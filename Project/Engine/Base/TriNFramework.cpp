@@ -5,8 +5,8 @@
 //============================================================================*/
 #include <Engine/Asset/Asset.h>
 #include <Engine/Renderer/ImGuiRenderer.h>
+#include <Engine/Process/Input.h>
 #include <Game/3D/PrimitiveDrawer.h>
-#include <Game/Utility/GameTimer.h>
 
 //============================================================================*/
 //	TriNFramework classMethods
@@ -51,7 +51,6 @@ void TriNFramework::Init() {
 void TriNFramework::Update() {
 
 	graphicsEngine_->BeginRenderFrame();
-	GameTimer::Update();
 
 	gameSystem_->Update();
 	ImGuiRenderer::Render();
@@ -73,6 +72,10 @@ void TriNFramework::Draw() {
 void TriNFramework::Finalize() {
 
 	graphicsEngine_->Finalize();
+	Asset::Finalize();
+	PrimitiveDrawer::Finalize();
+	Input::Finalize();
+	gameSystem_->Finalize();
 
 	graphicsEngine_.reset();
 	gameSystem_.reset();

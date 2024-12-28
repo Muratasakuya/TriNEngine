@@ -51,6 +51,7 @@ public:
 	//========================================================================*/
 
 	static PrimitiveDrawer* GetInstance();
+	static void Finalize();
 
 	void Init(PipelineManager* pipeline);
 
@@ -75,6 +76,8 @@ private:
 
 	//========================================================================*/
 	//* variables
+
+	static PrimitiveDrawer* instance_;
 
 	PipelineManager* pipeline_ = nullptr;
 

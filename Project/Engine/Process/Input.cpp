@@ -16,10 +16,23 @@
 //	Input classMethods
 //============================================================================*/
 
+Input* Input::instance_ = nullptr;
+
 Input* Input::GetInstance() {
 
-	static Input instance;
-	return &instance;
+	if (instance_ == nullptr) {
+		instance_ = new Input();
+	}
+	return instance_;
+}
+
+void Input::Finalize() {
+
+	if (instance_ != nullptr) {
+
+		delete instance_;
+		instance_ = nullptr;
+	}
 }
 
 bool Input::PushKey(BYTE keyNumber) {

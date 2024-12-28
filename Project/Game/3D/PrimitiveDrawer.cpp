@@ -10,10 +10,23 @@
 //	PrimitiveDrawer classMethods
 //============================================================================*/
 
+PrimitiveDrawer* PrimitiveDrawer::instance_ = nullptr;
+
 PrimitiveDrawer* PrimitiveDrawer::GetInstance() {
 
-	static PrimitiveDrawer instance;
-	return &instance;
+	if (instance_ == nullptr) {
+		instance_ = new PrimitiveDrawer();
+	}
+	return instance_;
+}
+
+void PrimitiveDrawer::Finalize() {
+
+	if (instance_ != nullptr) {
+
+		delete instance_;
+		instance_ = nullptr;
+	}
 }
 
 void PrimitiveDrawer::Init(PipelineManager* pipeline) {

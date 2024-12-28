@@ -10,6 +10,7 @@
 
 // c++
 #include <vector>
+#include <unordered_map>
 
 //============================================================================*/
 //	MeshRenderer class
@@ -35,7 +36,7 @@ public:
 
 	//* imgui *//
 
-	static void SelectGameObject(const ImVec2& mainWindowPos);
+	static void SelectGameObject();
 
 	static void SelectedImGui();
 

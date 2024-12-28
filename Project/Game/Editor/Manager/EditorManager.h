@@ -28,7 +28,7 @@ public:
 
 	//* imgui *//
 
-	static void SelectEditor(const ImVec2& mainWindowPos);
+	static void SelectEditor();
 
 	static void SelectedImGui();
 

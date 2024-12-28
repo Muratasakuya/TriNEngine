@@ -53,6 +53,7 @@ public:
 	//========================================================================*/
 
 	static Input* GetInstance();
+	static void Finalize();
 
 	void Init(WinApp* winApp);
 
@@ -97,6 +98,8 @@ private:
 
 	//========================================================================*/
 	//* variables
+
+	static Input* instance_;
 
 	WinApp* winApp_ = nullptr;
 

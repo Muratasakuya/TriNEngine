@@ -26,8 +26,8 @@ const constexpr uint32_t kBufferCount = 2;
 const Color kWindowClearColor = Color(0.032f, 0.032f, 0.032f, 1.0f);
 
 // shadowMapSize
-const constexpr uint32_t kShadowMapWidth = 1024;
-const constexpr uint32_t kShadowMapHeight = 1024;
+const constexpr uint32_t kShadowMapWidth = 2048;
+const constexpr uint32_t kShadowMapHeight = 2048;
 
 // gravity
 const constexpr float gravity = -9.8f;

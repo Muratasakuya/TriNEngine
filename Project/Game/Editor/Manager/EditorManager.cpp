@@ -3,8 +3,8 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Engine/Renderer/ImGuiRenderer.h>
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Game/System/GameSystem.h>
 
 //============================================================================*/
 //	EditorManager classMethods
@@ -34,48 +34,44 @@ void EditorManager::Clear() {
 	selectedEditor_ = nullptr;
 }
 
-void EditorManager::SelectEditor(const ImVec2& mainWindowPos) {
+void EditorManager::SelectEditor() {
 
-	if (ImGuiRenderer::cameraInfoEnable_ ||
-		MeshRenderer::GetSelectedObject()) {
+	ImGui::Begin("Editor");
 
+	// 他のオブジェクトが選択されていたら選択解除
+	if (MeshRenderer::GetSelectedObject() ||
+		GameSystem::GameCamera()->SelectedGameCamera()) {
 		selectedEditor_ = nullptr;
+		currentEditorIndex_ = -1;
 	}
 
+	// UI 描画
 	if (!editors_.empty()) {
-		ImGui::SetCursorPos(ImVec2(6.0f, mainWindowPos.y + 192.0f));
-		ImGui::SetNextItemWidth(144.0f);
-		if (ImGui::BeginCombo("##EditorsCombo",
-			currentEditorIndex_ >= 0 ? editors_[currentEditorIndex_]->GetName().c_str() : "EditorList", ImGuiComboFlags_NoArrowButton)) {
-			for (int i = 0; i < editors_.size(); ++i) {
-				if (editors_[i]) {
-					bool isSelected = (currentEditorIndex_ == i);
-					if (ImGui::Selectable(editors_[i]->GetName().c_str(), isSelected)) {
-
-						currentEditorIndex_ = i;
-						selectedEditor_ = editors_[i];
-
-						ImGuiRenderer::cameraInfoEnable_ = false;
-
-					}
-					if (isSelected) {
-
-						ImGui::SetItemDefaultFocus();
-					}
-				}
+		for (int i = 0; i < editors_.size(); ++i) {
+			auto& editor = editors_[i];
+			if (!editor) {
+				continue;
 			}
 
-			ImGui::EndCombo();
-		}
-	} else {
+			// エディタをリスト表示
+			bool isSelected = (currentEditorIndex_ == i);
+			if (ImGui::Selectable(editor->GetName().c_str(), isSelected)) {
 
-		ImGui::SetCursorPos(ImVec2(6.0f, mainWindowPos.y + 198.0f));
-		ImGui::Text("No Editor");
+				currentEditorIndex_ = i;
+				selectedEditor_ = editor;
+			}
+		}
 	}
+
+	ImGui::End();
 
 }
 
 void EditorManager::SelectedImGui() {
+
+	if (!selectedEditor_) {
+		return;
+	}
 
 	ImGui::Text(selectedEditor_->GetName().c_str());
 	ImGui::Separator();

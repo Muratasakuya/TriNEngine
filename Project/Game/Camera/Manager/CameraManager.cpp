@@ -3,6 +3,10 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Renderer/MeshRenderer.h>
+#include <Game/Editor/Manager/EditorManager.h>
+
+// imgui
 #include <imgui.h>
 
 //============================================================================*/
@@ -12,6 +16,9 @@
 void CameraManager::Init() {
 
 	debugCameraEnable_ = false;
+
+	selectGameCamera_ = false;
+
 
 	// 2D
 	camera2D_ = std::make_unique<Camera2D>();
@@ -31,7 +38,6 @@ void CameraManager::Init() {
 	// Sun
 	sunLightCamera_ = std::make_unique<SunLightCamera>();
 	sunLightCamera_->Init();
-
 }
 
 void CameraManager::Update() {
@@ -57,20 +63,48 @@ void CameraManager::DrawDebug() {
 
 }
 
+void CameraManager::SelectGameCamera() {
+
+	// 他のObjectが選択された場合は選択解除する
+	if (MeshRenderer::GetSelectedObject() ||
+		EditorManager::GetSelectedEditor()) {
+		selectGameCamera_ = false;
+	}
+
+	bool isSelected = selectGameCamera_;
+
+	if (ImGui::Selectable("gameCamera", isSelected)) {
+
+		selectGameCamera_ = true;
+	}
+}
+
 void CameraManager::ImGui() {
 
+	if (!selectGameCamera_ ||
+		MeshRenderer::GetSelectedObject() ||
+		EditorManager::GetSelectedEditor()) {
+		return;
+	}
+
+	//========================================================================*/
+	ImGui::Text("debugCamera");
 	ImGui::Checkbox("debugCameraEnable", &debugCameraEnable_);
-
 	if (debugCameraEnable_) {
-
 		debugCamera_->ImGui();
 	}
 	debugCamera_->SetEnable(debugCameraEnable_);
-
+	//========================================================================*/
+	ImGui::Separator();
+	ImGui::Text("mainCamera");
 	camera3D_->ImGui();
-
+	//========================================================================*/
+	ImGui::Separator();
+	ImGui::Text("followCamera");
 	followCamera_->ImGui();
-
+	//========================================================================*/
+	ImGui::Separator();
+	ImGui::Text("sunLightCamera");
 	sunLightCamera_->ImGui();
 
 }

@@ -23,6 +23,8 @@ public:
 
 	static void Init();
 
+	static void Finalize();
+
 	static void LoadTexture(const std::string& textureName);
 
 	static void LoadModel(const std::string& directoryPath, const std::string& modelName);

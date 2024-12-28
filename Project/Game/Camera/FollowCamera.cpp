@@ -71,10 +71,6 @@ void FollowCamera::Move() {
 
 void FollowCamera::ImGui() {
 
-	ImGui::Separator();
-
-	ImGui::Text("followCamera");
-
 	if (ImGui::Button("Save")) {
 		SaveJson();
 	}

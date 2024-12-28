@@ -47,6 +47,8 @@ void IBaseGameObject::ImGui() {
 
 			if (ImGui::TreeNode(materialLabel.c_str())) {
 
+				ImGuiViewport* viewport = ImGui::GetMainViewport();
+				ImGui::SetNextWindowViewport(viewport->ID);
 				ImGui::ColorEdit4("", &materials_[i].properties.color.r);
 				ImGui::Text("R:%4.2f G:%4.2f B:%4.2f A:%4.2f",
 					materials_[i].properties.color.r, materials_[i].properties.color.g,

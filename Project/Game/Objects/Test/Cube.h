@@ -3,33 +3,22 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/Scenes/Methods/IScene.h>
-
-// object
-#include <Game/Objects/Test/Cube.h>
-#include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Player/Player.h>
-
-// c++
-#include <string>
-#include <memory>
+#include <Game/3D/Object/BaseGameObject.h>
 
 //============================================================================*/
-//	GameScene class
+//	Cube class
 //============================================================================*/
-class GameScene :
-	public IScene {
+class Cube :
+	public BaseGameObject {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	GameScene() = default;
-	~GameScene() = default;
+	Cube() = default;
+	~Cube() = default;
 
-	void Init() override;
-
-	void Update() override;
+	void Init(uint32_t index);
 
 private:
 	//========================================================================*/
@@ -38,16 +27,5 @@ private:
 
 	//========================================================================*/
 	//* variables
-
-	std::vector<std::unique_ptr<Cube>> cubes_;
-
-	std::unique_ptr<Field> field_;
-
-	std::unique_ptr<Player> player_;
-
-	//========================================================================*/
-	//* function
-
-	void LoadAssets();
 
 };

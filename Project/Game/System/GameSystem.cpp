@@ -3,6 +3,8 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Process/Input.h>
+#include <Game/Utility/GameTimer.h>
 
 //============================================================================*/
 //	GameSystem classMethods
@@ -26,10 +28,22 @@ void GameSystem::Init() {
 
 void GameSystem::Update() {
 
+	GameTimer::Update();
+
+	Input::GetInstance()->Update();
+
 	collisionManager_->UpdateAllCollisions();
 
 	cameraManager_->Update();
 
 	lightManager_->Update();
+
+}
+
+void GameSystem::Finalize() {
+
+	collisionManager_.reset();
+	cameraManager_.reset();
+	lightManager_.reset();
 
 }

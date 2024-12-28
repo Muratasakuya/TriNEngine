@@ -141,6 +141,7 @@ void GraphicsEngine::Finalize() {
 	dsvManager_.reset();
 	swapChain_.reset();
 	offscreenRenderer_.reset();
+	shadowMapRenderer_.reset();
 	imguiManager_.reset();
 
 	// ComFinalize

@@ -69,9 +69,6 @@ void SunLightCamera::DrawDebug() {
 
 void SunLightCamera::ImGui() {
 
-	ImGui::Separator();
-	ImGui::Text("sunLightCamera");
-
 	ImGui::DragFloat("orthoSize", &orthoSize_, 1.0f);
 	ImGui::DragFloat("nearPlane", &nearPlane_, 0.01f);
 	ImGui::DragFloat("farPlane", &farPlane_);

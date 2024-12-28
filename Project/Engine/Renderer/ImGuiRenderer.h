@@ -39,27 +39,23 @@ private:
 	//========================================================================*/
 	//* variables
 
-	static bool show_;
-
 	static D3D12_GPU_DESCRIPTOR_HANDLE renderTextureGPUHandle_;
+
+	static ImGuiWindowFlags windowFlag_;
+
+	static bool testBool_;
+	static int testInt_;
+	static float testFloat_;
 
 	//========================================================================*/
 	//* functions
 
-	static void GuiSetting(const ImVec2& mainWindowPos);
+	static void MainWindow();
 
-	static void MainWindowSetting(const ImVec2& mainWindowPos);
+	static void EngineView();
 
-	static void GameObjectList(const ImVec2& mainWindowPos);
+	static void GameView();
 
-	static void CameraList(const ImVec2& mainWindowPos);
-
-	static void EditorList(const ImVec2& mainWindowPos);
-
-	static void EngineLog(const ImVec2& mainWindowPos, const ImVec2& mainWindowSize);
-
-	static void SelectedInfo(const ImVec2& mainWindowPos, const ImVec2& mainWindowSize);
-
-	static void CollisionLog(const ImVec2& mainWindowPos, const ImVec2& mainWindowSize);
+	static void InspectorView();
 
 };

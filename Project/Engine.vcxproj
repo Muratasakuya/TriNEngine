@@ -345,6 +345,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Objects\Test\Cube.cpp" />
     <ClCompile Include="Engine\DXClass\DXCommand.cpp" />
     <ClCompile Include="Game\Utility\GameTimer.cpp" />
     <ClCompile Include="Game\Camera\Camera2D.cpp" />
@@ -375,7 +376,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DXClass\Managers\DsvManager.cpp" />
     <ClCompile Include="Engine\DXClass\DXDevice.cpp" />
     <ClCompile Include="Engine\DXClass\DXSwapChain.cpp" />
-    <ClCompile Include="Engine\DXClass\DXCommon.cpp" />
     <ClCompile Include="Game\Scenes\Methods\IScene.cpp" />
     <ClCompile Include="Engine\External\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Renderer\ImGuiRenderer.cpp" />
@@ -416,6 +416,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Base\TriNFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Objects\Test\Cube.h" />
     <ClInclude Include="Engine\DXClass\DXCommand.h" />
     <ClInclude Include="Game\Utility\GameTimer.h" />
     <ClInclude Include="Game\Camera\Camera2D.h" />
@@ -446,7 +447,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DXClass\Managers\DsvManager.h" />
     <ClInclude Include="Engine\DXClass\DXDevice.h" />
     <ClInclude Include="Engine\DXClass\DXSwapChain.h" />
-    <ClInclude Include="Engine\DXClass\DXCommon.h" />
     <ClInclude Include="Engine\DXClass\ComPtr.h" />
     <ClInclude Include="Engine\DXClass\Pipeline\PipelineTypes.h" />
     <ClInclude Include="Engine\Utility\AssetStructure.h" />

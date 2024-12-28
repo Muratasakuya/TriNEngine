@@ -47,7 +47,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Base\GraphicsEngine.cpp" />
     <ClCompile Include="Engine\Window\WinApp.cpp" />
-    <ClCompile Include="Engine\DXClass\DXCommon.cpp" />
     <ClCompile Include="Engine\DXClass\DXSwapChain.cpp" />
     <ClCompile Include="Engine\DXClass\DXDevice.cpp" />
     <ClCompile Include="Engine\DXClass\Managers\RtvManager.cpp" />
@@ -113,13 +112,13 @@
     <ClCompile Include="Engine\Base\TriNFramework.cpp" />
     <ClCompile Include="Engine\DXClass\DXCommand.cpp" />
     <ClCompile Include="Game\Utility\GameTimer.cpp" />
+    <ClCompile Include="Game\Objects\Test\Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
     <ClInclude Include="Engine\Base\GraphicsEngine.h" />
     <ClInclude Include="Engine\DXClass\ComPtr.h" />
     <ClInclude Include="Engine\Window\WinApp.h" />
-    <ClInclude Include="Engine\DXClass\DXCommon.h" />
     <ClInclude Include="Engine\DXClass\DXSwapChain.h" />
     <ClInclude Include="Engine\DXClass\DXDevice.h" />
     <ClInclude Include="Engine\DXClass\Managers\RtvManager.h" />
@@ -191,5 +190,6 @@
     <ClInclude Include="Engine\Base\TriNFramework.h" />
     <ClInclude Include="Engine\DXClass\DXCommand.h" />
     <ClInclude Include="Game\Utility\GameTimer.h" />
+    <ClInclude Include="Game\Objects\Test\Cube.h" />
   </ItemGroup>
 </Project>

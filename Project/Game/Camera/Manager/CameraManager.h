@@ -11,6 +11,7 @@
 
 // c++
 #include <memory>
+#include <unordered_map>
 
 //============================================================================*/
 //	CameraManager class
@@ -30,6 +31,8 @@ public:
 
 	void DrawDebug();
 
+	void SelectGameCamera();
+
 	void ImGui();
 
 	//* getter *//
@@ -41,6 +44,8 @@ public:
 	FollowCamera* GetFollowCamera() const { return followCamera_.get(); }
 
 	SunLightCamera* GetSunLightCamera() const { return sunLightCamera_.get(); }
+
+	bool SelectedGameCamera() const { return selectGameCamera_; }
 
 private:
 	//========================================================================*/
@@ -61,5 +66,7 @@ private:
 	std::unique_ptr<SunLightCamera> sunLightCamera_;
 
 	bool debugCameraEnable_;
+
+	bool selectGameCamera_;
 
 };

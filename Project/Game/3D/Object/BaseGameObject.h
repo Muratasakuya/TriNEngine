@@ -6,6 +6,7 @@
 #include <Game/3D/Object/IBaseGameObject.h>
 
 // c++
+#include <cstdint>
 #include <memory>
 #include <numbers>
 

@@ -13,6 +13,12 @@ void Asset::Init() {
 	modelManager_ = std::make_unique<ModelManager>();
 }
 
+void Asset::Finalize() {
+
+	textureManager_.reset();
+	modelManager_.reset();
+}
+
 void Asset::LoadTexture(const std::string& textureName) {
 
 	textureManager_->Load(textureName);
