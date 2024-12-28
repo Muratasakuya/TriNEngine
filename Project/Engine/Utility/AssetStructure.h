@@ -147,3 +147,17 @@ struct SkinCluster {
 	std::span<WellForGPU> mappedPalette;
 	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
 };
+struct AnimationBlendState {
+
+	bool isBlending = false;    // ブレンド中か
+	float blendTimer = 0.0f;    // 現在のブレンド経過時間
+	float blendDuration = 0.0f; // ブレンドにかける総時間
+
+	// 今まで再生していたアニメーション
+	std::string fromAnimation;
+	float fromAnimationTime = 0.0f;
+
+	// 次に再生するアニメーション
+	std::string toAnimation;
+	float toAnimationTime = 0.0f;
+};

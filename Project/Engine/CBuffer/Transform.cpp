@@ -5,6 +5,7 @@
 //============================================================================*/
 #include <Engine/Base/GraphicsEngine.h>
 #include <Game/System/GameSystem.h>
+#include <Game/Utility/GameTimer.h>
 #include <Engine/Asset/Asset.h>
 
 //============================================================================*/
@@ -81,7 +82,7 @@ void AnimationTransform::Update() {
 	if (animationController_.first) {
 
 		//* repeat
-		animationTime_ += 0.016f;
+		animationTime_ += GameTimer::GetScaledDeltaTime();
 		animationTime_ = std::fmod(animationTime_, animationData_[animationController_.second].duration);
 
 		// スケルトンが存在する場合
@@ -108,7 +109,15 @@ void AnimationTransform::Update() {
 
 }
 
+void AnimationTransform::AnimationInfo() {
+
+	float progress = animationTime_ / animationData_[animationController_.second].duration;
+	ImGui::ProgressBar(progress);
+}
+
 void AnimationTransform::SetPlayAnimation(bool isPlayAnimation, const std::string& animationName) {
+
+	animationTime_ = 0.0f; // TimerReset
 
 	animationController_.first = isPlayAnimation;
 	animationController_.second = animationName;

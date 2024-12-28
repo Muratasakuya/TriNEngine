@@ -74,6 +74,9 @@ private:
 	std::optional<MoveBehaviour> moveBehaviour_;              //* 依頼移動ビヘイビア
 	std::unordered_set<MoveBehaviour> currentMoveBehaviours_; //* 現在の移動ビヘイビア
 
+	std::unordered_map<std::string, std::string> animationNames_;
+	std::string currentAnimationKey_;
+
 	//* base *//
 
 	Vector3 velocity_; //* 移動速度

@@ -122,6 +122,8 @@ public:
 
 	void Update() override;
 
+	void AnimationInfo();
+
 	//* setter *//
 
 	void SetPlayAnimation(bool isPlayAnimation, const std::string& animationName);

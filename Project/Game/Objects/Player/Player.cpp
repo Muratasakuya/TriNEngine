@@ -25,15 +25,21 @@ void Player::Init() {
 	//* model *//
 
 	const std::string modelName = "player.gltf";
-	const std::string animationName = "player_wait";
+	animationNames_ = {
 
-	BaseAnimationObject::Init(modelName, animationName);
+		{"walk", "player_Walk"},
+		{"dash", "player_Dash"},
+	};
+	currentAnimationKey_ = "walk";
+
+	BaseAnimationObject::Init(modelName, animationNames_[currentAnimationKey_]);
 	BaseAnimationObject::SetMeshRenderer("player");
 	parentFolderName_ = "Player/";
 
 	model_->SetTexture("white");
+	transform_.SetNewAnimationData(animationNames_["dash"]);
 
-	transform_.SetPlayAnimation(true, animationName);
+	transform_.SetPlayAnimation(true, animationNames_[currentAnimationKey_]);
 
 	ApplyJson();
 
@@ -226,8 +232,31 @@ void Player::DerivedImGui() {
 		ImGui::DragFloat("jumpStrength", &jumpStrength, 0.01f);
 		ImGui::PopItemWidth();
 	}
-
 	ImGui::Separator();
+
+	// Animation
+	if (ImGui::BeginCombo("Animations", currentAnimationKey_.c_str()))
+	{
+		// animationNames_ の中身をループしながら候補を表示
+		for (auto& kv : animationNames_) {
+
+			const std::string& key = kv.first;
+			const bool isSelected = (currentAnimationKey_ == key);
+
+			if (ImGui::Selectable(key.c_str(), isSelected)) {
+
+				currentAnimationKey_ = key;
+				BaseAnimationObject::SetAnimation(animationNames_[currentAnimationKey_], true);
+			}
+
+			if (isSelected) {
+
+				ImGui::SetItemDefaultFocus();
+			}
+		}
+		ImGui::EndCombo();
+	}
+	transform_.AnimationInfo();
 
 	// 現在のMoveBehaviour
 	ImGui::Text("Current Move Behaviours:");
