@@ -62,6 +62,8 @@ public:
 
 	static SrvManager* SRV() { return srvManager_.get(); }
 
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGuiTextureGPUHandle() const { return offscreenRenderer_->GetGuiGPUHandle(); }
+
 private:
 	//========================================================================*/
 	//	private Methods

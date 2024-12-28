@@ -32,13 +32,6 @@ void GameScene::Init() {
 
 	LoadAssets();
 
-	for (uint32_t index = 0; index < 3; ++index) {
-
-		cubes_.emplace_back();
-		cubes_[index] = std::make_unique<Cube>();
-		cubes_[index]->Init(index);
-	}
-
 	field_ = std::make_unique<Field>();
 	field_->Init();
 
@@ -52,11 +45,6 @@ void GameScene::Init() {
 void GameScene::Update() {
 
 	GameSystem::GameCamera()->GetSunLightCamera()->SetTranslate(player_->GetWorldPos());
-
-	for (uint32_t index = 0; index < 3; ++index) {
-
-		cubes_[index]->Update();
-	}
 
 	field_->Update();
 

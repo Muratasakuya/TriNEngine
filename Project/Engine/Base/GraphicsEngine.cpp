@@ -114,12 +114,6 @@ void GraphicsEngine::Init() {
 
 	rtvManager_->Reset();
 
-#ifdef _DEBUG
-
-	// ImGuiRendererの初期化
-	ImGuiRenderer::Init(offscreenRenderer_->GetGuiGPUHandle());
-#endif
-
 	// Inputの初期化
 	Input::GetInstance()->Init(winApp_.get());
 

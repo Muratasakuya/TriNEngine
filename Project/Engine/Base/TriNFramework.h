@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Base/GraphicsEngine.h>
+#include <Engine/Renderer/ImGuiRenderer.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Scenes/Manager/SceneManager.h>
 
@@ -33,6 +34,8 @@ private:
 	//* variables
 
 	std::unique_ptr<GraphicsEngine> graphicsEngine_;
+
+	std::unique_ptr<ImGuiRenderer> imGuiRenderer_;
 
 	std::unique_ptr<GameSystem> gameSystem_;
 

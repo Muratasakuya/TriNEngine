@@ -15,17 +15,12 @@
 //	ImGuiRenderer classMethods
 //============================================================================*/
 
-D3D12_GPU_DESCRIPTOR_HANDLE ImGuiRenderer::renderTextureGPUHandle_ = {};
-ImGuiWindowFlags ImGuiRenderer::windowFlag_ = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-
-bool ImGuiRenderer::testBool_ = false;
-int ImGuiRenderer::testInt_ = 0;
-float ImGuiRenderer::testFloat_ = 0.0f;
-
 void ImGuiRenderer::Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle) {
 
 	// RenderTextureのGpuHandleの取得
 	renderTextureGPUHandle_ = renderTextureGPUHandle;
+
+	windowFlag_ = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
 }
 
@@ -62,11 +57,18 @@ void ImGuiRenderer::MainWindow() {
 
 void ImGuiRenderer::EngineView() {
 
+	ImGui::Begin("Process");
+
+	GameSystem::GetCollision()->DisplayCollisionLogs();
+
+	ImGui::End();
+
 	ImGui::Begin("Engine", nullptr, windowFlag_);
 
 	GameTimer::ImGui();
 
 	ImGui::End();
+
 }
 
 void ImGuiRenderer::GameView() {

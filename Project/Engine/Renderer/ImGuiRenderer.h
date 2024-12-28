@@ -22,14 +22,9 @@ public:
 	ImGuiRenderer() = default;
 	~ImGuiRenderer() = default;
 
-	static void Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle);
+	void Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle);
 
-	static void Render();
-
-	//========================================================================*/
-	//* variables
-
-	static bool cameraInfoEnable_;
+	void Render();
 
 private:
 	//========================================================================*/
@@ -39,23 +34,19 @@ private:
 	//========================================================================*/
 	//* variables
 
-	static D3D12_GPU_DESCRIPTOR_HANDLE renderTextureGPUHandle_;
+	D3D12_GPU_DESCRIPTOR_HANDLE renderTextureGPUHandle_;
 
-	static ImGuiWindowFlags windowFlag_;
-
-	static bool testBool_;
-	static int testInt_;
-	static float testFloat_;
+	ImGuiWindowFlags windowFlag_;
 
 	//========================================================================*/
 	//* functions
 
-	static void MainWindow();
+	void MainWindow();
 
-	static void EngineView();
+	void EngineView();
 
-	static void GameView();
+	void GameView();
 
-	static void InspectorView();
+	void InspectorView();
 
 };

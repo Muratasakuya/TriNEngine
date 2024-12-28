@@ -46,6 +46,12 @@ void TriNFramework::Init() {
 	// scene
 	sceneManager_ = std::make_unique<SceneManager>("Game");
 
+#ifdef _DEBUG
+	imGuiRenderer_ = std::make_unique<ImGuiRenderer>();
+	imGuiRenderer_->Init(graphicsEngine_->GetGuiTextureGPUHandle());
+#endif // _DEBUG
+
+
 }
 
 void TriNFramework::Update() {
@@ -53,7 +59,7 @@ void TriNFramework::Update() {
 	graphicsEngine_->BeginRenderFrame();
 
 	gameSystem_->Update();
-	ImGuiRenderer::Render();
+	imGuiRenderer_->Render();
 
 	sceneManager_->Update();
 
