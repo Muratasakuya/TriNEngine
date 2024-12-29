@@ -40,7 +40,7 @@ public:
 
 	//* setter *//
 
-	void SetAnimation(const std::string& animationName, bool play);
+	void SetAnimation(const std::string& animationName, bool roopAnimation);
 
 	void SetWorldTransform(const AnimationTransform& transform);
 

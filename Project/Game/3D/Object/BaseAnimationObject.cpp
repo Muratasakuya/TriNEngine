@@ -62,9 +62,9 @@ void BaseAnimationObject::TransformImGui() {
 	}
 }
 
-void BaseAnimationObject::SetAnimation(const std::string& animationName, bool play) {
+void BaseAnimationObject::SetAnimation(const std::string& animationName, bool roopAnimation) {
 
-	transform_.SetPlayAnimation(play, animationName);
+	transform_.SetPlayAnimation(animationName, roopAnimation);
 	model_->SetAnimationName(animationName);
 }
 

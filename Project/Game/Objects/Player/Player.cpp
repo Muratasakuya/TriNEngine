@@ -39,7 +39,8 @@ void Player::Init() {
 	model_->SetTexture("white");
 	transform_.SetNewAnimationData(animationNames_["dash"]);
 
-	transform_.SetPlayAnimation(true, animationNames_[currentAnimationKey_]);
+	transform_.SetPlayAnimation(animationNames_[currentAnimationKey_], true);
+	model_->SetAnimationName(animationNames_[currentAnimationKey_]);
 
 	ApplyJson();
 
@@ -246,7 +247,9 @@ void Player::DerivedImGui() {
 			if (ImGui::Selectable(key.c_str(), isSelected)) {
 
 				currentAnimationKey_ = key;
-				BaseAnimationObject::SetAnimation(animationNames_[currentAnimationKey_], true);
+
+				transform_.SwitchAnimation(animationNames_[currentAnimationKey_], false,1.0f);
+				model_->SetAnimationName(animationNames_["walk"]);
 			}
 
 			if (isSelected) {
@@ -257,6 +260,12 @@ void Player::DerivedImGui() {
 		ImGui::EndCombo();
 	}
 	transform_.AnimationInfo();
+	if (currentAnimationKey_ == "dash") {
+		if (!transform_.IsTransition()) {
+
+			model_->SetAnimationName(animationNames_["dash"]);
+		}
+	}
 
 	// 現在のMoveBehaviour
 	ImGui::Text("Current Move Behaviours:");

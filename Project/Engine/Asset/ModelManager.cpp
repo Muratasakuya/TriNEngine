@@ -304,6 +304,73 @@ void ModelManager::SkinClusterUpdate(const std::string& animationName) {
 	}
 }
 
+void ModelManager::BlendAnimation(
+	const std::string& oldAnimName, float oldAnimTime,
+	const std::string& nextAnimName, float nextAnimTime, float alpha) {
+
+	auto& oldAnim = animations_[oldAnimName];
+	auto& nextAnim = animations_[nextAnimName];
+
+	// すべてのJointを対象
+	for (size_t jointIndex = 0; jointIndex < skeletons_[oldAnimName].joints.size(); ++jointIndex) {
+
+		auto& jointOld = skeletons_[oldAnimName].joints[jointIndex];
+
+		const std::string& nodeName = jointOld.name;
+
+		// old の transform
+		Vector3 posOld = Vector3(0.0f, 0.0f, 0.0f);
+		Quaternion rotOld = Quaternion::IdentityQuaternion();
+		Vector3 sclOld = Vector3(1.0f,1.0f,1.0f);
+		if (auto itOld = oldAnim.nodeAnimations.find(nodeName); itOld != oldAnim.nodeAnimations.end()) {
+
+			const auto& rootNodeAnimation = itOld->second;
+			if (!rootNodeAnimation.translate.keyframes.empty()) {
+
+				posOld = Vector3::CalculateValue(rootNodeAnimation.translate.keyframes, oldAnimTime);
+			}
+			if (!rootNodeAnimation.rotate.keyframes.empty()) {
+
+				rotOld = Quaternion::CalculateValue(rootNodeAnimation.rotate.keyframes, oldAnimTime);
+			}
+			if (!rootNodeAnimation.scale.keyframes.empty()) {
+
+				sclOld = Vector3::CalculateValue(rootNodeAnimation.scale.keyframes, oldAnimTime);
+			}
+		}
+
+		// next の transform
+		Vector3 posNext = Vector3(0.0f, 0.0f, 0.0f);
+		Quaternion rotNext = Quaternion::IdentityQuaternion();
+		Vector3 sclNext = Vector3(1.0f, 1.0f, 1.0f);
+		if (auto itNext = nextAnim.nodeAnimations.find(nodeName); itNext != nextAnim.nodeAnimations.end()) {
+			const auto& rootNodeAnimation = itNext->second;
+
+			if (!rootNodeAnimation.translate.keyframes.empty()) {
+
+				posNext = Vector3::CalculateValue(rootNodeAnimation.translate.keyframes, nextAnimTime);
+			}
+			if (!rootNodeAnimation.rotate.keyframes.empty()) {
+
+				rotNext = Quaternion::CalculateValue(rootNodeAnimation.rotate.keyframes, nextAnimTime);
+			}
+			if (!rootNodeAnimation.scale.keyframes.empty()) {
+
+				sclNext = Vector3::CalculateValue(rootNodeAnimation.scale.keyframes, nextAnimTime);
+			}
+		}
+
+		// αブレンド
+		Vector3 posBlend = Vector3::Lerp(posOld, posNext, alpha);
+		Quaternion rotBlend = Quaternion::Slerp(rotOld, rotNext, alpha);
+		Vector3 sclBlend = Vector3::Lerp(sclOld, sclNext, alpha);
+
+		jointOld.transform.translate = posBlend;
+		jointOld.transform.rotate = rotBlend;
+		jointOld.transform.scale = sclBlend;
+	}
+}
+
 Skeleton ModelManager::CreateSkeleton(const Node& rootNode, const std::string& animationName) {
 
 	Skeleton skeleton;

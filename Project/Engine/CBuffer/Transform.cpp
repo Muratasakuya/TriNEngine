@@ -72,28 +72,75 @@ void AnimationTransform::Init(const std::string& modelName, const std::string& a
 
 	modelData_ = Asset::GetModel()->GetModelData(modelName);
 
-	animationController_.first = false;
-	animationTime_ = 0.0f;
-
 }
 
 void AnimationTransform::Update() {
 
-	if (animationController_.first) {
+	float deltaTime = GameTimer::GetScaledDeltaTime();
 
-		//* repeat
-		animationTime_ += GameTimer::GetScaledDeltaTime();
-		animationTime_ = std::fmod(animationTime_, animationData_[animationController_.second].duration);
+	//============================================================================*/
+	// 通常のAnimation再生
+	//============================================================================*/
+	if (!inTransition_) {
+		if (roopAnimation_) {
 
-		// スケルトンが存在する場合
-		if (skeleton_[animationController_.second]) {
+			currentAnimationTimer_ += deltaTime;
+			currentAnimationTimer_ = std::fmod(currentAnimationTimer_, animationData_[currentAnimationName_].duration);
+		} else {
+			if (animationData_[currentAnimationName_].duration > currentAnimationTimer_) {
+				currentAnimationTimer_ += deltaTime;
+			}
+			if (currentAnimationTimer_ >= animationData_[currentAnimationName_].duration) {
+				currentAnimationTimer_ = animationData_[currentAnimationName_].duration;
+			}
+		}
 
-			// アニメーション適応
-			Asset::GetModel()->ApplyAnimation(skeleton_[animationController_.second].value().name, animationTime_);
-			// スケルトンの更新
-			Asset::GetModel()->SkeletonUpdate(skeleton_[animationController_.second].value().name);
-			// スキンクラスターの更新
-			Asset::GetModel()->SkinClusterUpdate(skeleton_[animationController_.second].value().name);
+		if (skeleton_[currentAnimationName_]) {
+			Asset::GetModel()->ApplyAnimation(skeleton_[currentAnimationName_].value().name, currentAnimationTimer_);
+			Asset::GetModel()->SkeletonUpdate(skeleton_[currentAnimationName_].value().name);
+			Asset::GetModel()->SkinClusterUpdate(skeleton_[currentAnimationName_].value().name);
+		}
+	}
+	//============================================================================*/
+	// 遷移中のAnimation再生
+	//============================================================================*/
+	else {
+		
+		// 遷移時間を進める
+		transitionTimer_ += deltaTime;
+		float alpha = transitionTimer_ / transitionDuration_;
+		if (alpha > 1.0f) {
+			alpha = 1.0f;
+		}
+
+		oldAnimationTimer_ += deltaTime;
+		if (roopAnimation_) {
+			oldAnimationTimer_ = std::fmod(oldAnimationTimer_, animationData_[oldAnimationName_].duration);
+		}
+		if (oldAnimationTimer_ >= animationData_[oldAnimationName_].duration) {
+			oldAnimationTimer_ = animationData_[oldAnimationName_].duration;
+		}
+
+		nextAnimationTimer_ += deltaTime;
+		if (roopAnimation_) {
+			nextAnimationTimer_ = std::fmod(nextAnimationTimer_, animationData_[nextAnimationName_].duration);
+		}
+		if (nextAnimationTimer_ >= animationData_[nextAnimationName_].duration) {
+			nextAnimationTimer_ = animationData_[nextAnimationName_].duration;
+		}
+
+		// AnimationをBlendして更新する
+		Asset::GetModel()->BlendAnimation(skeleton_[oldAnimationName_].value().name,oldAnimationTimer_,
+			skeleton_[nextAnimationName_].value().name,nextAnimationTimer_,alpha);
+		Asset::GetModel()->SkeletonUpdate(skeleton_[oldAnimationName_].value().name);
+		Asset::GetModel()->SkinClusterUpdate(skeleton_[oldAnimationName_].value().name);
+
+		// 遷移終了
+		if (alpha >= 1.0f) {
+
+			inTransition_ = false;
+			currentAnimationName_ = nextAnimationName_;
+			currentAnimationTimer_ = nextAnimationTimer_;
 		}
 	}
 
@@ -111,16 +158,40 @@ void AnimationTransform::Update() {
 
 void AnimationTransform::AnimationInfo() {
 
-	float progress = animationTime_ / animationData_[animationController_.second].duration;
+	ImGui::Checkbox("roopAnimation", &roopAnimation_);
+	ImGui::SameLine();
+	if (ImGui::Button("Restart")) {
+		currentAnimationTimer_ = 0.0f;
+	}
+	float progress = currentAnimationTimer_ / animationData_[currentAnimationName_].duration;
 	ImGui::ProgressBar(progress);
 }
 
-void AnimationTransform::SetPlayAnimation(bool isPlayAnimation, const std::string& animationName) {
+void AnimationTransform::SetPlayAnimation(const std::string& animationName, bool roopAnimation) {
 
-	animationTime_ = 0.0f; // TimerReset
+	// Animationの再生設定
+	currentAnimationTimer_ = 0.0f;
+	currentAnimationName_ = animationName;
+	roopAnimation_ = roopAnimation;
 
-	animationController_.first = isPlayAnimation;
-	animationController_.second = animationName;
+}
+
+void AnimationTransform::SwitchAnimation(const std::string& nextAnimName, bool loopAnimation, float transitionDuration) {
+
+	// 現在のAnimationを設定
+	oldAnimationName_ = currentAnimationName_;
+	oldAnimationTimer_ = currentAnimationTimer_;
+
+	// 次のAnimationを設定
+	nextAnimationName_ = nextAnimName;
+	nextAnimationTimer_ = 0.0f;
+
+	// 遷移開始
+	inTransition_ = true;
+	transitionTimer_ = 0.0f;
+	transitionDuration_ = transitionDuration;
+
+	roopAnimation_ = loopAnimation;
 }
 
 void AnimationTransform::SetNewAnimationData(const std::string& animationName) {

@@ -124,10 +124,19 @@ public:
 
 	void AnimationInfo();
 
+	//* getter *//
+
+	bool IsTransition() const { return inTransition_; }
+
 	//* setter *//
 
-	void SetPlayAnimation(bool isPlayAnimation, const std::string& animationName);
+	// 最初のAnimation再生
+	void SetPlayAnimation(const std::string& animationName, bool roopAnimation);
 
+	// 切り替えAnimation
+	void SwitchAnimation(const std::string& nextAnimName, bool loopAnimation, float transitionDuration);
+
+	// 新しいAnimationの設定
 	void SetNewAnimationData(const std::string& animationName);
 
 private:
@@ -144,8 +153,22 @@ private:
 	std::unordered_map<std::string, std::optional<Skeleton>> skeleton_;
 	std::unordered_map<std::string, SkinCluster> skinCluster_;
 
-	std::pair<bool, std::string> animationController_;
-	float animationTime_;
+	std::string currentAnimationName_; //* 現在のAnimationの名前
+	float currentAnimationTimer_;      //* 現在のAnimation経過時間
+	bool roopAnimation_;               //* ループ再生するかどうか
+
+	//* Transition *//
+
+	bool inTransition_;        //* 遷移中かどうか
+	float transitionTimer_;    //* 遷移管理タイマー
+	float transitionDuration_; //* 遷移時間
+
+	// 切り替え前のAnimation
+	std::string oldAnimationName_;
+	float oldAnimationTimer_;
+	// 切り替え後のAnimation
+	std::string nextAnimationName_;
+	float nextAnimationTimer_;
 
 };
 

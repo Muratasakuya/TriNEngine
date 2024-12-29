@@ -41,6 +41,11 @@ public:
 
 	void SkinClusterUpdate(const std::string& animationName);
 
+	void BlendAnimation(
+		const std::string& oldAnimName, float oldAnimTime,
+		const std::string& nextAnimName, float nextAnimTime,
+		float alpha);
+
 	//* getter *//
 
 	ModelData GetModelData(const std::string& modelName);
