@@ -75,11 +75,15 @@ void AnimationTransform::Init(const std::string& modelName, const std::string& a
 	// Init
 	transitionDuration_ = 0.4f;
 
+	animationFinish_ = false;
+
 }
 
 void AnimationTransform::Update() {
 
 	float deltaTime = GameTimer::GetScaledDeltaTime();
+
+	animationFinish_ = false;
 
 	//============================================================================*/
 	// 通常のAnimation再生
@@ -95,6 +99,8 @@ void AnimationTransform::Update() {
 			}
 			if (currentAnimationTimer_ >= animationData_[currentAnimationName_].duration) {
 				currentAnimationTimer_ = animationData_[currentAnimationName_].duration;
+
+				animationFinish_ = true;
 			}
 		}
 

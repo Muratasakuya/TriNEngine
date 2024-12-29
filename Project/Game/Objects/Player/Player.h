@@ -61,8 +61,13 @@ private:
 	// 移動
 	enum class MoveBehaviour {
 
-		Dash, // ダッシュ
-		Jump, // ジャンプ
+		// Move
+		Dash,              // ダッシュ
+		Jump,              // ジャンプ
+
+		// Attack
+		WaitToFirstAttack, // 待機からの最初の攻撃
+		DashToFirstAttack, // ダッシュからの最初の攻撃
 	};
 
 	//========================================================================*/
@@ -77,7 +82,11 @@ private:
 	std::unordered_map<std::string, std::string> animationNames_;
 	std::string currentAnimationKey_;
 
-	float animationDuration_;
+	float waitToDashDuration_;   //* 待機         -> ダッシュ
+	float waitToAttackDuration_; //* 待機         -> 最初の攻撃
+	float dashToAttackDuration_; //* ダッシュ      -> 最初の攻撃
+	float moveToJumpDuration_;   //* 何かしらの動き -> ジャンプ
+	float moveToWaitDuration_;   //* 何かしらの動き -> 待機
 
 	//* base *//
 
@@ -91,14 +100,12 @@ private:
 
 	LerpValue dashSpeed_; //* ダッシュ速度
 
-	//* jump *//
-
-	float jumpStrength_; //* ジャンプ力
-
 	//* bool *//
 
-	bool isDashing_;  //* ダッシュしたかどうか
-	bool isOnGround_; //* 地面に着いているかどうか
+	bool isDashing_;           //* ダッシュしたかどうか
+	bool isJump_;              //* ジャンプしたかどうか
+	bool isWaitToFirstAttack_; //* 待機からの最初の攻撃をしたかどうか
+	bool isDashToFirstAttack_; //* ダッシュからの最初の攻撃をしたかどうか
 
 	//========================================================================*/
 	//* functions
@@ -106,8 +113,11 @@ private:
 	//====================================*/
 	//* move
 
+	void UpdateAnimation(); //* アニメーション更新
+
 	void Move();        //* 全体の移動を管理
 	void MoveRequest(); //* 移動依頼
+	void AttackRequest(); //* 攻撃依頼
 
 	void MoveWalk(); //* 通常移動、歩きに該当する
 	void MoveDash(); //* ダッシュ、Rを押している間はダッシュ
@@ -115,6 +125,9 @@ private:
 
 	//====================================*/
 	//* attack
+
+	void WaitToFirstAttack(); //* 待機からの最初の攻撃
+	void DashToFirstAttack(); //* ダッシュからの最初の攻撃
 
 	//====================================*/
 	//* other

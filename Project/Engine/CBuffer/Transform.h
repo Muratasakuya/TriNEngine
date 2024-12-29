@@ -128,6 +128,9 @@ public:
 
 	bool IsTransition() const { return inTransition_; }
 
+	bool AnimationFinish() const { return animationFinish_; }
+	std::string GetCurrentAnimationName() const { return currentAnimationName_; }
+
 	//* setter *//
 
 	// 最初のAnimation再生
@@ -156,6 +159,8 @@ private:
 	std::string currentAnimationName_; //* 現在のAnimationの名前
 	float currentAnimationTimer_;      //* 現在のAnimation経過時間
 	bool roopAnimation_;               //* ループ再生するかどうか
+
+	bool animationFinish_; //* 現在のAnimationが終了したかどうか
 
 	//* Transition *//
 

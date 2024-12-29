@@ -68,6 +68,10 @@ void BaseAnimationObject::DrawShadowDepth() {
 void BaseAnimationObject::SwitchAnimation(
 	const std::string& animationKey, bool loopAnimation, float transitionDuration) {
 
+	if (nextAnimationKey_ == animationKey) {
+		return;
+	}
+
 	// 次のAnimationの名前を保持
 	nextAnimationKey_ = animationKey;
 

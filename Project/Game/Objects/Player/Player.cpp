@@ -27,10 +27,16 @@ void Player::Init() {
 	const std::string modelName = "player.gltf";
 	animationNames_ = {
 
-		{"walk", "player_Walk"},
+		// Move
+		{"wait", "player_Wait"},
 		{"dash", "player_Dash"},
+		{"jump", "player_Jump"},
+
+		// Attack
+		{"waitToAttack0", "player_WaitToAttack0"},
+		{"dashToAttack0", "player_DashToAttack0"},
 	};
-	currentAnimationKey_ = "walk";
+	currentAnimationKey_ = "wait";
 
 	BaseAnimationObject::Init(modelName, animationNames_[currentAnimationKey_]);
 	BaseAnimationObject::SetMeshRenderer("player");
@@ -41,11 +47,16 @@ void Player::Init() {
 	// InitAnimation
 	transform_.SetPlayAnimation(animationNames_[currentAnimationKey_], true);
 	transform_.SetNewAnimationData(animationNames_["dash"]);
+	transform_.SetNewAnimationData(animationNames_["jump"]);
+	transform_.SetNewAnimationData(animationNames_["waitToAttack0"]);
+	transform_.SetNewAnimationData(animationNames_["dashToAttack0"]);
 
 	ApplyJson();
 
 	isDashing_ = false;
-	isOnGround_ = true;
+	isJump_ = false;
+	isWaitToFirstAttack_ = false;
+	isDashToFirstAttack_ = false;
 
 }
 
@@ -53,7 +64,41 @@ void Player::Update() {
 
 	Move(); //* 移動処理
 
+	UpdateAnimation(); //* アニメーション設定処理
+
 	BaseAnimationObject::Update();
+
+}
+
+void Player::UpdateAnimation() {
+
+	if (isDashing_ && move_.Length() > 0.001f) {
+
+		// ダッシュ中のAnimationの設定
+		BaseAnimationObject::SwitchAnimation(animationNames_["dash"], false, waitToDashDuration_);
+		return;
+	}
+	if (isJump_ && !isDashing_) {
+
+		// ジャンプAnimationの設定
+		BaseAnimationObject::SwitchAnimation(animationNames_["jump"], false, moveToJumpDuration_);
+		return;
+	}
+	if (!isDashToFirstAttack_ && isWaitToFirstAttack_ && !isDashing_) {
+
+		// 待機中からの最初の攻撃Animation
+		BaseAnimationObject::SwitchAnimation(animationNames_["waitToAttack0"], false, waitToAttackDuration_);
+		return;
+	}
+	if (isDashToFirstAttack_) {
+
+		// ダッシュからの最初の攻撃Animation
+		BaseAnimationObject::SwitchAnimation(animationNames_["dashToAttack0"], false, dashToAttackDuration_);
+		return;
+	}
+
+	// 何もなければここを通って待機Animationになる
+	BaseAnimationObject::SwitchAnimation(animationNames_["wait"], true, moveToWaitDuration_);
 
 }
 
@@ -70,6 +115,14 @@ void Player::Move() {
 		// ジャンプ
 		MoveJump();
 	}
+	if (CheckCurrentMoveBehaviour({ MoveBehaviour::WaitToFirstAttack })) {
+		// 待機からの最初の攻撃
+		WaitToFirstAttack();
+	}
+	if (CheckCurrentMoveBehaviour({ MoveBehaviour::DashToFirstAttack })) {
+		// ダッシュからの最初の攻撃
+		DashToFirstAttack();
+	}
 
 	RotateToDirection();
 
@@ -78,10 +131,12 @@ void Player::Move() {
 void Player::MoveRequest() {
 
 	// Rでダッシュ
-	if (input_->PushGamepadButton(InputGamePadButtons::RIGHT_SHOULDER)) {
+	if (!isDashToFirstAttack_ && !isWaitToFirstAttack_ && !isJump_ &&
+		input_->PushGamepadButton(InputGamePadButtons::RIGHT_SHOULDER)) {
 
 		moveBehaviour_ = MoveBehaviour::Dash;
 	} else {
+		// ダッシュ中にRを離したらダッシュを終わらせる
 		if (isDashing_) {
 
 			currentMoveBehaviours_.erase(MoveBehaviour::Dash);
@@ -90,11 +145,23 @@ void Player::MoveRequest() {
 	}
 
 	// Aでジャンプ
-	if (isOnGround_ && input_->TriggerGamepadButton(InputGamePadButtons::A)) {
+	if (!isDashToFirstAttack_ && !isWaitToFirstAttack_ && !isJump_ &&
+		input_->TriggerGamepadButton(InputGamePadButtons::A)) {
 
 		moveBehaviour_ = MoveBehaviour::Jump;
 	}
+	// Animationが終わればfalseにする
+	if (isJump_) {
+		if (transform_.AnimationFinish()) {
 
+			currentMoveBehaviours_.erase(MoveBehaviour::Jump);
+			isJump_ = false;
+		}
+	}
+
+	AttackRequest(); // 攻撃依頼
+
+	// 行動ビヘイビアが何かあればセットする
 	if (moveBehaviour_) {
 
 		// 同じ値はセットできないようにする
@@ -105,6 +172,49 @@ void Player::MoveRequest() {
 
 		moveBehaviour_ = std::nullopt;
 	}
+}
+
+void Player::AttackRequest() {
+
+	//========================================================================*/
+	// 待機中の攻撃
+	// Xで攻撃
+	// ジャンプをしていないかつなにも攻撃をしていないとき
+	if (!isJump_ && !isWaitToFirstAttack_ && !isDashToFirstAttack_ &&
+		input_->TriggerGamepadButton(InputGamePadButtons::X)) {
+
+		moveBehaviour_ = MoveBehaviour::WaitToFirstAttack;
+	}
+	// Animationが終わればfalseにする
+	if (isWaitToFirstAttack_) {
+		if (transform_.AnimationFinish()) {
+
+			currentMoveBehaviours_.erase(MoveBehaviour::WaitToFirstAttack);
+			isWaitToFirstAttack_ = false;
+		}
+	}
+	//========================================================================*/
+	// ダッシュ中の攻撃
+	// Xで攻撃
+	// ジャンプをしていないかつダッシュ中かつダッシュAnimationが終わっている勝つ何も攻撃していないとき
+	if (!isJump_ && isDashing_ && !isDashToFirstAttack_ && transform_.AnimationFinish() &&
+		input_->TriggerGamepadButton(InputGamePadButtons::X)) {
+
+		moveBehaviour_ = MoveBehaviour::DashToFirstAttack;
+		// ダッシュ移動を取り消す
+		isDashing_ = false;
+		currentMoveBehaviours_.erase(MoveBehaviour::Dash);
+	}
+	// Animationが終わればfalseにする
+	if (isDashToFirstAttack_) {
+		if (transform_.AnimationFinish()) {
+
+			currentMoveBehaviours_.erase(MoveBehaviour::DashToFirstAttack);
+			isDashToFirstAttack_ = false;
+		}
+	}
+	//========================================================================*/
+
 }
 
 void Player::MoveWalk() {
@@ -188,28 +298,22 @@ void Player::MoveDash() {
 
 void Player::MoveJump() {
 
-	if (isOnGround_) {
+	// ジャンプアニメーション開始
+	isJump_ = true;
 
-		// ジャンプ初速度設定
-		velocity_.y = jumpStrength_;
-		isOnGround_ = false;
-	}
+}
 
-	if (!isOnGround_) {
+void Player::WaitToFirstAttack() {
 
-		velocity_.y += gravity * GameTimer::GetScaledDeltaTime();
-		transform_.translation.y += velocity_.y * GameTimer::GetScaledDeltaTime();
+	// 待機からの最初の攻撃アニメーション開始
+	isWaitToFirstAttack_ = true;
 
-		if (transform_.translation.y <= groundY) {
+}
 
-			// ここでジャンプ終了
-			transform_.translation.y = 0.0f;
-			velocity_.y = 0.0f;
-			isOnGround_ = true;
+void Player::DashToFirstAttack() {
 
-			currentMoveBehaviours_.erase(MoveBehaviour::Jump);
-		}
-	}
+	// ダッシュからの最初の攻撃アニメーション開始
+	isDashToFirstAttack_ = true;
 
 }
 
@@ -254,34 +358,20 @@ void Player::DerivedImGui() {
 			ImGui::DragFloat("dashSpeed.end", &dashSpeed_.end, 0.01f);
 			ImGui::DragFloat("dashSpeed.lerpTime", &dashSpeed_.lerpTime, 0.01f);
 			ImGui::Text("currentDahSpeed: %4.1f", dashSpeed_.current);
-			ImGui::DragFloat("jumpStrength", &jumpStrength_, 0.01f);
 
 			ImGui::EndTabItem();
 		}
 		// AnimationTab
 		if (ImGui::BeginTabItem("Animation")) {
-			
-			ImGui::DragFloat("animationDuration", &animationDuration_, 0.01f);
-			if (ImGui::BeginCombo("Animations", currentAnimationKey_.c_str())) {
-				for (auto& kv : animationNames_) {
 
-					const std::string& key = kv.first;
-					const bool isSelected = (currentAnimationKey_ == key);
+			ImGui::DragFloat("waitToDashDuration", &waitToDashDuration_, 0.01f);
+			ImGui::DragFloat("moveToJumpDuration", &moveToJumpDuration_, 0.01f);
+			ImGui::DragFloat("moveToWaitDuration", &moveToWaitDuration_, 0.01f);
+			ImGui::DragFloat("waitToAttackDuration", &waitToAttackDuration_, 0.01f);
+			ImGui::DragFloat("dashToAttackDuration", &dashToAttackDuration_, 0.01f);
 
-					if (ImGui::Selectable(key.c_str(), isSelected)) {
-
-						currentAnimationKey_ = key;
-						BaseAnimationObject::SwitchAnimation(animationNames_[currentAnimationKey_], false, animationDuration_);
-					}
-
-					if (isSelected) {
-
-						ImGui::SetItemDefaultFocus();
-					}
-				}
-				ImGui::EndCombo();
-			}
 			ImGui::Separator();
+
 			transform_.AnimationInfo();
 
 			ImGui::EndTabItem();
@@ -302,8 +392,11 @@ void Player::ApplyJson() {
 	dashSpeed_.start = data["dashSpeed_start"];
 	dashSpeed_.end = data["dashSpeed_end"];
 	dashSpeed_.lerpTime = data["dashSpeed_lerpTime"];
-	jumpStrength_ = data["jumpStrength"];
-	animationDuration_ = data["animationDuration"];
+	waitToDashDuration_ = data["waitToDashDuration"];
+	moveToWaitDuration_ = data["moveToWaitDuration"];
+	moveToJumpDuration_ = data["moveToJumpDuration"];
+	waitToAttackDuration_ = data["waitToAttackDuration"];
+	dashToAttackDuration_ = data["dashToAttackDuration"];
 
 }
 
@@ -317,8 +410,11 @@ void Player::SaveJson() {
 	data["dashSpeed_start"] = dashSpeed_.start;
 	data["dashSpeed_end"] = dashSpeed_.end;
 	data["dashSpeed_lerpTime"] = dashSpeed_.lerpTime;
-	data["jumpStrength"] = jumpStrength_;
-	data["animationDuration"] = animationDuration_;
+	data["waitToDashDuration"] = waitToDashDuration_;
+	data["moveToWaitDuration"] = moveToWaitDuration_;
+	data["moveToJumpDuration"] = moveToJumpDuration_;
+	data["waitToAttackDuration"] = waitToAttackDuration_;
+	data["dashToAttackDuration"] = dashToAttackDuration_;
 
 	JsonAdapter::Save(parentFolderName_.value() + GetName() + "EditParameter.json", data);
 

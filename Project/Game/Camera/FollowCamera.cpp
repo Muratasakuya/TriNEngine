@@ -28,7 +28,7 @@ void FollowCamera::Init(Matrix4x4 projectionMatrix) {
 
 void FollowCamera::Update() {
 
-	if (!target_){
+	if (!target_) {
 		return;
 	}
 
@@ -52,10 +52,18 @@ void FollowCamera::Move() {
 	Vector3 rotate{};
 	rotate.Init();
 
-	rotate.y = Input::GetInstance()->GetRightStickVal().x;
-	eulerRotate_ += rotate.Normalize() / rotateLerpRate_;
-	transform_.rotation = Quaternion::EulerToQuaternion(eulerRotate_);
+	rotate.y = Input::GetInstance()->GetRightStickVal().x; // Y軸回転
+	rotate.x = Input::GetInstance()->GetRightStickVal().y; // X軸回転
+	eulerRotate_.y += rotate.Normalize().y / rotateLerpRate_;
+	eulerRotate_.x += rotate.Normalize().x / 96.0f;
+	if (eulerRotate_.x <= -0.1f) {
+		eulerRotate_.x = -0.1f;
+	}
+	if (eulerRotate_.x >= 0.55f) {
+		eulerRotate_.x = 0.55f;
+	}
 
+	transform_.rotation = Quaternion::EulerToQuaternion(eulerRotate_);
 	interTarget_ = Vector3::Lerp(interTarget_, target_->GetWorldPos(), interLerpRate_);
 
 	Vector3 offset{};
