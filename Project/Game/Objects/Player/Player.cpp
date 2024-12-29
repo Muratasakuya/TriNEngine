@@ -37,10 +37,10 @@ void Player::Init() {
 	parentFolderName_ = "Player/";
 
 	model_->SetTexture("white");
-	transform_.SetNewAnimationData(animationNames_["dash"]);
 
+	// InitAnimation
 	transform_.SetPlayAnimation(animationNames_[currentAnimationKey_], true);
-	model_->SetAnimationName(animationNames_[currentAnimationKey_]);
+	transform_.SetNewAnimationData(animationNames_["dash"]);
 
 	ApplyJson();
 
@@ -191,7 +191,7 @@ void Player::MoveJump() {
 	if (isOnGround_) {
 
 		// ジャンプ初速度設定
-		velocity_.y = jumpStrength;
+		velocity_.y = jumpStrength_;
 		isOnGround_ = false;
 	}
 
@@ -221,52 +221,6 @@ void Player::DerivedImGui() {
 
 	ImGui::Separator();
 
-	if (ImGui::CollapsingHeader("Movement Parameters")) {
-		ImGui::PushItemWidth(144.0f);
-		ImGui::DragFloat("rotationLerpRate", &rotationLerpRate_, 0.01f);
-		ImGui::DragFloat("moveDecay", &moveDecay_, 0.01f);
-		ImGui::DragFloat3("moveVelocity", &velocity_.x, 0.01f);
-		ImGui::DragFloat("dashSpeed.start", &dashSpeed_.start, 0.01f);
-		ImGui::DragFloat("dashSpeed.end", &dashSpeed_.end, 0.01f);
-		ImGui::DragFloat("dashSpeed.lerpTime", &dashSpeed_.lerpTime, 0.01f);
-		ImGui::Text("currentDahSpeed: %4.1f", dashSpeed_.current);
-		ImGui::DragFloat("jumpStrength", &jumpStrength, 0.01f);
-		ImGui::PopItemWidth();
-	}
-	ImGui::Separator();
-
-	// Animation
-	if (ImGui::BeginCombo("Animations", currentAnimationKey_.c_str()))
-	{
-		// animationNames_ の中身をループしながら候補を表示
-		for (auto& kv : animationNames_) {
-
-			const std::string& key = kv.first;
-			const bool isSelected = (currentAnimationKey_ == key);
-
-			if (ImGui::Selectable(key.c_str(), isSelected)) {
-
-				currentAnimationKey_ = key;
-
-				transform_.SwitchAnimation(animationNames_[currentAnimationKey_], false,1.0f);
-				model_->SetAnimationName(animationNames_["walk"]);
-			}
-
-			if (isSelected) {
-
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
-	transform_.AnimationInfo();
-	if (currentAnimationKey_ == "dash") {
-		if (!transform_.IsTransition()) {
-
-			model_->SetAnimationName(animationNames_["dash"]);
-		}
-	}
-
 	// 現在のMoveBehaviour
 	ImGui::Text("Current Move Behaviours:");
 	if (currentMoveBehaviours_.empty()) {
@@ -286,6 +240,55 @@ void Player::DerivedImGui() {
 			}
 		}
 	}
+	ImGui::Separator();
+
+	if (ImGui::BeginTabBar("PlayerTabBar")) {
+
+		// MovementTab
+		if (ImGui::BeginTabItem("Movement")) {
+
+			ImGui::DragFloat("rotationLerpRate", &rotationLerpRate_, 0.01f);
+			ImGui::DragFloat("moveDecay", &moveDecay_, 0.01f);
+			ImGui::DragFloat3("moveVelocity", &velocity_.x, 0.01f);
+			ImGui::DragFloat("dashSpeed.start", &dashSpeed_.start, 0.01f);
+			ImGui::DragFloat("dashSpeed.end", &dashSpeed_.end, 0.01f);
+			ImGui::DragFloat("dashSpeed.lerpTime", &dashSpeed_.lerpTime, 0.01f);
+			ImGui::Text("currentDahSpeed: %4.1f", dashSpeed_.current);
+			ImGui::DragFloat("jumpStrength", &jumpStrength_, 0.01f);
+
+			ImGui::EndTabItem();
+		}
+		// AnimationTab
+		if (ImGui::BeginTabItem("Animation")) {
+			
+			ImGui::DragFloat("animationDuration", &animationDuration_, 0.01f);
+			if (ImGui::BeginCombo("Animations", currentAnimationKey_.c_str())) {
+				for (auto& kv : animationNames_) {
+
+					const std::string& key = kv.first;
+					const bool isSelected = (currentAnimationKey_ == key);
+
+					if (ImGui::Selectable(key.c_str(), isSelected)) {
+
+						currentAnimationKey_ = key;
+						BaseAnimationObject::SwitchAnimation(animationNames_[currentAnimationKey_], false, animationDuration_);
+					}
+
+					if (isSelected) {
+
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::Separator();
+			transform_.AnimationInfo();
+
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
 
 }
 
@@ -299,7 +302,8 @@ void Player::ApplyJson() {
 	dashSpeed_.start = data["dashSpeed_start"];
 	dashSpeed_.end = data["dashSpeed_end"];
 	dashSpeed_.lerpTime = data["dashSpeed_lerpTime"];
-	jumpStrength = data["jumpStrength"];
+	jumpStrength_ = data["jumpStrength"];
+	animationDuration_ = data["animationDuration"];
 
 }
 
@@ -313,7 +317,8 @@ void Player::SaveJson() {
 	data["dashSpeed_start"] = dashSpeed_.start;
 	data["dashSpeed_end"] = dashSpeed_.end;
 	data["dashSpeed_lerpTime"] = dashSpeed_.lerpTime;
-	data["jumpStrength"] = jumpStrength;
+	data["jumpStrength"] = jumpStrength_;
+	data["animationDuration"] = animationDuration_;
 
 	JsonAdapter::Save(parentFolderName_.value() + GetName() + "EditParameter.json", data);
 

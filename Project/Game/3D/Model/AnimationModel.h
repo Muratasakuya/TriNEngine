@@ -26,6 +26,12 @@ public:
 	void Draw(AnimationTransform transform, MaterialBuffer material, RendererPipelineType pipeline);
 	void DrawShadowDepth(AnimationTransform transform);
 
+	void SetComputeCommands();
+
+	//* getter *//
+
+	std::string GetAnimationName() const { return animationName_; }
+
 	//* setter *//
 
 	void SetAnimationName(const std::string& animationName) { animationName_ = animationName; }
@@ -48,10 +54,5 @@ private:
 	OutputVertexBuffer outputVertices_;
 	// SkinningInfo
 	SkinningInfoData skinningInfoDates_;
-
-	//========================================================================*/
-	//* functions
-
-	void SetComputeCommands(const std::string& animationName);
 
 };

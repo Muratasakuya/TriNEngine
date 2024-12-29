@@ -28,8 +28,6 @@ void AnimationModel::Draw(AnimationTransform transform, MaterialBuffer material,
 
 	auto commandList = GraphicsEngine::GetCommand()->GetCommandList();
 
-	SetComputeCommands(animationName_);
-
 	// D3D12_RESOURCE_STATE_UNORDERED_ACCESS -> D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
 	GraphicsEngine::GetCommand()->TransitionBarrier(
 		outputVertices_.GetResource(),
@@ -68,8 +66,6 @@ void AnimationModel::DrawShadowDepth(AnimationTransform transform) {
 
 	auto commandList = GraphicsEngine::GetCommand()->GetCommandList();
 
-	SetComputeCommands(animationName_);
-
 	// D3D12_RESOURCE_STATE_UNORDERED_ACCESS -> D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER
 	GraphicsEngine::GetCommand()->TransitionBarrier(
 		outputVertices_.GetResource(),
@@ -92,16 +88,16 @@ void AnimationModel::DrawShadowDepth(AnimationTransform transform) {
 
 }
 
-void AnimationModel::SetComputeCommands(const std::string& animationName) {
+void AnimationModel::SetComputeCommands() {
 
 	auto commandList = GraphicsEngine::GetCommand()->GetCommandList();
 
 	GraphicsEngine::GetPipeline()->SetComputePipeline(commandList, SkinningCS);
 	commandList->SetComputeRootDescriptorTable(0,
-		Asset::GetModel()->GetSkinClusterData(animationName).paletteSrvHandle.second);
+		Asset::GetModel()->GetSkinClusterData(animationName_).paletteSrvHandle.second);
 	commandList->SetComputeRootDescriptorTable(1, inputVertices_.GetGpuHandle());
 	commandList->SetComputeRootDescriptorTable(2,
-		Asset::GetModel()->GetSkinClusterData(animationName).influenceSrvHandle.second);
+		Asset::GetModel()->GetSkinClusterData(animationName_).influenceSrvHandle.second);
 	commandList->SetComputeRootDescriptorTable(3, outputVertices_.GetGpuHandle());
 	commandList->SetComputeRootConstantBufferView(4, skinningInfoDates_.GetResource()->GetGPUVirtualAddress());
 	// Compute起動

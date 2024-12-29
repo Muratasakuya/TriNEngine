@@ -72,6 +72,9 @@ void AnimationTransform::Init(const std::string& modelName, const std::string& a
 
 	modelData_ = Asset::GetModel()->GetModelData(modelName);
 
+	// Init
+	transitionDuration_ = 0.4f;
+
 }
 
 void AnimationTransform::Update() {
@@ -113,22 +116,6 @@ void AnimationTransform::Update() {
 			alpha = 1.0f;
 		}
 
-		oldAnimationTimer_ += deltaTime;
-		if (roopAnimation_) {
-			oldAnimationTimer_ = std::fmod(oldAnimationTimer_, animationData_[oldAnimationName_].duration);
-		}
-		if (oldAnimationTimer_ >= animationData_[oldAnimationName_].duration) {
-			oldAnimationTimer_ = animationData_[oldAnimationName_].duration;
-		}
-
-		nextAnimationTimer_ += deltaTime;
-		if (roopAnimation_) {
-			nextAnimationTimer_ = std::fmod(nextAnimationTimer_, animationData_[nextAnimationName_].duration);
-		}
-		if (nextAnimationTimer_ >= animationData_[nextAnimationName_].duration) {
-			nextAnimationTimer_ = animationData_[nextAnimationName_].duration;
-		}
-
 		// AnimationをBlendして更新する
 		Asset::GetModel()->BlendAnimation(skeleton_[oldAnimationName_].value().name,oldAnimationTimer_,
 			skeleton_[nextAnimationName_].value().name,nextAnimationTimer_,alpha);
@@ -163,8 +150,13 @@ void AnimationTransform::AnimationInfo() {
 	if (ImGui::Button("Restart")) {
 		currentAnimationTimer_ = 0.0f;
 	}
-	float progress = currentAnimationTimer_ / animationData_[currentAnimationName_].duration;
-	ImGui::ProgressBar(progress);
+	float animationProgress = currentAnimationTimer_ / animationData_[currentAnimationName_].duration;
+	ImGui::Text("Animation Progress ");
+	ImGui::ProgressBar(animationProgress);
+	ImGui::Separator();
+	float transitionProgress = transitionTimer_ / transitionDuration_;
+	ImGui::Text("Transition Progress ");
+	ImGui::ProgressBar(transitionProgress);
 }
 
 void AnimationTransform::SetPlayAnimation(const std::string& animationName, bool roopAnimation) {

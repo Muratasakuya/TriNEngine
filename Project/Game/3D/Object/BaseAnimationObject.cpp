@@ -26,15 +26,33 @@ void BaseAnimationObject::Init(const std::string& modelName, const std::string& 
 		material.properties.enableLighting = true;
 		material.properties.enableHalfLambert = true;
 	}
+
+	isTransitioning_ = false;
+
 }
 
 void BaseAnimationObject::Update() {
 
 	transform_.Update();
+	// dispatch
+	model_->SetComputeCommands();
+
 	for (auto& material : materials_) {
 
 		material.Update();
 	}
+
+	if (isTransitioning_) {
+		if (!transform_.IsTransition()) {
+
+			// Animation遷移完了
+			model_->SetAnimationName(nextAnimationKey_);
+
+			currentAnimationKey_ = nextAnimationKey_;
+			isTransitioning_ = false;
+		}
+	}
+
 }
 
 void BaseAnimationObject::Draw(RendererPipelineType pipeline) {
@@ -45,6 +63,18 @@ void BaseAnimationObject::Draw(RendererPipelineType pipeline) {
 void BaseAnimationObject::DrawShadowDepth() {
 
 	model_->DrawShadowDepth(transform_);
+}
+
+void BaseAnimationObject::SwitchAnimation(
+	const std::string& animationKey, bool loopAnimation, float transitionDuration) {
+
+	// 次のAnimationの名前を保持
+	nextAnimationKey_ = animationKey;
+
+	// 遷移開始
+	transform_.SwitchAnimation(animationKey, loopAnimation, transitionDuration);
+	isTransitioning_ = true;
+
 }
 
 void BaseAnimationObject::TransformImGui() {
@@ -60,12 +90,6 @@ void BaseAnimationObject::TransformImGui() {
 
 		ImGui::TreePop();
 	}
-}
-
-void BaseAnimationObject::SetAnimation(const std::string& animationName, bool roopAnimation) {
-
-	transform_.SetPlayAnimation(animationName, roopAnimation);
-	model_->SetAnimationName(animationName);
 }
 
 void BaseAnimationObject::SetWorldTransform(const AnimationTransform& transform) {

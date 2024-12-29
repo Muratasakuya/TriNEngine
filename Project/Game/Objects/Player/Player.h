@@ -77,6 +77,8 @@ private:
 	std::unordered_map<std::string, std::string> animationNames_;
 	std::string currentAnimationKey_;
 
+	float animationDuration_;
+
 	//* base *//
 
 	Vector3 velocity_; //* 移動速度
@@ -91,7 +93,7 @@ private:
 
 	//* jump *//
 
-	float jumpStrength; //* ジャンプ力
+	float jumpStrength_; //* ジャンプ力
 
 	//* bool *//
 

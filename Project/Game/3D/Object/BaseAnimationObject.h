@@ -28,6 +28,10 @@ public:
 	virtual void Draw(RendererPipelineType pipeline) override;
 	virtual void DrawShadowDepth() override;
 
+	void SwitchAnimation(const std::string& animationKey,
+		bool loopAnimation,
+		float transitionDuration);
+
 	//* imgui *//
 
 	void TransformImGui() override;
@@ -39,8 +43,6 @@ public:
 	virtual void SaveJson() override {};
 
 	//* setter *//
-
-	void SetAnimation(const std::string& animationName, bool roopAnimation);
 
 	void SetWorldTransform(const AnimationTransform& transform);
 
@@ -61,5 +63,18 @@ protected:
 	std::unique_ptr<AnimationModel> model_;
 
 	AnimationTransform transform_;
+
+private:
+	//===================================================================*/
+	//							private Methods
+	//===================================================================*/
+
+	//===================================================================*/
+	///* variables
+
+	std::string currentAnimationKey_;
+	std::string nextAnimationKey_;
+
+	bool isTransitioning_ = false;
 
 };

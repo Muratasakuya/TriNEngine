@@ -1,24 +1,14 @@
 {
+    "animationDuration": 0.20000000298023224,
     "dashSpeed_end": 1.7999999523162842,
     "dashSpeed_lerpTime": 1.5,
     "dashSpeed_start": 3.4000000953674316,
-    "headYOffset": 1.149999976158142,
     "jumpStrength": 5.599999904632568,
-    "leftArmOffset": {
-        "x": -0.5,
-        "y": 1.149999976158142,
-        "z": 0.0
-    },
     "moveDecay": 0.8999999761581421,
     "moveVelocity": {
         "x": 0.15000000596046448,
         "y": 0.0,
         "z": 0.15000000596046448
-    },
-    "rightArmOffset": {
-        "x": 0.5,
-        "y": 1.149999976158142,
-        "z": 0.0
     },
     "rotationLerpRate": 0.30000001192092896
 }
