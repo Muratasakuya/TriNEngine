@@ -6,6 +6,9 @@
 #include <Engine/Process/Input.h>
 #include <Game/3D/Object/BaseAnimationObject.h>
 
+// Collider
+#include <Game/Objects/Player/Collision/PlayerAttackCollider.h>
+
 // c++
 #include <memory>
 #include <optional>
@@ -31,11 +34,19 @@ public:
 
 	void Update();
 
+	void Draw(RendererPipelineType pipeline) override;
+
 	//* imgui *//
 
 	void DerivedImGui() override;
 
 	//* getter *//
+
+	bool IsWaitToFirstAttack() const { return isWaitToFirstAttack_; }
+
+	bool IsWaitToSecondAttack() const { return isWaitToSecondAttackEnable_; }
+
+	bool IsWaitToThirdAttack() const { return isWaitToThirdAttackEnable_; }
 
 private:
 	//========================================================================*/
@@ -77,6 +88,8 @@ private:
 	Input* input_ = nullptr;
 	FollowCamera* followCamera_ = nullptr;
 
+	std::unique_ptr<PlayerAttackCollider> attackCollider_;
+
 	std::optional<MoveBehaviour> moveBehaviour_;              //* 依頼移動ビヘイビア
 	std::unordered_set<MoveBehaviour> currentMoveBehaviours_; //* 現在の移動ビヘイビア
 
@@ -106,6 +119,8 @@ private:
 	LerpValue dashSpeed_; //* ダッシュ速度
 
 	//* bool *//
+
+	bool isDrawDebugCollider_; //* 攻撃用Colliderの描画有無
 
 	bool isDashing_;           //* ダッシュしたかどうか
 	bool isJump_;              //* ジャンプしたかどうか

@@ -113,6 +113,9 @@
     <ClCompile Include="Engine\DXClass\DXCommand.cpp" />
     <ClCompile Include="Game\Utility\GameTimer.cpp" />
     <ClCompile Include="Game\Objects\Test\Cube.cpp" />
+    <ClCompile Include="Game\Objects\Player\Collision\PlayerAttackCollider.cpp" />
+    <ClCompile Include="Game\Objects\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\Objects\Enemy\Manager\EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -191,5 +194,8 @@
     <ClInclude Include="Engine\DXClass\DXCommand.h" />
     <ClInclude Include="Game\Utility\GameTimer.h" />
     <ClInclude Include="Game\Objects\Test\Cube.h" />
+    <ClInclude Include="Game\Objects\Player\Collision\PlayerAttackCollider.h" />
+    <ClInclude Include="Game\Objects\Enemy\Enemy.h" />
+    <ClInclude Include="Game\Objects\Enemy\Manager\EnemyManager.h" />
   </ItemGroup>
 </Project>

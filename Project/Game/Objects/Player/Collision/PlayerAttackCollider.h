@@ -3,33 +3,29 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/Scenes/Methods/IScene.h>
+#include <Game/3D/Collision/Collider.h>
 
-// object
-#include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Player/Player.h>
-#include <Game/Objects/Enemy/Manager/EnemyManager.h>
-
-// c++
-#include <string>
-#include <memory>
+// front
+class Player;
 
 //============================================================================*/
-//	GameScene class
+//	PlayerAttackCollider class
 //============================================================================*/
-class GameScene :
-	public IScene {
+class PlayerAttackCollider :
+	public Collider {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	GameScene() = default;
-	~GameScene() = default;
+	PlayerAttackCollider() = default;
+	~PlayerAttackCollider() = default;
 
-	void Init() override;
+	void Init(Player* player);
 
-	void Update() override;
+	void Update();
+
+	void ImGui();
 
 private:
 	//========================================================================*/
@@ -37,17 +33,31 @@ private:
 	//========================================================================*/
 
 	//========================================================================*/
-	//* variables
+	//* structure
 
-	std::unique_ptr<Field> field_;
+	// 攻撃ごとのParameter
+	struct Parameter {
 
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EnemyManager> enemyManager_;
+		float offsetY;       // yをずらす
+		float offsetForward; // 前方方向のオフセット
+		Vector3 size;        // 大きさ
+	};
 
 	//========================================================================*/
-	//* function
+	//* variables
 
-	void LoadAssets();
+	Player* player_;
+
+	// 各攻撃ごとのParameter
+	Parameter firstParameter_;
+	Parameter secondParameter_;
+	Parameter thirdParameter_;
+
+	//========================================================================*/
+	//* functions
+
+	// json
+	void ApplyJson();
+	void SaveJson();
 
 };

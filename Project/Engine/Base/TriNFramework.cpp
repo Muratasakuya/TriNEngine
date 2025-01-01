@@ -71,6 +71,8 @@ void TriNFramework::Draw() {
 
 	graphicsEngine_->EndRenderFrame();
 
+	gameSystem_->Reset();
+
 	sceneManager_->SwitchScene();
 
 }
@@ -81,10 +83,13 @@ void TriNFramework::Finalize() {
 	Asset::Finalize();
 	PrimitiveDrawer::Finalize();
 	Input::Finalize();
-	gameSystem_->Finalize();
 
 	graphicsEngine_.reset();
-	gameSystem_.reset();
+
+	sceneManager_->Finalize();
 	sceneManager_.reset();
+
+	gameSystem_->Finalize();
+	gameSystem_.reset();
 
 }

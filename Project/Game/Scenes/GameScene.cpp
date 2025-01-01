@@ -38,6 +38,9 @@ void GameScene::Init() {
 	player_ = std::make_unique<Player>();
 	player_->Init();
 
+	enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_->Init();
+
 	GameSystem::GameCamera()->GetFollowCamera()->SetTarget(&player_->GetWorldTransform());
 
 }
@@ -49,5 +52,7 @@ void GameScene::Update() {
 	field_->Update();
 
 	player_->Update();
+
+	enemyManager_->Update();
 
 }

@@ -191,7 +191,7 @@ void CollisionManager::UpdateExitLog(Collider* colliderA, Collider* colliderB) {
 
 bool CollisionManager::IsColliding(Collider* colliderA, Collider* colliderB) {
 
-	//* Type &6 Center *//
+	//* Type && Center *//
 
 	const auto& shapeA = colliderA->GetCollisionShape();
 	const auto& shapeB = colliderB->GetCollisionShape();
@@ -210,6 +210,9 @@ bool CollisionManager::IsColliding(Collider* colliderA, Collider* colliderB) {
 		} else if constexpr (std::is_same_v<ShapeTypeA, CollisionShapes::Sphere> && std::is_same_v<ShapeTypeB, CollisionShapes::OBB>) {
 
 			return SphereToOBB(shapeA, shapeB, centerA);
+		} else if constexpr (std::is_same_v<ShapeTypeA, CollisionShapes::OBB> && std::is_same_v<ShapeTypeB, CollisionShapes::Sphere>) {
+
+			return SphereToOBB(shapeB, shapeA, centerB);
 		} else if constexpr (std::is_same_v<ShapeTypeA, CollisionShapes::OBB> && std::is_same_v<ShapeTypeB, CollisionShapes::OBB>) {
 
 			return OBBToOBB(shapeA, shapeB);

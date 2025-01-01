@@ -28,6 +28,8 @@ public:
 
 	void SetNextScene(const std::string& sceneName);
 
+	void Finalize();
+
 	//* imgui *//
 
 	void ImGui();

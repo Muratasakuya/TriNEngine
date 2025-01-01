@@ -62,6 +62,14 @@ void Player::Init() {
 	isWaitToSecondAttackEnable_ = false;
 	isWaitToThirdAttackEnable_ = false;
 
+	//========================================================================*/
+	//* collision *//
+
+	isDrawDebugCollider_ = true;
+
+	attackCollider_ = std::make_unique<PlayerAttackCollider>();
+	attackCollider_->Init(this);
+
 }
 
 void Player::Update() {
@@ -71,6 +79,18 @@ void Player::Update() {
 	UpdateAnimation(); //* アニメーション設定処理
 
 	BaseAnimationObject::Update();
+
+	attackCollider_->Update();
+
+}
+
+void Player::Draw(RendererPipelineType pipeline) {
+
+	BaseAnimationObject::Draw(pipeline);
+
+	if (isDrawDebugCollider_) {
+		attackCollider_->DrawCollider();
+	}
 
 }
 
@@ -257,6 +277,10 @@ void Player::MoveWalk() {
 	if (isDashing_) {
 		return;
 	}
+	// 攻撃中は移動不可
+	if (isWaitToFirstAttack_ || isWaitToSecondAttackEnable_ || isWaitToThirdAttackEnable_) {
+		return;
+	}
 
 	Vector2 leftStickVal = input_->GetLeftStickVal();
 
@@ -401,6 +425,14 @@ void Player::DerivedImGui() {
 			ImGui::Separator();
 
 			transform_.AnimationInfo();
+
+			ImGui::EndTabItem();
+		}
+		// CollisionTab
+		if (ImGui::BeginTabItem("AttackCollider")) {
+
+			ImGui::Checkbox("isDrawDebugCollider", &isDrawDebugCollider_);
+			attackCollider_->ImGui();
 
 			ImGui::EndTabItem();
 		}

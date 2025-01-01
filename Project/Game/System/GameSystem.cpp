@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Process/Input.h>
+#include <Game/3D/PrimitiveDrawer.h>
 #include <Game/Utility/GameTimer.h>
 
 //============================================================================*/
@@ -32,6 +33,8 @@ void GameSystem::Update() {
 
 	Input::GetInstance()->Update();
 
+	PrimitiveDrawer::GetInstance()->Update();
+
 	collisionManager_->UpdateAllCollisions();
 
 	cameraManager_->Update();
@@ -46,4 +49,9 @@ void GameSystem::Finalize() {
 	cameraManager_.reset();
 	lightManager_.reset();
 
+}
+
+void GameSystem::Reset() {
+
+	PrimitiveDrawer::GetInstance()->Reset();
 }

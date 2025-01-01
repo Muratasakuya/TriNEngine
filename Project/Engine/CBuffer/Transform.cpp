@@ -34,6 +34,36 @@ Vector3 BaseTransform::GetWorldPos() const {
 	return worldPos;
 }
 
+Vector3 BaseTransform::GetForward() const {
+
+	return Vector3(matrix.world.m[2][0], matrix.world.m[2][1], matrix.world.m[2][2]).Normalize();
+}
+
+Vector3 BaseTransform::GetBack() const {
+
+	return Vector3(-GetForward().x, -GetForward().y, -GetForward().z);
+}
+
+Vector3 BaseTransform::GetRight() const {
+
+	return Vector3(matrix.world.m[0][0], matrix.world.m[0][1], matrix.world.m[0][2]).Normalize();
+}
+
+Vector3 BaseTransform::GetLeft() const {
+
+	return Vector3(-GetRight().x, -GetRight().y, -GetRight().z);
+}
+
+Vector3 BaseTransform::GetUp() const {
+
+	return Vector3(matrix.world.m[1][0], matrix.world.m[1][1], matrix.world.m[1][2]).Normalize();
+}
+
+Vector3 BaseTransform::GetDown() const {
+
+	return Vector3(-GetUp().x, -GetUp().y, -GetUp().z);
+}
+
 //============================================================================*/
 //	WorldTransform classMethods
 //============================================================================*/
@@ -114,7 +144,7 @@ void AnimationTransform::Update() {
 	// 遷移中のAnimation再生
 	//============================================================================*/
 	else {
-		
+
 		// 遷移時間を進める
 		transitionTimer_ += deltaTime;
 		float alpha = transitionTimer_ / transitionDuration_;
@@ -123,8 +153,8 @@ void AnimationTransform::Update() {
 		}
 
 		// AnimationをBlendして更新する
-		Asset::GetModel()->BlendAnimation(skeleton_[oldAnimationName_].value().name,oldAnimationTimer_,
-			skeleton_[nextAnimationName_].value().name,nextAnimationTimer_,alpha);
+		Asset::GetModel()->BlendAnimation(skeleton_[oldAnimationName_].value().name, oldAnimationTimer_,
+			skeleton_[nextAnimationName_].value().name, nextAnimationTimer_, alpha);
 		Asset::GetModel()->SkeletonUpdate(skeleton_[oldAnimationName_].value().name);
 		Asset::GetModel()->SkinClusterUpdate(skeleton_[oldAnimationName_].value().name);
 

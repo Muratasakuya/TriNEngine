@@ -15,8 +15,11 @@
 //============================================================================*/
 
 enum class ColliderType {
-	Type_None = 0,        // ビットが立っていない状態
-	Type_Test = 1 << 0,
+
+	Type_None         = 0,      // ビットが立っていない状態
+	Type_Test         = 1 << 0, // テスト
+	Type_PlayerAttack = 1 << 1, // プレイヤーの攻撃
+	Type_Enemy        = 1 << 2, // 敵
 };
 
 // operator
@@ -47,7 +50,7 @@ public:
 	//========================================================================*/
 
 	Collider() = default;
-	virtual ~Collider() = default;
+	virtual ~Collider();
 
 	virtual void OnCollisionEnter([[maybe_unused]] Collider* other) {};
 
@@ -55,10 +58,11 @@ public:
 
 	virtual void OnCollisionExit([[maybe_unused]] Collider* other) {};
 
-	void SetCollisionShapeSphere();
+	void SetCollisionShapeSphere(const CollisionShapes::Sphere& sphere = CollisionShapes::Sphere::Default());
 
-	void SetCollisionShapeOBB();
+	void SetCollisionShapeOBB(const CollisionShapes::OBB& obb = CollisionShapes::OBB::Default());
 
+	void SphereUpdate();
 	void OBBUpdate();
 
 	void DrawCollider();
@@ -89,6 +93,8 @@ protected:
 
 	Quaternion rotate_; //* OBB衝突用の回転
 	Vector3 size_;      //* OBB衝突用の大きさ
+
+	float radius_; //* 円衝突用の大きさ
 
 	ColliderType type_;       //* 自身のタイプ
 	ColliderType targetType_; //* 衝突相手のタイプ

@@ -71,6 +71,18 @@ public:
 
 	virtual Vector3 GetWorldPos() const;
 
+	virtual Vector3 GetForward() const;
+
+	virtual Vector3 GetBack() const;
+
+	virtual Vector3 GetRight() const;
+
+	virtual Vector3 GetLeft() const;
+
+	virtual Vector3 GetUp() const;
+
+	virtual Vector3 GetDown() const;
+
 	//========================================================================*/
 	//* variables
 

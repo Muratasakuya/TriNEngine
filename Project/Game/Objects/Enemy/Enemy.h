@@ -3,33 +3,35 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/Scenes/Methods/IScene.h>
-
-// object
-#include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Player/Player.h>
-#include <Game/Objects/Enemy/Manager/EnemyManager.h>
-
-// c++
-#include <string>
-#include <memory>
+#include <Game/3D/Object/BaseGameObject.h>
+#include <Game/3D/Collision/Collider.h>
 
 //============================================================================*/
-//	GameScene class
+//	Enemy class
 //============================================================================*/
-class GameScene :
-	public IScene {
+class Enemy :
+	public BaseGameObject, Collider {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	GameScene() = default;
-	~GameScene() = default;
+	Enemy() = default;
+	~Enemy() = default;
 
-	void Init() override;
+	void Init(uint32_t index);
 
-	void Update() override;
+	void Update();
+
+	void Draw(RendererPipelineType pipeline) override;
+
+	//* collision *//
+
+	void OnCollisionEnter([[maybe_unused]] Collider* other) override;
+	
+	//* getter *//
+
+	bool IsAlive() const { return isAlive_; }
 
 private:
 	//========================================================================*/
@@ -39,15 +41,6 @@ private:
 	//========================================================================*/
 	//* variables
 
-	std::unique_ptr<Field> field_;
-
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EnemyManager> enemyManager_;
-
-	//========================================================================*/
-	//* function
-
-	void LoadAssets();
+	bool isAlive_;
 
 };

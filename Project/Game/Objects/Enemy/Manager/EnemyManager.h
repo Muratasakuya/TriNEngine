@@ -3,33 +3,31 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/Scenes/Methods/IScene.h>
-
-// object
-#include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Player/Player.h>
-#include <Game/Objects/Enemy/Manager/EnemyManager.h>
+#include <Game/Editor/Base/BaseEditor.h>
+#include <Game/Objects/Enemy/Enemy.h>
 
 // c++
-#include <string>
 #include <memory>
+#include <list>
 
 //============================================================================*/
-//	GameScene class
+//	EnemyManager class
 //============================================================================*/
-class GameScene :
-	public IScene {
+class EnemyManager :
+	public BaseEditor {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	GameScene() = default;
-	~GameScene() = default;
+	EnemyManager() = default;
+	~EnemyManager() = default;
 
-	void Init() override;
+	void Init();
 
-	void Update() override;
+	void Update();
+
+	void ImGui() override;
 
 private:
 	//========================================================================*/
@@ -39,15 +37,7 @@ private:
 	//========================================================================*/
 	//* variables
 
-	std::unique_ptr<Field> field_;
-
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EnemyManager> enemyManager_;
-
-	//========================================================================*/
-	//* function
-
-	void LoadAssets();
+	std::list<std::unique_ptr<Enemy>> enemies_;
+	uint32_t enemyIndex_;
 
 };

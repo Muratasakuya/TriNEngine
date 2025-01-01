@@ -47,6 +47,10 @@ void SceneManager::SetNextScene(const std::string& sceneName) {
 	isSceneSwitching_ = true;
 }
 
+void SceneManager::Finalize() {
+	currentScene_.reset();
+}
+
 void SceneManager::LoadScene(const std::string& sceneName) {
 
 	currentScene_.reset();
