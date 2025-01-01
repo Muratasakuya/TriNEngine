@@ -61,13 +61,14 @@ private:
 	// 移動
 	enum class MoveBehaviour {
 
-		// Move
+		// 移動
 		Dash,              // ダッシュ
 		Jump,              // ジャンプ
 
-		// Attack
-		WaitToFirstAttack, // 待機からの最初の攻撃
-		DashToFirstAttack, // ダッシュからの最初の攻撃
+		// 攻撃
+		WaitToFirstAttack,  // 待機からの最初の攻撃
+		WaitToSecondAttack, // 最初の攻撃からの2回目の攻撃
+		WaitToThirdAttack,  // 2回目の攻撃からの3回目の攻撃
 	};
 
 	//========================================================================*/
@@ -82,11 +83,15 @@ private:
 	std::unordered_map<std::string, std::string> animationNames_;
 	std::string currentAnimationKey_;
 
+	// 移動
 	float waitToDashDuration_;   //* 待機         -> ダッシュ
-	float waitToAttackDuration_; //* 待機         -> 最初の攻撃
-	float dashToAttackDuration_; //* ダッシュ      -> 最初の攻撃
 	float moveToJumpDuration_;   //* 何かしらの動き -> ジャンプ
 	float moveToWaitDuration_;   //* 何かしらの動き -> 待機
+
+	// 攻撃
+	float waitToAttackDuration_;       //* 待機       -> 最初の攻撃
+	float waitToSecondAttackDuration_; //* 最初の攻撃  -> 2回目の攻撃
+	float waitToThirdAttackDuration_;  //* 2回目の攻撃 -> 3回目の攻撃
 
 	//* base *//
 
@@ -104,8 +109,10 @@ private:
 
 	bool isDashing_;           //* ダッシュしたかどうか
 	bool isJump_;              //* ジャンプしたかどうか
-	bool isWaitToFirstAttack_; //* 待機からの最初の攻撃をしたかどうか
-	bool isDashToFirstAttack_; //* ダッシュからの最初の攻撃をしたかどうか
+
+	bool isWaitToFirstAttack_;        //* 待機からの最初の攻撃をしたかどうか
+	bool isWaitToSecondAttackEnable_; //* 二回目の攻撃を行うかどうか
+	bool isWaitToThirdAttackEnable_;  //* 三回目の攻撃を行うかどうか
 
 	//========================================================================*/
 	//* functions
@@ -127,7 +134,6 @@ private:
 	//* attack
 
 	void WaitToFirstAttack(); //* 待機からの最初の攻撃
-	void DashToFirstAttack(); //* ダッシュからの最初の攻撃
 
 	//====================================*/
 	//* other

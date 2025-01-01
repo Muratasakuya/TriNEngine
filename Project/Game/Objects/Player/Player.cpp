@@ -27,16 +27,17 @@ void Player::Init() {
 	const std::string modelName = "player.gltf";
 	animationNames_ = {
 
-		// Move
+		// 待機、移動
 		{"wait", "player_Wait"},
 		{"dash", "player_Dash"},
 		{"jump", "player_Jump"},
 
-		// Attack
+		// 待機状態からの攻撃コンボ
 		{"waitToAttack0", "player_WaitToAttack0"},
-		{"dashToAttack0", "player_DashToAttack0"},
+		{"waitToAttack1", "player_WaitToAttack1"},
+		{"waitToAttack2", "player_WaitToAttack2"},
 	};
-	currentAnimationKey_ = "wait";
+	currentAnimationKey_ = "wait"; //* 初期状態を設定
 
 	BaseAnimationObject::Init(modelName, animationNames_[currentAnimationKey_]);
 	BaseAnimationObject::SetMeshRenderer("player");
@@ -49,14 +50,17 @@ void Player::Init() {
 	transform_.SetNewAnimationData(animationNames_["dash"]);
 	transform_.SetNewAnimationData(animationNames_["jump"]);
 	transform_.SetNewAnimationData(animationNames_["waitToAttack0"]);
-	transform_.SetNewAnimationData(animationNames_["dashToAttack0"]);
+	transform_.SetNewAnimationData(animationNames_["waitToAttack1"]);
+	transform_.SetNewAnimationData(animationNames_["waitToAttack2"]);
 
 	ApplyJson();
 
 	isDashing_ = false;
 	isJump_ = false;
+
 	isWaitToFirstAttack_ = false;
-	isDashToFirstAttack_ = false;
+	isWaitToSecondAttackEnable_ = false;
+	isWaitToThirdAttackEnable_ = false;
 
 }
 
@@ -84,16 +88,22 @@ void Player::UpdateAnimation() {
 		BaseAnimationObject::SwitchAnimation(animationNames_["jump"], false, moveToJumpDuration_);
 		return;
 	}
-	if (!isDashToFirstAttack_ && isWaitToFirstAttack_ && !isDashing_) {
+	if (isWaitToFirstAttack_ && !isDashing_) {
 
 		// 待機中からの最初の攻撃Animation
 		BaseAnimationObject::SwitchAnimation(animationNames_["waitToAttack0"], false, waitToAttackDuration_);
 		return;
 	}
-	if (isDashToFirstAttack_) {
+	if (isWaitToSecondAttackEnable_ && !isWaitToFirstAttack_) {
 
-		// ダッシュからの最初の攻撃Animation
-		BaseAnimationObject::SwitchAnimation(animationNames_["dashToAttack0"], false, dashToAttackDuration_);
+		// 待機中からの2回目の攻撃Animation
+		BaseAnimationObject::SwitchAnimation(animationNames_["waitToAttack1"], false, waitToSecondAttackDuration_);
+		return;
+	}
+	if (isWaitToThirdAttackEnable_ && !isWaitToSecondAttackEnable_) {
+
+		// 待機中からの3回目の攻撃Animation
+		BaseAnimationObject::SwitchAnimation(animationNames_["waitToAttack2"], false, waitToThirdAttackDuration_);
 		return;
 	}
 
@@ -119,10 +129,6 @@ void Player::Move() {
 		// 待機からの最初の攻撃
 		WaitToFirstAttack();
 	}
-	if (CheckCurrentMoveBehaviour({ MoveBehaviour::DashToFirstAttack })) {
-		// ダッシュからの最初の攻撃
-		DashToFirstAttack();
-	}
 
 	RotateToDirection();
 
@@ -131,8 +137,8 @@ void Player::Move() {
 void Player::MoveRequest() {
 
 	// Rでダッシュ
-	if (!isDashToFirstAttack_ && !isWaitToFirstAttack_ && !isJump_ &&
-		input_->PushGamepadButton(InputGamePadButtons::RIGHT_SHOULDER)) {
+	if (!isWaitToFirstAttack_ && !isWaitToSecondAttackEnable_ && !isWaitToThirdAttackEnable_ &&
+		!isJump_ && input_->PushGamepadButton(InputGamePadButtons::RIGHT_SHOULDER)) {
 
 		moveBehaviour_ = MoveBehaviour::Dash;
 	} else {
@@ -145,10 +151,12 @@ void Player::MoveRequest() {
 	}
 
 	// Aでジャンプ
-	if (!isDashToFirstAttack_ && !isWaitToFirstAttack_ && !isJump_ &&
-		input_->TriggerGamepadButton(InputGamePadButtons::A)) {
+	if (!isJump_ && input_->TriggerGamepadButton(InputGamePadButtons::A)) {
 
 		moveBehaviour_ = MoveBehaviour::Jump;
+		// ダッシュ移動を取り消す
+		isDashing_ = false;
+		currentMoveBehaviours_.erase(MoveBehaviour::Dash);
 	}
 	// Animationが終わればfalseにする
 	if (isJump_) {
@@ -180,7 +188,7 @@ void Player::AttackRequest() {
 	// 待機中の攻撃
 	// Xで攻撃
 	// ジャンプをしていないかつなにも攻撃をしていないとき
-	if (!isJump_ && !isWaitToFirstAttack_ && !isDashToFirstAttack_ &&
+	if (!isJump_ && !isWaitToFirstAttack_ && !isWaitToSecondAttackEnable_ && !isWaitToThirdAttackEnable_ &&
 		input_->TriggerGamepadButton(InputGamePadButtons::X)) {
 
 		moveBehaviour_ = MoveBehaviour::WaitToFirstAttack;
@@ -191,29 +199,55 @@ void Player::AttackRequest() {
 
 			currentMoveBehaviours_.erase(MoveBehaviour::WaitToFirstAttack);
 			isWaitToFirstAttack_ = false;
+
+			// 最初の攻撃が終わったときに次の攻撃フラグがたっていれば
+			if (isWaitToSecondAttackEnable_) {
+
+				moveBehaviour_ = MoveBehaviour::WaitToSecondAttack;
+				return;
+			}
+		}
+
+		// 2回目の攻撃予約
+		if (input_->TriggerGamepadButton(InputGamePadButtons::X)) {
+
+			isWaitToSecondAttackEnable_ = true;
 		}
 	}
-	//========================================================================*/
-	// ダッシュ中の攻撃
-	// Xで攻撃
-	// ジャンプをしていないかつダッシュ中かつダッシュAnimationが終わっている勝つ何も攻撃していないとき
-	if (!isJump_ && isDashing_ && !isDashToFirstAttack_ && transform_.AnimationFinish() &&
-		input_->TriggerGamepadButton(InputGamePadButtons::X)) {
 
-		moveBehaviour_ = MoveBehaviour::DashToFirstAttack;
-		// ダッシュ移動を取り消す
-		isDashing_ = false;
-		currentMoveBehaviours_.erase(MoveBehaviour::Dash);
-	}
-	// Animationが終わればfalseにする
-	if (isDashToFirstAttack_) {
+	// 最初の攻撃が終わり、次の攻撃が始まったとき
+	if (!isWaitToFirstAttack_ && isWaitToSecondAttackEnable_) {
+
+		// Animationが終わればfalseにする
 		if (transform_.AnimationFinish()) {
 
-			currentMoveBehaviours_.erase(MoveBehaviour::DashToFirstAttack);
-			isDashToFirstAttack_ = false;
+			currentMoveBehaviours_.erase(MoveBehaviour::WaitToSecondAttack);
+			isWaitToSecondAttackEnable_ = false;
+
+			// 最初の攻撃が終わったときに次の攻撃フラグがたっていれば
+			if (isWaitToThirdAttackEnable_) {
+
+				moveBehaviour_ = MoveBehaviour::WaitToThirdAttack;
+				return;
+			}
+		}
+
+		// 3回目の攻撃予約
+		if (input_->TriggerGamepadButton(InputGamePadButtons::X)) {
+
+			isWaitToThirdAttackEnable_ = true;
 		}
 	}
-	//========================================================================*/
+
+	// 2回目の攻撃が終わり、次の攻撃が始まったとき
+	// Animationが終わればfalseにする
+	if (!isWaitToSecondAttackEnable_ && isWaitToThirdAttackEnable_) {
+		if (transform_.AnimationFinish()) {
+
+			currentMoveBehaviours_.erase(MoveBehaviour::WaitToThirdAttack);
+			isWaitToThirdAttackEnable_ = false;
+		}
+	}
 
 }
 
@@ -310,13 +344,6 @@ void Player::WaitToFirstAttack() {
 
 }
 
-void Player::DashToFirstAttack() {
-
-	// ダッシュからの最初の攻撃アニメーション開始
-	isDashToFirstAttack_ = true;
-
-}
-
 void Player::DerivedImGui() {
 
 	if (ImGui::Button("Save")) {
@@ -368,7 +395,8 @@ void Player::DerivedImGui() {
 			ImGui::DragFloat("moveToJumpDuration", &moveToJumpDuration_, 0.01f);
 			ImGui::DragFloat("moveToWaitDuration", &moveToWaitDuration_, 0.01f);
 			ImGui::DragFloat("waitToAttackDuration", &waitToAttackDuration_, 0.01f);
-			ImGui::DragFloat("dashToAttackDuration", &dashToAttackDuration_, 0.01f);
+			ImGui::DragFloat("waitToSecondAttackDuration", &waitToSecondAttackDuration_, 0.01f);
+			ImGui::DragFloat("waitToThirdAttackDuration", &waitToThirdAttackDuration_, 0.01f);
 
 			ImGui::Separator();
 
@@ -396,7 +424,8 @@ void Player::ApplyJson() {
 	moveToWaitDuration_ = data["moveToWaitDuration"];
 	moveToJumpDuration_ = data["moveToJumpDuration"];
 	waitToAttackDuration_ = data["waitToAttackDuration"];
-	dashToAttackDuration_ = data["dashToAttackDuration"];
+	waitToSecondAttackDuration_ = data["waitToSecondAttackDuration"];
+	waitToThirdAttackDuration_ = data["waitToThirdAttackDuration"];
 
 }
 
@@ -414,7 +443,8 @@ void Player::SaveJson() {
 	data["moveToWaitDuration"] = moveToWaitDuration_;
 	data["moveToJumpDuration"] = moveToJumpDuration_;
 	data["waitToAttackDuration"] = waitToAttackDuration_;
-	data["dashToAttackDuration"] = dashToAttackDuration_;
+	data["waitToSecondAttackDuration"] = waitToSecondAttackDuration_;
+	data["waitToThirdAttackDuration"] = waitToThirdAttackDuration_;
 
 	JsonAdapter::Save(parentFolderName_.value() + GetName() + "EditParameter.json", data);
 
