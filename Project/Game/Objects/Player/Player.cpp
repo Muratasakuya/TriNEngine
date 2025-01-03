@@ -55,12 +55,18 @@ void Player::Init() {
 
 	ApplyJson();
 
+	posClamped_ = false;
+
 	isDashing_ = false;
 	isJump_ = false;
 
 	isWaitToFirstAttack_ = false;
 	isWaitToSecondAttackEnable_ = false;
 	isWaitToThirdAttackEnable_ = false;
+
+	firstAttackCollisionEnable_ = false;
+	secondAttackCollisionEnable_ = false;
+	thirdAttackCollisionEnable_ = false;
 
 	//========================================================================*/
 	//* collision *//
@@ -77,6 +83,8 @@ void Player::Update() {
 	Move(); //* 移動処理
 
 	UpdateAnimation(); //* アニメーション設定処理
+
+	UpdateCollisionEnable(); //* 衝突フラグ更新
 
 	BaseAnimationObject::Update();
 
@@ -132,7 +140,23 @@ void Player::UpdateAnimation() {
 
 }
 
+void Player::MoveClamp() {
+
+	// 座標制限、Yはない
+	const Vector3 clampPos = Vector3(30.0f, 0.0f, 30.0f);
+
+	Vector3 originalPos = transform_.translation;
+
+	transform_.translation.x = std::clamp(transform_.translation.x, -clampPos.x, clampPos.x);
+	transform_.translation.z = std::clamp(transform_.translation.z, -clampPos.z, clampPos.z);
+
+	posClamped_ = transform_.translation != originalPos;
+
+}
+
 void Player::Move() {
+
+	MoveClamp(); // 移動処理
 
 	MoveWalk();    // 通常歩き移動
 	MoveRequest(); // 移動依頼処理
@@ -389,6 +413,15 @@ void Player::DerivedImGui() {
 			case MoveBehaviour::Jump:
 				ImGui::BulletText("Jump");
 				break;
+			case MoveBehaviour::WaitToFirstAttack:
+				ImGui::BulletText("WaitToFirstAttack");
+				break;
+			case MoveBehaviour::WaitToSecondAttack:
+				ImGui::BulletText("WaitToSecondAttack");
+				break;
+			case MoveBehaviour::WaitToThirdAttack:
+				ImGui::BulletText("WaitToThirdAttack");
+				break;
 			default:
 				ImGui::BulletText("Unknown");
 				break;
@@ -480,6 +513,36 @@ void Player::SaveJson() {
 
 	JsonAdapter::Save(parentFolderName_.value() + GetName() + "EditParameter.json", data);
 
+}
+
+void Player::UpdateCollisionEnable() {
+
+	if (isWaitToFirstAttack_) {
+		if (!transform_.IsTransition()) {
+
+			firstAttackCollisionEnable_ = true;
+		}
+	} else {
+		firstAttackCollisionEnable_ = false;
+	}
+
+	if (isWaitToSecondAttackEnable_) {
+		if (!transform_.IsTransition()) {
+
+			secondAttackCollisionEnable_ = true;
+		}
+	} else {
+		secondAttackCollisionEnable_ = false;
+	}
+
+	if (isWaitToThirdAttackEnable_) {
+		if (!transform_.IsTransition()) {
+
+			thirdAttackCollisionEnable_ = true;
+		}
+	} else {
+		thirdAttackCollisionEnable_ = false;
+	}
 }
 
 void Player::RotateToDirection() {

@@ -115,6 +115,54 @@ void ModelManager::MakeOriginalModel(
 	models_[modelName] = modelData;
 }
 
+void ModelManager::ExportToOBJ(const std::string& modelName) {
+
+	auto& modelData = models_.at(modelName);
+	if (modelData.meshes.empty()) {
+		return;
+	}
+
+	std::string name = "./Resources/Model/Output/" + modelName;
+	std::ofstream objFile(name);
+	if (!objFile.is_open()) {
+		throw std::runtime_error("Failed to open file for OBJ export.");
+	}
+
+	auto& meshData = modelData.meshes[0];
+	auto& vertices = meshData.vertices;
+	auto& indices = meshData.indices;
+
+	// 頂点データの書き込み
+	for (auto& vertex : vertices) {
+
+		vertex.pos.x *= -1.0f;
+		objFile << "v " << vertex.pos.x << " " << vertex.pos.y << " " << vertex.pos.z << "\n";
+	}
+
+	// 法線データの書き込み
+	for (const auto& vertex : vertices) {
+		objFile << "vn " << vertex.normal.x << " " << vertex.normal.y << " " << vertex.normal.z << "\n";
+	}
+
+	// テクスチャ座標の書き込み（無ければ省略）
+	for (const auto& vertex : vertices) {
+		objFile << "vt " << vertex.texcoord.x << " " << vertex.texcoord.y << "\n";
+	}
+
+	// 面の書き込み（インデックス情報を使う）
+	size_t numTriangles = indices.size() / 3;
+	for (size_t i = 0; i < numTriangles; ++i) {
+
+		// インデックスを1から始めるため+1をする
+		objFile << "f "
+			<< indices[i * 3 + 0] + 1 << "/" << indices[i * 3 + 0] + 1 << "/" << indices[i * 3 + 0] + 1 << " "
+			<< indices[i * 3 + 1] + 1 << "/" << indices[i * 3 + 1] + 1 << "/" << indices[i * 3 + 1] + 1 << " "
+			<< indices[i * 3 + 2] + 1 << "/" << indices[i * 3 + 2] + 1 << "/" << indices[i * 3 + 2] + 1 << "\n";
+	}
+	objFile.close();
+
+}
+
 ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const std::string& filename) {
 
 	ModelData modelData;            // 構築するModelData
@@ -321,7 +369,7 @@ void ModelManager::BlendAnimation(
 		// old の transform
 		Vector3 posOld = Vector3(0.0f, 0.0f, 0.0f);
 		Quaternion rotOld = Quaternion::IdentityQuaternion();
-		Vector3 sclOld = Vector3(1.0f,1.0f,1.0f);
+		Vector3 sclOld = Vector3(1.0f, 1.0f, 1.0f);
 		if (auto itOld = oldAnim.nodeAnimations.find(nodeName); itOld != oldAnim.nodeAnimations.end()) {
 
 			const auto& rootNodeAnimation = itOld->second;

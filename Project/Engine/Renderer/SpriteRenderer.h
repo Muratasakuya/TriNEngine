@@ -3,41 +3,57 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/3D/Object/BaseGameObject.h>
+#include <Game/2D/Base/BaseSprite.h>
+
+// imgui
+#include <imgui.h>
+
+// c++
+#include <vector>
+#include <unordered_map>
 
 //============================================================================*/
-//	Field class
+//	SpriteRenderer class
 //============================================================================*/
-class Field :
-	public BaseGameObject {
+class SpriteRenderer {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	Field() = default;
-	~Field() = default;
+	SpriteRenderer() = default;
+	~SpriteRenderer() = default;
 
-	void Init();
+	static void Render();
+
+	static void SetSprite(BaseSprite* sprite);
+
+	static void EraseSprite(BaseSprite* sprite);
+
+	static void Clear();
 
 	//* imgui *//
 
-	void DerivedImGui() override;
+	static void SelectSprite();
+
+	static void SelectedImGui();
+
+	//* getter *//
+
+	static BaseSprite* GetSelectedSprite() { return selectedSprite_; };
 
 private:
 	//========================================================================*/
 	//	private Methods
 	//========================================================================*/
 
-	//========================================================================*/
-	//* variables
+	//===================================================================*/
+	///* variables
 
-	//========================================================================*/
-	//* functions
+	static std::vector<BaseSprite*> sprites_;
 
-	void CreateModel(int division);
+	static BaseSprite* selectedSprite_;
 
-	void ApplyJson() override;
-	void SaveJson() override;
+	static int currentSpriteIndex_;
 
 };

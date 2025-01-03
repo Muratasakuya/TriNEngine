@@ -100,7 +100,6 @@ void AnimationModel::SetComputeCommands() {
 		Asset::GetModel()->GetSkinClusterData(animationName_).influenceSrvHandle.second);
 	commandList->SetComputeRootDescriptorTable(3, outputVertices_.GetGpuHandle());
 	commandList->SetComputeRootConstantBufferView(4, skinningInfoDates_.GetResource()->GetGPUVirtualAddress());
-	// Compute起動
 	commandList->Dispatch(static_cast<UINT>(modelData_.meshes.front().vertices.size() + 1023) / 1024, 1, 1);
 }
 

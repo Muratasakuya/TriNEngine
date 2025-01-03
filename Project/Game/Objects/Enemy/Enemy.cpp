@@ -6,13 +6,13 @@
 
 void Enemy::Init(uint32_t index) {
 
-	BaseGameObject::Init("cube.obj");
+	BaseGameObject::Init("slime.obj");
 
 	BaseGameObject::SetMeshRenderer("enemy", index);
 
 	// Collider設定
 	Collider::SetCollisionShapeSphere(); //* 球の形で設定
-	Collider::radius_ = 1.1f;
+	Collider::radius_ = 1.2f;
 
 	// 自身のタイプと攻撃対象
 	Collider::type_ = ColliderType::Type_Enemy;

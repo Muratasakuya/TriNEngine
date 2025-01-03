@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Lib/MathUtils/Vector2.h>
 #include <Lib/MathUtils/Vector3.h>
 #include <Lib/MathUtils/Vector4.h>
 
@@ -36,6 +37,9 @@ public:
 
 	static Json FromVector3(const Vector3& v);
 	static Vector3 ToVector3(const Json& data);
+
+	static Json FromVector2(const Vector2& v);
+	static Vector2 ToVector2(const Json& data);
 
 	static Json FromColor(const Color& v);
 	static Color ToColor(const Json& data);

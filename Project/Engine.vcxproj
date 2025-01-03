@@ -345,6 +345,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\2D\Base\BaseSprite.cpp" />
     <ClCompile Include="Game\Objects\Enemy\Manager\EnemyManager.cpp" />
     <ClCompile Include="Game\Objects\Enemy\Enemy.cpp" />
     <ClCompile Include="Game\Objects\Test\Cube.cpp" />
@@ -417,8 +418,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Objects\Player\Player.cpp" />
     <ClCompile Include="Engine\Base\TriNFramework.cpp" />
     <ClCompile Include="Game\Objects\Player\Collision\PlayerAttackCollider.cpp" />
+    <ClCompile Include="Game\Objects\HUD\TimeLimit.cpp" />
+    <ClCompile Include="Engine\Renderer\SpriteRenderer.cpp" />
+    <ClCompile Include="Game\Objects\Environment\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\2D\Base\BaseSprite.h" />
     <ClInclude Include="Game\Objects\Enemy\Manager\EnemyManager.h" />
     <ClInclude Include="Game\Objects\Enemy\Enemy.h" />
     <ClInclude Include="Game\Objects\Test\Cube.h" />
@@ -498,6 +503,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Objects\Player\Player.h" />
     <ClInclude Include="Engine\Base\TriNFramework.h" />
     <ClInclude Include="Game\Objects\Player\Collision\PlayerAttackCollider.h" />
+    <ClInclude Include="Game\Objects\HUD\TimeLimit.h" />
+    <ClInclude Include="Engine\Renderer\SpriteRenderer.h" />
+    <ClInclude Include="Game\Objects\Environment\Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

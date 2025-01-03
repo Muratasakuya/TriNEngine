@@ -3,37 +3,35 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/Scenes/Methods/IScene.h>
-
-// object
-#include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Environment/Wall.h>
-#include <Game/Objects/Player/Player.h>
-#include <Game/Objects/Enemy/Manager/EnemyManager.h>
-
-// HUD
-#include <Game/Objects/HUD/TimeLimit.h>
+#include <Game/3D/Object/BaseGameObject.h>
+#include <Game/Utility/Direction.h>
 
 // c++
-#include <string>
-#include <memory>
+#include <chrono>
+
+// front
+class Player;
 
 //============================================================================*/
-//	GameScene class
+//	Wall class
 //============================================================================*/
-class GameScene :
-	public IScene {
+class Wall :
+	public BaseGameObject {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	GameScene() = default;
-	~GameScene() = default;
+	Wall() = default;
+	~Wall() = default;
 
-	void Init() override;
+	void Init(Player* player, uint32_t index);
 
-	void Update() override;
+	void Update();
+
+	//* imgui *//
+
+	void DerivedImGui() override;
 
 private:
 	//========================================================================*/
@@ -43,18 +41,14 @@ private:
 	//========================================================================*/
 	//* variables
 
-	std::unique_ptr<Field> field_;
-	std::vector<std::unique_ptr<Wall>> walls_;
+	Player* player_ = nullptr;
 
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EnemyManager> enemyManager_;
-
-	std::unique_ptr<TimeLimit> timeLimit_;
+	std::chrono::time_point<std::chrono::steady_clock> startTime_;
 
 	//========================================================================*/
-	//* function
+	//* functions
 
-	void LoadAssets();
+	void ApplyJson() override;
+	void SaveJson() override;
 
 };

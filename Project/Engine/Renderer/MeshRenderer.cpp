@@ -3,7 +3,6 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Engine/Renderer/ImGuiRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
 #include <Game/System/GameSystem.h>
 
@@ -64,9 +63,11 @@ void MeshRenderer::SetGameObject(IBaseGameObject* gameObject) {
 
 void MeshRenderer::EraseGameObject(IBaseGameObject* gameObject) {
 
-	if (selectedGameObject_->GetName() == gameObject->GetName()) {
+	if (selectedGameObject_) {
+		if (selectedGameObject_->GetName() == gameObject->GetName()) {
 
-		selectedGameObject_ = nullptr;
+			selectedGameObject_ = nullptr;
+		}
 	}
 
 	gameObjects_.erase(std::remove(gameObjects_.begin(), gameObjects_.end(), gameObject), gameObjects_.end());

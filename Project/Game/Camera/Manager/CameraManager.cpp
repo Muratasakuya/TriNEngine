@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/SpriteRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
 
 // imgui
@@ -66,7 +67,8 @@ void CameraManager::DrawDebug() {
 void CameraManager::SelectGameCamera() {
 
 	// 他のObjectが選択された場合は選択解除する
-	if (MeshRenderer::GetSelectedObject() ||
+	if (SpriteRenderer::GetSelectedSprite() ||
+		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
 		selectGameCamera_ = false;
 	}

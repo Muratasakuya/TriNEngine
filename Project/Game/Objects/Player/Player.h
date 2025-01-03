@@ -42,11 +42,13 @@ public:
 
 	//* getter *//
 
-	bool IsWaitToFirstAttack() const { return isWaitToFirstAttack_; }
+	bool IsPosClamped() const { return posClamped_; }
 
-	bool IsWaitToSecondAttack() const { return isWaitToSecondAttackEnable_; }
+	bool IsWaitToFirstAttack() const { return firstAttackCollisionEnable_; }
 
-	bool IsWaitToThirdAttack() const { return isWaitToThirdAttackEnable_; }
+	bool IsWaitToSecondAttack() const { return secondAttackCollisionEnable_; }
+
+	bool IsWaitToThirdAttack() const { return thirdAttackCollisionEnable_; }
 
 private:
 	//========================================================================*/
@@ -129,6 +131,14 @@ private:
 	bool isWaitToSecondAttackEnable_; //* 二回目の攻撃を行うかどうか
 	bool isWaitToThirdAttackEnable_;  //* 三回目の攻撃を行うかどうか
 
+	//* 衝突フラグ *//
+
+	bool posClamped_;
+
+	bool firstAttackCollisionEnable_;
+	bool secondAttackCollisionEnable_;
+	bool thirdAttackCollisionEnable_;
+
 	//========================================================================*/
 	//* functions
 
@@ -136,6 +146,8 @@ private:
 	//* move
 
 	void UpdateAnimation(); //* アニメーション更新
+
+	void MoveClamp(); //* 移動制限
 
 	void Move();        //* 全体の移動を管理
 	void MoveRequest(); //* 移動依頼
@@ -156,6 +168,8 @@ private:
 	// json
 	void ApplyJson();
 	void SaveJson();
+
+	void UpdateCollisionEnable();
 
 	// helper
 	void RotateToDirection();

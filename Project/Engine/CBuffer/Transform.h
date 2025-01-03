@@ -42,7 +42,7 @@ struct Transform2D {
 		pos = { 0.0f,0.0f };
 		rotate = 0.0f;
 		size = { 0.0f,0.0f };
-		anchorPoint = { 0.0f,0.0f };
+		anchorPoint = { 0.5f,0.5f };
 		textureLeftTop = { 0.0f,0.0f };
 		textureSize = { 0.0f,0.0f };
 		isFlipX = false;

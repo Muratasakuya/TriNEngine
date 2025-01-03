@@ -110,13 +110,6 @@ void ImGuiManager::End() {
 
 	ImGui::Render();
 
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-	}
-
 }
 
 void ImGuiManager::Draw(ID3D12GraphicsCommandList* commandList) {

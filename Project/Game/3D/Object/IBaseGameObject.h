@@ -43,7 +43,7 @@ public:
 	virtual void ApplyJsonForColor();
 	virtual void SaveJsonForColor();
 
-	virtual void ApplyJsonForTransform(BaseTransform& transform);
+	virtual void ApplyJsonForTransform(BaseTransform& transform, const std::optional<std::string>& name = std::nullopt);
 	virtual void SaveJsonForTransform(const BaseTransform& transform);
 
 	//* Json *//

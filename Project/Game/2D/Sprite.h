@@ -26,10 +26,10 @@ public:
 	//	public Methods
 	//========================================================================*/
 
-	Sprite(const std::string& textureName);
+	Sprite(const std::string& textureName, Transform2D& transform);
 	~Sprite() = default;
 
-	void Update();
+	void Update(const Transform2D& transform, const Color& color);
 
 	void Draw(BlendMode blendMode = BlendMode::kBlendModeNormal);
 
@@ -43,8 +43,6 @@ private:
 
 	std::string textureName_;
 
-	Transform2D transform_;
-
 	//* buffer *//
 
 	VertexBuffer<SpriteVertexData> vertexBuffer_;
@@ -56,7 +54,7 @@ private:
 	//========================================================================*/
 	//* function
 
-	void SetMetaDataTextureSize();
-	void VertexUpdate();
+	void SetMetaDataTextureSize(Transform2D& transform);
+	void VertexUpdate(const Transform2D& transform);
 
 };
