@@ -39,6 +39,7 @@ void CameraManager::Init() {
 	// Sun
 	sunLightCamera_ = std::make_unique<SunLightCamera>();
 	sunLightCamera_->Init();
+
 }
 
 void CameraManager::Update() {
@@ -51,7 +52,6 @@ void CameraManager::Update() {
 
 		followCamera_->Update();
 		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetTranslate());
-
 	}
 
 	sunLightCamera_->Update();

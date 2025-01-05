@@ -36,11 +36,9 @@ void MeshRenderer::Render() {
 
 		if (gameObject->GetDrawShadowEnable()) {
 
-			// このObjectには影を落とさない
 			pipeline = RendererPipelineType::NormalObject3D;
 		} else {
 
-			// このObjectに影を落とす
 			pipeline = RendererPipelineType::TargetShadowObject3D;
 		}
 

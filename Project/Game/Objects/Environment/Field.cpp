@@ -23,7 +23,7 @@ void Field::Init() {
 
 	drawDepthShadowEnable_ = false;
 
-	model_->SetTexture("field");
+	model_->SetTexture("fieldBaseTile");
 	parentFolderName_ = "Field/";
 
 	BaseGameObject::ApplyJsonForTransform(transform_);

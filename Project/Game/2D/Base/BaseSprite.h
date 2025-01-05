@@ -44,6 +44,8 @@ public:
 
 	std::string GetName() const { return name_; }
 
+	Vector2 GetTextureSize() const;
+
 protected:
 	//===================================================================*/
 	//							protected Methods
@@ -64,5 +66,6 @@ private:
 	std::unique_ptr<Sprite> sprite;
 
 	std::string name_ = "sprite";
+	std::string textureName_;
 
 };

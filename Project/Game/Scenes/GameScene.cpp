@@ -22,7 +22,7 @@ void GameScene::LoadAssets() {
 	Asset::LoadTexture("coron");
 
 	// environment
-	Asset::LoadTexture("field");
+	Asset::LoadTexture("fieldBaseTile");
 	Asset::LoadTexture("wall");
 
 	//========================================================================*/
@@ -59,7 +59,7 @@ void GameScene::Init() {
 	}
 
 	enemyManager_ = std::make_unique<EnemyManager>();
-	enemyManager_->Init();
+	enemyManager_->Init(player_.get());
 
 	timeLimit_ = std::make_unique<TimeLimit>();
 	timeLimit_->Init();

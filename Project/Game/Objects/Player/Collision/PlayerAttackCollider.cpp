@@ -39,7 +39,8 @@ void PlayerAttackCollider::Update() {
 	forward.Normalize();
 
 	// 最初の攻撃の時
-	if (player_->IsWaitToFirstAttack()) {
+	if (player_->IsWaitToFirstAttack() &&
+		player_->GetWorldTransform().GetAnimationProgress() >= 0.4f) {
 
 		// オフセット計算
 		Vector3 offset = forward * firstParameter_.offsetForward;
@@ -49,7 +50,8 @@ void PlayerAttackCollider::Update() {
 		Collider::size_ = firstParameter_.size;
 	}
 	// 2回目の攻撃の時
-	else if (player_->IsWaitToSecondAttack()) {
+	else if (player_->IsWaitToSecondAttack() &&
+		player_->GetWorldTransform().GetAnimationProgress() >= 0.4f) {
 
 		// オフセット計算
 		Vector3 offset = forward * secondParameter_.offsetForward;
@@ -59,7 +61,8 @@ void PlayerAttackCollider::Update() {
 		Collider::size_ = secondParameter_.size;
 	}
 	// 3回目の攻撃
-	else if (player_->IsWaitToThirdAttack()) {
+	else if (player_->IsWaitToThirdAttack() &&
+		player_->GetWorldTransform().GetAnimationProgress() >= 0.76f) {
 
 		// オフセット計算
 		Vector3 offset = forward * thirdParameter_.offsetForward;
@@ -122,7 +125,7 @@ void PlayerAttackCollider::ApplyJson() {
 	thirdParameter_.offsetY = data["thirdParameter_offsetY"];
 	thirdParameter_.offsetForward = data["thirdParameter_offsetForward"];
 	thirdParameter_.size = JsonAdapter::ToVector3(data["thirdParameter_size"]);
-	
+
 }
 
 void PlayerAttackCollider::SaveJson() {

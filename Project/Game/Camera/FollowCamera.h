@@ -35,7 +35,7 @@ public:
 
 	//* setter *//
 
-	void SetTarget(const AnimationTransform* target) { target_ = target; };
+	void SetTarget(const AnimationTransform* target);
 
 private:
 	//========================================================================*/

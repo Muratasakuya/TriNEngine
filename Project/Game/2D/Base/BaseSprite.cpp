@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/SpriteRenderer.h>
+#include <Engine/Asset/Asset.h>
 
 // imgui
 #include <imgui.h>
@@ -19,6 +20,7 @@ BaseSprite::~BaseSprite() {
 void BaseSprite::Init(const std::string& textureName) {
 
 	sprite = std::make_unique<Sprite>(textureName, transform);
+	textureName_ = textureName;
 
 	color = Color::White();
 }
@@ -62,4 +64,10 @@ void BaseSprite::SetSpriteRenderer(const std::string& name) {
 
 	name_ = name;
 	SpriteRenderer::SetSprite(this);
+}
+
+Vector2 BaseSprite::GetTextureSize() const {
+
+	const DirectX::TexMetadata& metadata = Asset::GetTexture()->GetMetaData(textureName_);
+	return Vector2(static_cast<float>(metadata.width), static_cast<float>(metadata.height));
 }

@@ -126,6 +126,26 @@ float EaseInBack(float t) {
 	return c3 * std::powf(t, 3) - c1 * std::powf(t, 2);
 }
 
+// Ease Out Bounce
+float EaseOutBounce(float t) {
+
+	const float n1 = 7.5625f;
+	const float d1 = 2.75f;
+
+	if (t < 1.0f / d1) {
+		return n1 * t * t;
+	} else if (t < 2.0f / d1) {
+		t -= 1.5f / d1;
+		return n1 * t * t + 0.75f;
+	} else if (t < 2.5f / d1) {
+		t -= 2.25f / d1;
+		return n1 * t * t + 0.9375f;
+	} else {
+		t -= 2.625f / d1;
+		return n1 * t * t + 0.984375f;
+	}
+}
+
 float EasedValue(EasingType easingType, float t) {
 
 	switch (easingType) {

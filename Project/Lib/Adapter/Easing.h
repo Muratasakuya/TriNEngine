@@ -37,6 +37,7 @@ float EaseOutCirc(float t);
 float EaseInOutCirc(float t);
 float EaseOutBack(float t);
 float EaseInBack(float t);
+float EaseOutBounce(float t);
 
 enum class EasingType {
 

@@ -76,13 +76,14 @@ void TimeLimit::Update() {
 	for (const auto& timeNumber : timeNumbers_) {
 
 		// サイズ設定
-		timeNumber->SetSize(Vector2(texWidth, texHeight));
+		timeNumber->SetSize(Vector2(texWidth, texHeight) / 2.0f);
 		timeNumber->SetTextureSize(Vector2(texWidth, texHeight));
 
 		// 更新
 		timeNumber->Update();
 	}
 
+	timeCoron_->SetSize(timeCoron_->GetTextureSize() / 2.0f);
 	timeCoron_->Update();
 
 }

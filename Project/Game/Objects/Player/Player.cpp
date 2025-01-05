@@ -53,6 +53,7 @@ void Player::Init() {
 	transform_.SetNewAnimationData(animationNames_["waitToAttack1"]);
 	transform_.SetNewAnimationData(animationNames_["waitToAttack2"]);
 
+	BaseAnimationObject::ApplyJsonForTransform(transform_);
 	ApplyJson();
 
 	posClamped_ = false;

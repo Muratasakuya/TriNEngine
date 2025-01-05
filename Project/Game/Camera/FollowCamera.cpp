@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Game/Utility/Direction.h>
+#include <Game/System/GameSystem.h>
 #include <Engine/Process/Input.h>
 #include <Lib/Adapter/JsonAdapter.h>
 
@@ -64,7 +65,7 @@ void FollowCamera::Move() {
 	}
 
 	transform_.rotation = Quaternion::EulerToQuaternion(eulerRotate_);
-	interTarget_ = Vector3::Lerp(interTarget_, target_->GetWorldPos(), interLerpRate_);
+	interTarget_ = Vector3::Lerp(interTarget_, target_->translation, interLerpRate_);
 
 	Vector3 offset{};
 	offset.Init();
@@ -93,6 +94,13 @@ void FollowCamera::ImGui() {
 void FollowCamera::Reset() {
 
 	target_ = nullptr;
+}
+
+void FollowCamera::SetTarget(const AnimationTransform* target) {
+
+	target_ = target;
+	interTarget_ = target->translation;
+	Update();
 }
 
 void FollowCamera::ApplyJson() {

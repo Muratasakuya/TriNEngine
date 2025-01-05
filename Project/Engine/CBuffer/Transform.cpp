@@ -111,8 +111,6 @@ void AnimationTransform::Init(const std::string& modelName, const std::string& a
 
 void AnimationTransform::Update() {
 
-	float deltaTime = GameTimer::GetScaledDeltaTime();
-
 	animationFinish_ = false;
 
 	//============================================================================*/
@@ -121,17 +119,21 @@ void AnimationTransform::Update() {
 	if (!inTransition_) {
 		if (roopAnimation_) {
 
-			currentAnimationTimer_ += deltaTime;
+			currentAnimationTimer_ += GameTimer::GetScaledDeltaTime();
 			currentAnimationTimer_ = std::fmod(currentAnimationTimer_, animationData_[currentAnimationName_].duration);
+
+			animationProgress_ = currentAnimationTimer_ / animationData_[currentAnimationName_].duration;
 		} else {
 			if (animationData_[currentAnimationName_].duration > currentAnimationTimer_) {
-				currentAnimationTimer_ += deltaTime;
+				currentAnimationTimer_ += GameTimer::GetScaledDeltaTime();
 			}
 			if (currentAnimationTimer_ >= animationData_[currentAnimationName_].duration) {
 				currentAnimationTimer_ = animationData_[currentAnimationName_].duration;
 
 				animationFinish_ = true;
 			}
+
+			animationProgress_ = currentAnimationTimer_ / animationData_[currentAnimationName_].duration;
 		}
 
 		if (skeleton_[currentAnimationName_]) {
@@ -146,7 +148,7 @@ void AnimationTransform::Update() {
 	else {
 
 		// 遷移時間を進める
-		transitionTimer_ += deltaTime;
+		transitionTimer_ += GameTimer::GetDeltaTime();
 		float alpha = transitionTimer_ / transitionDuration_;
 		if (alpha > 1.0f) {
 			alpha = 1.0f;

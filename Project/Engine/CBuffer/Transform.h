@@ -143,6 +143,8 @@ public:
 	bool AnimationFinish() const { return animationFinish_; }
 	std::string GetCurrentAnimationName() const { return currentAnimationName_; }
 
+	float GetAnimationProgress() const { return animationProgress_; }
+
 	//* setter *//
 
 	// 最初のAnimation再生
@@ -186,6 +188,9 @@ private:
 	// 切り替え後のAnimation
 	std::string nextAnimationName_;
 	float nextAnimationTimer_;
+
+	// Animationの経過率
+	float animationProgress_;
 
 };
 
