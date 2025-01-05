@@ -220,7 +220,7 @@ void Enemy::DeadAnimation() {
 
 void Enemy::Move() {
 
-	if (!isAnimationFinish_) {
+	if (!isAnimationFinish_ || currentHp_ == 0 || isHitDamage_) {
 		return;
 	}
 
