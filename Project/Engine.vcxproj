@@ -421,6 +421,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Objects\HUD\TimeLimit.cpp" />
     <ClCompile Include="Engine\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Game\Objects\Environment\Wall.cpp" />
+    <ClCompile Include="Game\Objects\Title\TitleSprite.cpp" />
+    <ClCompile Include="Game\Scenes\Methods\SceneTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\2D\Base\BaseSprite.h" />
@@ -506,6 +508,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Objects\HUD\TimeLimit.h" />
     <ClInclude Include="Engine\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Game\Objects\Environment\Wall.h" />
+    <ClInclude Include="Game\Objects\Title\TitleSprite.h" />
+    <ClInclude Include="Game\Scenes\Methods\SceneTransition.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

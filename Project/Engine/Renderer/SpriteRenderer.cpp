@@ -17,9 +17,18 @@ int SpriteRenderer::currentSpriteIndex_ = 0;
 
 void SpriteRenderer::Render() {
 
-	for (const auto& sprite : sprites_) {
+	// Typeごとに分別
+	auto partitionIt = std::partition(sprites_.begin(), sprites_.end(), [](BaseSprite* sprite) {
+		return sprite->GetDrawType() != SpriteDrawType::Transition; });
 
-		sprite->Draw();
+	// None
+	for (auto it = sprites_.begin(); it != partitionIt; ++it) {
+		(*it)->Draw();
+	}
+
+	// Transition
+	for (auto it = partitionIt; it != sprites_.end(); ++it) {
+		(*it)->Draw();
 	}
 
 }

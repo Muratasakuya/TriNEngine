@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/SpriteRenderer.h>
+#include <Engine/Utility/Environment.h>
 #include <Engine/Asset/Asset.h>
 
 // imgui
@@ -23,6 +24,10 @@ void BaseSprite::Init(const std::string& textureName) {
 	textureName_ = textureName;
 
 	color = Color::White();
+
+	// default
+	drawType_ = SpriteDrawType::None;
+
 }
 
 void BaseSprite::Update() {
@@ -64,6 +69,12 @@ void BaseSprite::SetSpriteRenderer(const std::string& name) {
 
 	name_ = name;
 	SpriteRenderer::SetSprite(this);
+}
+
+void BaseSprite::SetCenterPos() {
+
+	transform.pos =
+		Vector2(static_cast<float>(kWindowWidth) / 2.0f, static_cast<float>(kWindowHeight) / 2.0f);
 }
 
 Vector2 BaseSprite::GetTextureSize() const {

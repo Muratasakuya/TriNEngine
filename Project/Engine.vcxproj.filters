@@ -120,6 +120,8 @@
     <ClCompile Include="Game\2D\Base\BaseSprite.cpp" />
     <ClCompile Include="Engine\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Game\Objects\Environment\Wall.cpp" />
+    <ClCompile Include="Game\Objects\Title\TitleSprite.cpp" />
+    <ClCompile Include="Game\Scenes\Methods\SceneTransition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -205,5 +207,7 @@
     <ClInclude Include="Game\2D\Base\BaseSprite.h" />
     <ClInclude Include="Engine\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Game\Objects\Environment\Wall.h" />
+    <ClInclude Include="Game\Objects\Title\TitleSprite.h" />
+    <ClInclude Include="Game\Scenes\Methods\SceneTransition.h" />
   </ItemGroup>
 </Project>

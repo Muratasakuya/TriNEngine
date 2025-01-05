@@ -68,7 +68,7 @@ void GameScene::Init() {
 
 }
 
-void GameScene::Update() {
+void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 
 	GameSystem::GameCamera()->GetSunLightCamera()->SetTranslate(player_->GetWorldPos());
 

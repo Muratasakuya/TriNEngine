@@ -33,7 +33,7 @@ public:
 
 	void Init() override;
 
-	void Update() override;
+	void Update([[maybe_unused]] SceneManager* sceneManager) override;
 
 private:
 	//========================================================================*/

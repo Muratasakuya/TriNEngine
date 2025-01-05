@@ -10,6 +10,14 @@
 #include <string>
 
 //============================================================================*/
+//* SpriteDrawType *//
+enum class SpriteDrawType {
+
+	None,      //* その他処理未定
+	Transition //* 最前面 -> 最後に描画
+};
+
+//============================================================================*/
 //	BaseSprite class
 //============================================================================*/
 class BaseSprite {
@@ -24,7 +32,7 @@ public:
 	void Init(const std::string& textureName);
 
 	void Update();
-		
+
 	void Draw();
 
 	virtual void ImGui();
@@ -35,6 +43,7 @@ public:
 	void SetSpriteRenderer(const std::string& name);
 
 	void SetPos(const Vector2& pos) { transform.pos = pos; }
+	void SetCenterPos();
 
 	void SetSize(const Vector2& size) { transform.size = size; }
 	void SetTextureSize(const Vector2& textureSize) { transform.textureSize = textureSize; }
@@ -43,6 +52,8 @@ public:
 	//* getter *//
 
 	std::string GetName() const { return name_; }
+
+	SpriteDrawType GetDrawType() const { return drawType_; }
 
 	Vector2 GetTextureSize() const;
 
@@ -57,6 +68,8 @@ protected:
 	Transform2D transform;
 
 	Color color;
+
+	SpriteDrawType drawType_;
 
 private:
 	//===================================================================*/

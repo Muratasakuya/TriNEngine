@@ -7,6 +7,9 @@
 // c++
 #include <string>
 
+// front
+class SceneManager;
+
 //============================================================================*/
 //	IScene class
 //============================================================================*/
@@ -21,7 +24,7 @@ public:
 
 	virtual void Init() = 0;
 
-	virtual void Update() = 0;
+	virtual void Update([[maybe_unused]] SceneManager* sceneManager) = 0;
 
 	virtual std::string GetSceneName() const { return sceneName_; }
 

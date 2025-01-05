@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Base/GraphicsEngine.h>
+#include <Engine/Asset/Asset.h>
 #include <Engine/Utility/Environment.h>
 
 //============================================================================*/
@@ -19,21 +20,28 @@ SceneManager::SceneManager(const std::string& firstSceneName) {
 
 	currentScene_->Init();
 
+	Asset::LoadTexture("transitionWhite");
+
+	sceneTransition_ = std::make_unique<SceneTransition>();
+	sceneTransition_->Init();
+
 }
 
 void SceneManager::Update() {
 
-	if (isSceneSwitching_) {
+	currentScene_->Update(this);
 
-		currentScene_->Init();
-		isSceneSwitching_ = false;
-	}
-
-	currentScene_->Update();
+	sceneTransition_->Update();
 
 }
 
 void SceneManager::SwitchScene() {
+
+	if (sceneTransition_->IsBeginTransitionFinished()) {
+
+		isSceneSwitching_ = true;
+		sceneTransition_->SetResetBeginTransition();
+	}
 
 	if (isSceneSwitching_) {
 
@@ -41,10 +49,20 @@ void SceneManager::SwitchScene() {
 	}
 }
 
+void SceneManager::InitNextScene() {
+
+	if (isSceneSwitching_) {
+
+		currentScene_->Init();
+		isSceneSwitching_ = false;
+	}
+}
+
 void SceneManager::SetNextScene(const std::string& sceneName) {
 
 	nextSceneName_ = sceneName;
-	isSceneSwitching_ = true;
+
+	sceneTransition_->SetTransition();
 }
 
 void SceneManager::Finalize() {
