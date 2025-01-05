@@ -50,6 +50,26 @@ void EnemyManager::Update() {
 
 void EnemyManager::UpdatePhase() {
 
+	// 最初のPhaseから次のPhaseへの処理
+	if (phaseController_.has_value() && phaseController_.value() == 0) {
+		// 敵の数が0になったら
+		if (enemies_.size() == 0) {
+
+			// 次のPhaseに進める
+			phase_ = 1;
+		}
+	}
+
+	// 2回目のPhaseから次のPhaseへの処理
+	if (phaseController_.has_value() && phaseController_.value() == 1) {
+		// 敵の数が0になったら
+		if (enemies_.size() == 0) {
+
+			// 次のPhaseに進める
+			phase_ = 2;
+		}
+	}
+
 	// 最初の敵の発生処理
 	if (phase_ == 0 && !phaseController_.has_value()) {
 		// 中心
@@ -61,7 +81,7 @@ void EnemyManager::UpdatePhase() {
 			enemies_.emplace_back(std::move(newEnemy));
 			++enemyIndex_;
 		}
-		// 左
+		// 左前
 		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::FrontLeft].size(); ++index) {
 
 			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
@@ -70,11 +90,85 @@ void EnemyManager::UpdatePhase() {
 			enemies_.emplace_back(std::move(newEnemy));
 			++enemyIndex_;
 		}
-		// 右
+		// 右前
 		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::FrontRight].size(); ++index) {
 
 			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 			newEnemy->Init(enemyIndex_, spawnPositions_[SpawnPlace::FrontRight][index], player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+
+		// 敵の発生処理終了
+		phaseController_ = phase_;
+	}
+
+	// 2回目の敵の発生処理
+	if (phase_ == 1 && phaseController_.value() == 0) {
+
+		// 中心
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::Center].size(); ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			newEnemy->Init(enemyIndex_, spawnPositions_[SpawnPlace::Center][index], player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+		// 左後ろ
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::BackLeft].size(); ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			newEnemy->Init(enemyIndex_, spawnPositions_[SpawnPlace::BackLeft][index], player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+		// 右後ろ
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::BackRight].size(); ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			newEnemy->Init(enemyIndex_, spawnPositions_[SpawnPlace::BackRight][index], player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+
+		// 敵の発生処理終了
+		phaseController_ = phase_;
+	}
+
+	// 3回目の敵の発生処理
+	if (phase_ == 2 && phaseController_.value() == 1) {
+
+		// 中心
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::Center].size(); ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			newEnemy->Init(enemyIndex_, spawnPositions_[SpawnPlace::Center][index], player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+		// 左前
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::FrontLeft].size() - 2; ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			Vector3 newSpawnPos = spawnPositions_[SpawnPlace::FrontLeft][index];
+			newSpawnPos.z = 0.0f;
+			newEnemy->Init(enemyIndex_, newSpawnPos, player_);
+
+			enemies_.emplace_back(std::move(newEnemy));
+			++enemyIndex_;
+		}
+		// 右前
+		for (uint32_t index = 0; index < spawnPositions_[SpawnPlace::FrontRight].size() - 2; ++index) {
+
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+			Vector3 newSpawnPos = spawnPositions_[SpawnPlace::FrontRight][index];
+			newSpawnPos.z = 0.0f;
+			newEnemy->Init(enemyIndex_, newSpawnPos, player_);
 
 			enemies_.emplace_back(std::move(newEnemy));
 			++enemyIndex_;
