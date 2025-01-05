@@ -8,6 +8,7 @@
 #include <Game/Utility/GameTimer.h>
 #include <Game/Utility/Direction.h>
 #include <Lib/Adapter/Easing.h>
+#include <Lib/Adapter/Random.h>
 
 //============================================================================*/
 //	Enemy classMethods
@@ -41,6 +42,7 @@ void Enemy::Init(uint32_t index, const Vector3& translate, Player* player) {
 	materials_.front().properties.color = Color(0.37f, 0.5f, 0.73f, 1.0f);
 
 	velocity_.Init();
+	moveVelocity_.Init();
 
 	isHitDamage_ = false;
 	isSetVelocity_ = false;
@@ -50,6 +52,9 @@ void Enemy::Init(uint32_t index, const Vector3& translate, Player* player) {
 
 	aliveTimer_ = 0.0f;
 	aliveTime_ = 1.2f;
+
+	moveCoolTimer_ = 0.0f;
+	moveCoolTime_ = Random::Generate(1.8f, 3.0f);
 
 	startAnimationTimer_ = 0.0f;
 	startAnimationTime_ = 1.0f;
@@ -66,6 +71,8 @@ void Enemy::Update() {
 	KnockbackAnimation();
 	// hpがなくなった時のAnimation
 	DeadAnimation();
+
+	Move();
 
 	Collider::centerPos_ = transform_.translation;
 	Collider::SphereUpdate();
@@ -141,6 +148,9 @@ void Enemy::KnockbackAnimation() {
 		velocity_ += hitDirection_ * knockbackSpeed;
 		velocity_.y += upwardVelocity;
 
+		moveVelocity_.Init();
+		moveCoolTimer_ = 0.0f;
+
 		isSetVelocity_ = false;
 	}
 
@@ -181,6 +191,9 @@ void Enemy::DeadAnimation() {
 		velocity_ = hitDirection_ * knockbackSpeed;
 		velocity_.y += upwardVelocity;
 
+		moveVelocity_.Init();
+		moveCoolTimer_ = 0.0f;
+
 		isSetVelocity_ = false;
 	}
 
@@ -205,6 +218,42 @@ void Enemy::DeadAnimation() {
 
 }
 
+void Enemy::Move() {
+
+	if (!isAnimationFinish_) {
+		return;
+	}
+
+	moveCoolTimer_ += GameTimer::GetDeltaTime();
+	// 移動クールタイムが終わったら初速度を与える
+	if (moveCoolTimer_ > moveCoolTime_) {
+
+		const float moveSpeed = 0.25f; //* 移動速度
+		const float upwardVelocity = 6.0f; //* 上方向の速度
+
+		Vector3 direction = player_->GetWorldTransform().translation - transform_.translation;
+		direction.Normalize();
+
+		moveVelocity_ = direction * moveSpeed;
+		moveVelocity_.y += upwardVelocity;
+
+		// クールタイムをリセット
+		moveCoolTimer_ = 0.0f;
+	}
+
+	const float dampingFactor = 0.98f; // 減衰係数
+	moveVelocity_ *= dampingFactor;
+
+	moveVelocity_.y += gravity * GameTimer::GetDeltaTime();
+	transform_.translation += moveVelocity_ * GameTimer::GetDeltaTime();
+
+	if (transform_.translation.y < groundY) {
+
+		transform_.translation.y = 0.0f;
+		moveVelocity_.Init();
+	}
+}
+
 void Enemy::RotateToDirection() {
 
 	if (currentHp_ == 0) {
@@ -214,6 +263,7 @@ void Enemy::RotateToDirection() {
 	// 方向ベクトル
 	Vector3 forward =
 		(player_->GetWorldTransform().translation - transform_.translation).Normalize();
+	forward.y = 0.0f;
 	// Playerの方を向かせる
 	transform_.rotation = Quaternion::LookRotation(forward, Direction::Up());
 }

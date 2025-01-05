@@ -50,6 +50,7 @@ private:
 	const float initScaleY_ = 0.2f; // 初期Yスケール
 
 	Vector3 velocity_;
+	Vector3 moveVelocity_;
 	Vector3 hitDirection_;
 
 	//* life *//
@@ -62,6 +63,10 @@ private:
 	float aliveTimer_; //* 消えるまでの時間
 
 	float rotateValue_; //* 消えるときの回転
+
+	//* 動くときのクールタイム
+	float moveCoolTimer_;
+	float moveCoolTime_;
 
 	const int maxHp_ = 3;
 	int currentHp_;
@@ -80,6 +85,8 @@ private:
 	void KnockbackAnimation();
 
 	void DeadAnimation();
+
+	void Move();
 
 	void RotateToDirection();
 
