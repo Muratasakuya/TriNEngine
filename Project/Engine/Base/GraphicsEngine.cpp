@@ -6,6 +6,7 @@
 #include <Engine/Utility/Environment.h>
 #include <Engine/Renderer/ImGuiRenderer.h>
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Engine/Renderer/SpriteRenderer.h>
 #include <Engine/Process/Input.h>
 
@@ -170,6 +171,7 @@ void GraphicsEngine::Render() {
 	// RenderTexture
 	BeginPreOffscreen();
 	MeshRenderer::Render();
+	ParticleRenderer::Render();
 	SpriteRenderer::Render();
 	command_->TransitionBarrier(offscreenRenderer_->GetRenderTexture(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET,

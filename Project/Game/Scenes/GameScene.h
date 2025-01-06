@@ -11,6 +11,9 @@
 #include <Game/Objects/Player/Player.h>
 #include <Game/Objects/Enemy/Manager/EnemyManager.h>
 
+// particle
+#include <Game/Objects/Test/TestParticle.h>
+
 // HUD
 #include <Game/Objects/HUD/TimeLimit.h>
 
@@ -51,6 +54,10 @@ private:
 	std::unique_ptr<EnemyManager> enemyManager_;
 
 	std::unique_ptr<TimeLimit> timeLimit_;
+
+	//* test *//
+
+	std::unique_ptr<TestParticle> testParticle_;
 
 	//========================================================================*/
 	//* function

@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
 #include <Game/System/GameSystem.h>
 
@@ -65,7 +66,8 @@ void SpriteRenderer::SelectSprite() {
 	ImGui::Begin("Sprite");
 
 	// 他のObjectが選択されていたら選択解除する
-	if (MeshRenderer::GetSelectedObject() ||
+	if (ParticleRenderer::GetSelectedParticle() ||
+		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 

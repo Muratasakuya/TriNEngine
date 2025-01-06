@@ -25,6 +25,9 @@ void GameScene::LoadAssets() {
 	Asset::LoadTexture("fieldBaseTile");
 	Asset::LoadTexture("wall");
 
+	// particle
+	Asset::LoadTexture("circle");
+
 	//========================================================================*/
 	//* models
 
@@ -37,6 +40,9 @@ void GameScene::LoadAssets() {
 
 	// enemy
 	Asset::LoadModel("./Resources/Model/Obj/Enemy", "slime.obj");
+
+	// particle
+	Asset::LoadModel("./Resources/Model/Obj/CG", "plane.obj");
 
 }
 
@@ -66,6 +72,11 @@ void GameScene::Init() {
 
 	GameSystem::GameCamera()->GetFollowCamera()->SetTarget(&player_->GetWorldTransform());
 
+	//* test *//
+
+	testParticle_ = std::make_unique<TestParticle>();
+	testParticle_->Init();
+
 }
 
 void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
@@ -82,5 +93,9 @@ void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 	enemyManager_->Update();
 
 	timeLimit_->Update();
+
+	//* test *//
+
+	testParticle_->Update();
 
 }

@@ -3,6 +3,8 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Renderer/SpriteRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
 #include <Game/System/GameSystem.h>
 
@@ -80,7 +82,9 @@ void MeshRenderer::Clear() {
 void MeshRenderer::SelectGameObject() {
 
 	// 他のObjectが選択されていたら選択解除する
-	if (EditorManager::GetSelectedEditor()||
+	if (ParticleRenderer::GetSelectedParticle() ||
+		SpriteRenderer::GetSelectedSprite() ||
+		EditorManager::GetSelectedEditor() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 
 		currentObjectIndex_ = -1;
