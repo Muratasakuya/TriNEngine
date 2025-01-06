@@ -69,6 +69,8 @@ private:
 	int time_;      //* 進める時間
 	int timeLimit_; //* 制限時間
 
+	float accumulatedTime_;
+
 	std::vector<std::unique_ptr<TimeNumber>> timeNumbers_;
 	std::vector<Vector2> timeNumberPositions_;
 

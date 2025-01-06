@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Game/Utility/GameTimer.h>
 #include "Lib/Adapter/JsonAdapter.h"
 
 //============================================================================*/
@@ -45,11 +46,20 @@ void TimeLimit::Init() {
 	timeCoron_ = std::make_unique<TimeCoron>();
 	timeCoron_->Init();
 
+	accumulatedTime_ = 0.0f;
+
 	ApplyJson();
 
 }
 
 void TimeLimit::Update() {
+
+	accumulatedTime_ += GameTimer::GetDeltaTime();
+	if (accumulatedTime_ >= 1.0f) {
+
+		++time_;
+		accumulatedTime_ = 0.0f;
+	}
 
 	// 1文字分のテクスチャサイズ
 	const float texWidth = 544.0f / 10.0f; // 画像の幅544px..10で割って1文字分を求める
