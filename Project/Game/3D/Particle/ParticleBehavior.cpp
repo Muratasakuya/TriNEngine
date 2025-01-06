@@ -20,34 +20,74 @@ void DispersionBehavior::Create(std::list<ParticleData>& particles, ParticlePara
 
 void DispersionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
 
-	particle.currentTime += GameTimer::GetDeltaTime();
+	float deltaTime;
+	if (particle.isUseScaledDeltaTime) {
+		deltaTime = GameTimer::GetScaledDeltaTime();
+	} else {
+		deltaTime = GameTimer::GetDeltaTime();
+	}
+	// 現在の時刻を進める
+	particle.currentTime += deltaTime;
 
 	// 寿命の進行度合い
 	float lifeRatio = 1.0f - (particle.currentTime / particle.lifeTime);
-
 	// イージング処理
 	if (particle.easingType.has_value()) {
+		// EasedTにあたる
 		particle.easedLifeRatio = EasedValue(particle.easingType.value(), lifeRatio);
 	}
-	float easedLifeRatio = particle.easedLifeRatio.value_or(lifeRatio);
 
-	Vector3 easedVelocity = particle.velocity * easedLifeRatio;
-	particle.transform.translate += {
-		easedVelocity.x* GameTimer::GetDeltaTime(),
-			easedVelocity.y* GameTimer::GetDeltaTime(),
-			easedVelocity.z* GameTimer::GetDeltaTime()
-	};
+	//============================================================================*/
+	/// Translate
 
+	// 速度をイージングにかける
+	Vector3 easedVelocity = particle.velocity * particle.easedLifeRatio.value_or(lifeRatio);
+	particle.transform.translate += easedVelocity * deltaTime;
+
+	//============================================================================*/
+	/// Scale
+
+	// スケールをイージングにかける
 	Vector3 scaledTransform = particle.transform.scale * particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Rotate: 回転を進行方向に合わせる
+
+	Vector3 direction = easedVelocity.Normalize();
+	Vector3 rotate{};
+
+	if (particle.moveToDirection) {
+		rotate.y = std::atan2(direction.x, direction.z);
+		// 横軸方向の長さを求める
+		float horizontalLength = std::sqrtf(direction.x * direction.x + direction.z * direction.z);
+		// X軸周りの角度(θx)
+		rotate.x = std::atan2(-direction.y, horizontalLength);
+	} else {
+
+		rotate.Init();
+	}
+
+	//============================================================================*/
+	/// Color.a
+
+	// α値をイージングにかける
+	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Matrix
+
 	Matrix4x4 scaleMatrix =
 		Matrix4x4::MakeScaleMatrix(scaledTransform);
-
-	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
 
 	Matrix4x4 translateMatrix =
 		Matrix4x4::MakeTranslateMatrix(particle.transform.translate);
 
-	particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	particle.worldMatrix = Matrix4x4::MakeIdentity4x4();
+	if (particle.isUseBillboard) {
+		particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	} else {
+		particle.worldMatrix = Matrix4x4::MakeAffineMatrix(scaledTransform, rotate, particle.transform.translate);
+	}
 	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
 
 }
@@ -64,34 +104,57 @@ void ChaseBehavior::Create(std::list<ParticleData>& particles, ParticleParameter
 
 void ChaseBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
 
-	particle.currentTime += GameTimer::GetDeltaTime();
+	float deltaTime;
+	if (particle.isUseScaledDeltaTime) {
+		deltaTime = GameTimer::GetScaledDeltaTime();
+	} else {
+		deltaTime = GameTimer::GetDeltaTime();
+	}
+	// 現在の時刻を進める
+	particle.currentTime += deltaTime;
 
 	// 寿命の進行度合い
 	float lifeRatio = 1.0f - (particle.currentTime / particle.lifeTime);
-
 	// イージング処理
 	if (particle.easingType.has_value()) {
+		// EasedTにあたる
 		particle.easedLifeRatio = EasedValue(particle.easingType.value(), lifeRatio);
 	}
-	float easedLifeRatio = particle.easedLifeRatio.value_or(lifeRatio);
 
-	Vector3 easedVelocity = particle.velocity * easedLifeRatio;
-	particle.transform.translate += {
-		easedVelocity.x* GameTimer::GetDeltaTime(),
-			easedVelocity.y* GameTimer::GetDeltaTime(),
-			easedVelocity.z* GameTimer::GetDeltaTime()
-	};
+	//============================================================================*/
+	/// Translate
 
+	// 速度をイージングにかける
+	Vector3 easedVelocity = particle.velocity * particle.easedLifeRatio.value_or(lifeRatio);
+	particle.transform.translate += easedVelocity * deltaTime;
+
+	//============================================================================*/
+	/// Scale
+
+	// スケールをイージングにかける
 	Vector3 scaledTransform = particle.transform.scale * particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Color.a
+
+	// α値をイージングにかける
+	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Matrix
+
 	Matrix4x4 scaleMatrix =
 		Matrix4x4::MakeScaleMatrix(scaledTransform);
-
-	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
 
 	Matrix4x4 translateMatrix =
 		Matrix4x4::MakeTranslateMatrix(particle.transform.translate);
 
-	particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	particle.worldMatrix = Matrix4x4::MakeIdentity4x4();
+	if (particle.isUseBillboard) {
+		particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	} else {
+		particle.worldMatrix = scaleMatrix * translateMatrix;
+	}
 	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
 
 }
@@ -108,34 +171,58 @@ void ConvergeBehavior::Create(std::list<ParticleData>& particles, ParticleParame
 
 void ConvergeBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
 
-	particle.currentTime += GameTimer::GetDeltaTime();
+	float deltaTime;
+	if (particle.isUseScaledDeltaTime) {
+		deltaTime = GameTimer::GetScaledDeltaTime();
+	} else {
+		deltaTime = GameTimer::GetDeltaTime();
+	}
+	// 現在の時刻を進める
+	particle.currentTime += deltaTime;
 
 	// 寿命の進行度合い
 	float lifeRatio = 1.0f - (particle.currentTime / particle.lifeTime);
-
 	// イージング処理
 	if (particle.easingType.has_value()) {
+		// EasedTにあたる
 		particle.easedLifeRatio = EasedValue(particle.easingType.value(), lifeRatio);
 	}
-	float easedLifeRatio = particle.easedLifeRatio.value_or(lifeRatio);
 
-	Vector3 easedVelocity = particle.velocity * easedLifeRatio;
-	particle.transform.translate += {
-		easedVelocity.x* GameTimer::GetDeltaTime(),
-			easedVelocity.y* GameTimer::GetDeltaTime(),
-			easedVelocity.z* GameTimer::GetDeltaTime()
-	};
+	//============================================================================*/
+	/// Translate
 
+	// 速度をイージングにかける
+	Vector3 easedVelocity = particle.velocity * particle.easedLifeRatio.value_or(lifeRatio);
+	particle.transform.translate += easedVelocity * deltaTime;
+
+
+	//============================================================================*/
+	/// Scale
+
+	// スケールをイージングにかける
 	Vector3 scaledTransform = particle.transform.scale * particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Color.a
+
+	// α値をイージングにかける
+	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Matrix
+
 	Matrix4x4 scaleMatrix =
 		Matrix4x4::MakeScaleMatrix(scaledTransform);
-
-	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
 
 	Matrix4x4 translateMatrix =
 		Matrix4x4::MakeTranslateMatrix(particle.transform.translate);
 
-	particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	particle.worldMatrix = Matrix4x4::MakeIdentity4x4();
+	if (particle.isUseBillboard) {
+		particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	} else {
+		particle.worldMatrix = scaleMatrix * translateMatrix;
+	}
 	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
 
 }
@@ -152,22 +239,33 @@ void InjectionBehavior::Create(std::list<ParticleData>& particles, ParticleParam
 
 void InjectionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
 
-	particle.currentTime += GameTimer::GetDeltaTime();
+	float deltaTime;
+	if (particle.isUseScaledDeltaTime) {
+		deltaTime = GameTimer::GetScaledDeltaTime();
+	} else {
+		deltaTime = GameTimer::GetDeltaTime();
+	}
+	// 現在の時刻を進める
+	particle.currentTime += deltaTime;
 
 	// 寿命の進行度合い
 	float lifeRatio = 1.0f - (particle.currentTime / particle.lifeTime);
-
 	// イージング処理
 	if (particle.easingType.has_value()) {
+		// EasedTにあたる
 		particle.easedLifeRatio = EasedValue(particle.easingType.value(), lifeRatio);
 	}
-	float easedLifeRatio = particle.easedLifeRatio.value_or(lifeRatio);
-	Vector3 easedVelocity = particle.velocity * easedLifeRatio;
 
+	// 速度をイージングにかける
+	Vector3 easedVelocity = particle.velocity * particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Physics
+
+	// 反射するかどうか
 	if (particle.physics.reflectEnable) {
 
-		// 移動処理前の位置
-		Vector3 newPosition = particle.transform.translate + easedVelocity * GameTimer::GetDeltaTime();
+		Vector3 newPosition = particle.transform.translate + easedVelocity * deltaTime;
 
 		// 衝突判定
 		if (newPosition.y <= particle.physics.reflectFace.y && particle.velocity.y < 0) {
@@ -182,29 +280,36 @@ void InjectionBehavior::Update(ParticleData& particle, const Matrix4x4& billboar
 		particle.transform.translate = newPosition;
 	} else {
 
-		particle.transform.translate += {
-			easedVelocity.x* GameTimer::GetDeltaTime(),
-				easedVelocity.y* GameTimer::GetDeltaTime(),
-				easedVelocity.z* GameTimer::GetDeltaTime()
-		};
+		particle.transform.translate += easedVelocity * deltaTime;
 	}
 
 	Vector3 gravityEffect =
-		particle.physics.gravityDirection.value() * particle.physics.gravityStrength.value() * GameTimer::GetDeltaTime();
+		particle.physics.gravityDirection.value() * particle.physics.gravityStrength.value() * deltaTime;
 	particle.velocity += gravityEffect;
+
+	//============================================================================*/
+	/// Color.a
+
+	// α値をイージングにかける
+	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
+
+	//============================================================================*/
+	/// Matrix
 
 	Vector3 scaledTransform = particle.transform.scale * particle.easedLifeRatio.value_or(lifeRatio);
 	Matrix4x4 scaleMatrix =
 		Matrix4x4::MakeScaleMatrix(scaledTransform);
 
-	particle.color.a = particle.easedLifeRatio.value_or(lifeRatio);
-
 	Matrix4x4 translateMatrix =
 		Matrix4x4::MakeTranslateMatrix(particle.transform.translate);
 
-	particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	particle.worldMatrix = Matrix4x4::MakeIdentity4x4();
+	if (particle.isUseBillboard) {
+		particle.worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+	} else {
+		particle.worldMatrix = scaleMatrix * translateMatrix;
+	}
 	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
-
 }
 
 //============================================================================*/

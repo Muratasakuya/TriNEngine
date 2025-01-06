@@ -101,18 +101,11 @@ inline void BaseParticle<particleType>::ImGui() {
 		} else {
 
 			ImGui::DragFloat3(("ScaleMin##" + std::to_string(ptrAddress)).c_str(), &parameter_.scale.min.x, 0.01f);
-			if (parameter_.scale.min.x >= parameter_.scale.max.x) {
-				parameter_.scale.min.x = parameter_.scale.max.x - 0.01f;
-			}
-			if (parameter_.scale.min.y >= parameter_.scale.max.y) {
-				parameter_.scale.min.y = parameter_.scale.max.y - 0.01f;
-			}
-			if (parameter_.scale.min.z >= parameter_.scale.max.z) {
-				parameter_.scale.min.z = parameter_.scale.max.z - 0.01f;
-			}
-
 			ImGui::DragFloat3(("ScaleMax##" + std::to_string(ptrAddress)).c_str(), &parameter_.scale.max.x, 0.01f);
 		}
+
+		ImGui::DragFloat3(("Translate##" + std::to_string(ptrAddress)).c_str(), & parameter_.aabb.center.x, 0.01f);
+		ImGui::DragFloat3(("AABB.extent##" + std::to_string(ptrAddress)).c_str(), & parameter_.aabb.extent.x, 0.01f);
 	}
 
 	// Particle Settings
@@ -120,6 +113,9 @@ inline void BaseParticle<particleType>::ImGui() {
 
 		// Uniform
 		ImGui::Checkbox(("Uniform##" + std::to_string(ptrAddress)).c_str(), &parameter_.isUniform);
+		ImGui::Checkbox(("UseScaledDeltaTime##" + std::to_string(ptrAddress)).c_str(), &parameter_.isUseScaledDeltaTime);
+		ImGui::Checkbox(("UseBillboard##" + std::to_string(ptrAddress)).c_str(), &parameter_.isUseBillboard);
+		ImGui::Checkbox(("MoveToDirection##" + std::to_string(ptrAddress)).c_str(), &parameter_.moveToDirection);
 
 		// LifeTime (optional)
 		bool haslifeTime = parameter_.lifeTime.has_value();

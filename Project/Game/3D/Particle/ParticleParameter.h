@@ -27,25 +27,36 @@ public:
 	ParticleParameter() = default;
 	virtual ~ParticleParameter() = default;
 
-	virtual void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) = 0;
+	void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles);
 
-	bool isUniform; // 均一か非均一
+	//* commonParameters *//
 
-	ParticleValue scale;
+	bool isUniform; //* 均一か非均一か決めるフラグ
 
+	ParticleValue scale; //* S
+	AABB aabb;           //* Emiterの場所、範囲
+
+	//* life
 	std::optional<float> speed = std::nullopt;
 	std::optional<float> lifeTime = std::nullopt;
+
+	//* 色
 	std::optional<Color> color = std::nullopt;
 	std::optional<RandomParticleColor> randomParticleColor;
 
+	// 物理
 	ParticlePhysics physics;
-	AABB aabb;
 
-	//* easing *//
+	// scaleされたDeltaTimeを使うかどうか
+	// Defaultはfalse
+	bool isUseScaledDeltaTime = false;
+	bool isUseBillboard = true;
+	bool moveToDirection = false;
+
+	//* easing
 	std::optional<EasingType> easingType = std::nullopt;
 
-	//* emitter *//
-
+	//* emitter 
 	uint32_t count;      // 個数
 	float frequency;     // ~秒置き、発生頻度
 	float frequencyTime; // 発生頻度用の時刻
@@ -64,11 +75,6 @@ public:
 
 	DispersionParticleParameter() = default;
 	~DispersionParticleParameter() = default;
-
-	void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) override;
-
-	float sphereScale;
-
 };
 
 //============================================================================*/
@@ -83,8 +89,6 @@ public:
 
 	ChaseParticleParameter() = default;
 	~ChaseParticleParameter() = default;
-
-	void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) override;
 
 	Vector3 prePos;
 
@@ -102,11 +106,6 @@ public:
 
 	ConvergeParticleParameter() = default;
 	~ConvergeParticleParameter() = default;
-
-	void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) override;
-
-	float sphereScale;
-
 };
 
 //============================================================================*/
@@ -121,8 +120,6 @@ public:
 
 	InjectionParticleParameter() = default;
 	~InjectionParticleParameter() = default;
-
-	void Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) override;
 
 	Vector3 injectionDirection;
 

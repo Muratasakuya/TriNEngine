@@ -20,13 +20,13 @@ void GameScene::LoadAssets() {
 	// timer
 	Asset::LoadTexture("timeNumber");
 	Asset::LoadTexture("coron");
-
 	// environment
 	Asset::LoadTexture("fieldBaseTile");
 	Asset::LoadTexture("wall");
 
 	// particle
 	Asset::LoadTexture("circle");
+	Asset::LoadTexture("starCircle");
 
 	//========================================================================*/
 	//* models
@@ -43,6 +43,7 @@ void GameScene::LoadAssets() {
 
 	// particle
 	Asset::LoadModel("./Resources/Model/Obj/CG", "plane.obj");
+	Asset::LoadModel("./Resources/Model/Obj/Particle", "hitLine.obj");
 
 }
 

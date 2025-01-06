@@ -6,7 +6,7 @@
 #include <Engine/Process/Input.h>
 #include <Game/3D/Object/BaseAnimationObject.h>
 
-// Collider
+// collider
 #include <Game/Objects/Player/Collision/PlayerAttackCollider.h>
 
 // c++

@@ -249,6 +249,10 @@ void EnemyManager::ImGui() {
 		}
 	}
 
+	if (ImGui::Button("Clear Enemy")) {
+		enemies_.clear();
+	}
+
 }
 
 void EnemyManager::ApplyJson() {

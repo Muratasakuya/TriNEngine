@@ -80,7 +80,7 @@ void ParticleSystem::Draw(const std::string& name, BlendMode blendMode) {
 		particleGroups_[name].model.inputAssembler.SetBuffer(commandList, index);
 		particleGroups_[name].particleBuffer.SetCommand(commandList);
 		D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = Asset::GetTexture()->GetTextureGPUHandle(particleGroups_[name].model.data.meshes[index].textureName.value());
-		commandList->SetGraphicsRootDescriptorTable(2, gpuHandle);
+		commandList->SetGraphicsRootDescriptorTable(1, gpuHandle);
 		commandList->SetGraphicsRootDescriptorTable(2, GraphicsEngine::SRV()->GetGPUHandle(particleGroups_[name].instancingSrvIndex));
 		particleGroups_[name].model.inputAssembler.DrawCall(commandList, particleGroups_[name].numInstance, index);
 	}
@@ -104,6 +104,9 @@ void ParticleSystem::CreateParticle(
 	//!! alreadyLoadModel !!//
 	particleGroups_[name].model.data = Asset::GetModel()->GetModelData(modelName);
 	CreateVertexData(name);
+	particleGroups_[name].model.data.meshes
+		[static_cast<int>(particleGroups_[name].model.data.meshes.size() - 1)].textureName =
+		Asset::GetModel()->GetModelData(modelName).meshes.front().textureName.value_or("assert");
 
 	//* CreateStructureBuffer *//
 	particleGroups_[name].srvIndex = GraphicsEngine::SRV()->Allocate();

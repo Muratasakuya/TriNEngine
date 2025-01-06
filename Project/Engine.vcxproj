@@ -361,6 +361,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Objects\Environment\Field.cpp" />
     <ClCompile Include="Game\Editor\Manager\EditorManager.cpp" />
     <ClCompile Include="Game\Editor\Base\BaseEditor.cpp" />
+    <ClCompile Include="Game\Objects\Player\Particle\HitLineParticle.cpp" />
+    <ClCompile Include="Game\Objects\Player\Particle\HitStarParticle.cpp" />
     <ClCompile Include="Lib\Adapter\Easing.cpp" />
     <ClCompile Include="Engine\DXClass\Pipeline\DXBlendState.cpp" />
     <ClCompile Include="Engine\DXClass\Pipeline\DXInputLayout.cpp" />
@@ -452,6 +454,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Objects\Environment\Field.h" />
     <ClInclude Include="Game\Editor\Manager\EditorManager.h" />
     <ClInclude Include="Game\Editor\Base\BaseEditor.h" />
+    <ClInclude Include="Game\Objects\Player\Particle\HitLineParticle.h" />
+    <ClInclude Include="Game\Objects\Player\Particle\HitStarParticle.h" />
     <ClInclude Include="Lib\Adapter\Easing.h" />
     <ClInclude Include="Engine\DXClass\Pipeline\DXBlendState.h" />
     <ClInclude Include="Engine\DXClass\Pipeline\DXInputLayout.h" />

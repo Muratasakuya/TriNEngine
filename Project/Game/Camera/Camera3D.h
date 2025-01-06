@@ -37,7 +37,7 @@ public:
 
 	//* setter *//
 
-	void SetCamera(const Matrix4x4& viewProMatrix, const Vector3& translate);
+	void SetCamera(const Matrix4x4& viewProMatrix, const Matrix4x4& cameraMatrix, const Vector3& translate);
 
 private:
 	//========================================================================*/

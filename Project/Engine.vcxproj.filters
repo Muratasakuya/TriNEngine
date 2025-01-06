@@ -131,6 +131,8 @@
     <ClCompile Include="Game\3D\Particle\ParticleVisitor.cpp" />
     <ClCompile Include="Game\Objects\Test\TestParticle.cpp" />
     <ClCompile Include="Engine\Renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Game\Objects\Player\Particle\HitLineParticle.cpp" />
+    <ClCompile Include="Game\Objects\Player\Particle\HitStarParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -229,5 +231,7 @@
     <ClInclude Include="Game\3D\Particle\ParticleVisitor.h" />
     <ClInclude Include="Game\Objects\Test\TestParticle.h" />
     <ClInclude Include="Engine\Renderer\ParticleRenderer.h" />
+    <ClInclude Include="Game\Objects\Player\Particle\HitLineParticle.h" />
+    <ClInclude Include="Game\Objects\Player\Particle\HitStarParticle.h" />
   </ItemGroup>
 </Project>

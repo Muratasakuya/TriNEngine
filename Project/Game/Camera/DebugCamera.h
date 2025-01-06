@@ -30,6 +30,8 @@ public:
 	bool Enable() const { return enable_; }
 	Matrix4x4 GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 
+	Matrix4x4 GetCameraMatrix() const { return matrix_; }
+
 	//* setter *//
 
 	void SetEnable(bool enable) { enable_ = enable; }

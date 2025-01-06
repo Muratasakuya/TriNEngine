@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Engine/Renderer/SpriteRenderer.h>
 #include <Game/System/GameSystem.h>
 
@@ -42,6 +43,7 @@ void EditorManager::SelectEditor() {
 	// 他のオブジェクトが選択されていたら選択解除
 	if (SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
+		ParticleRenderer::GetSelectedParticle() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 		selectedEditor_ = nullptr;
 		currentEditorIndex_ = -1;

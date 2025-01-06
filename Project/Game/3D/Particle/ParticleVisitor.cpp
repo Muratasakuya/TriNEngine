@@ -128,7 +128,7 @@ void DispersionVisitor::CreateUniformParticles(
 			Random::Generate(min.y, max.y),
 			Random::Generate(min.z, max.z));
 
-		particle.transform.translate = particlePos * dispersionParameter.sphereScale + randomPos;
+		particle.transform.translate = particlePos + randomPos;
 
 		float speedFactor = 1.0f + 0.5f * (1.0f - z);
 		particle.velocity = Vector3(x, y, z) * speedFactor * dispersionParameter.speed.value_or(1.0f);
@@ -141,6 +141,10 @@ void DispersionVisitor::CreateUniformParticles(
 		particle.color = SettingColor(dispersionParameter.color, dispersionParameter.randomParticleColor);
 
 		particle.easingType = parameter.easingType;
+
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
 
 		particles.push_back(particle);
 	}
@@ -189,6 +193,10 @@ void DispersionVisitor::CreateNonUniformParticles(
 		particle.lifeTime = dispersionParameter.lifeTime.value_or(Random::Generate(1.0f, 3.0f));
 
 		particle.easingType = parameter.easingType;
+
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
 
 		particles.push_back(particle);
 	}
@@ -247,6 +255,10 @@ void ChaseVisitor::CreateUniformParticles(std::list<ParticleData>& particles, Pa
 
 		particle.easingType = parameter.easingType;
 
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
+
 		particles.push_back(particle);
 	}
 }
@@ -300,6 +312,10 @@ void ChaseVisitor::CreateNonUniformParticles(std::list<ParticleData>& particles,
 
 		particle.easingType = parameter.easingType;
 
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
+
 		particles.push_back(particle);
 	}
 }
@@ -347,7 +363,7 @@ void ConvergeVisitor::CreateUniformParticles(std::list<ParticleData>& particles,
 			Random::Generate(min.y, max.y),
 			Random::Generate(min.z, max.z));
 
-		Vector3 initialPos = Vector3(x, y, z) * convergeParameter.sphereScale + randomPos;
+		Vector3 initialPos = Vector3(x, y, z) + randomPos;
 		particle.transform.translate = initialPos;
 
 		Vector3 targetDirection = Vector3(convergeParameter.aabb.center - initialPos).Normalize();
@@ -364,6 +380,10 @@ void ConvergeVisitor::CreateUniformParticles(std::list<ParticleData>& particles,
 
 		particle.easingType = parameter.easingType;
 
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
+
 		particles.push_back(particle);
 	}
 }
@@ -378,11 +398,6 @@ void ConvergeVisitor::CreateNonUniformParticles(std::list<ParticleData>& particl
 		particle.currentTime = 0.0f;
 		particle.transform.rotate.SetInit(0.0f);
 
-		Vector3 randomOffset(
-			Random::Generate(-convergeParameter.sphereScale, convergeParameter.sphereScale),
-			Random::Generate(-convergeParameter.sphereScale, convergeParameter.sphereScale),
-			Random::Generate(-convergeParameter.sphereScale, convergeParameter.sphereScale));
-
 		const Vector3& min = convergeParameter.aabb.GetMin();
 		const Vector3& max = convergeParameter.aabb.GetMax();
 		Vector3 randomPos = Vector3(
@@ -390,7 +405,7 @@ void ConvergeVisitor::CreateNonUniformParticles(std::list<ParticleData>& particl
 			Random::Generate(min.y, max.y),
 			Random::Generate(min.z, max.z));
 
-		particle.transform.translate = randomOffset + randomPos;
+		particle.transform.translate = randomPos;
 
 		Vector3 targetDirection = Vector3(convergeParameter.aabb.center - particle.transform.translate).Normalize();
 		float speed = convergeParameter.speed.value_or(Random::Generate(0.3f, 0.7f));
@@ -412,6 +427,10 @@ void ConvergeVisitor::CreateNonUniformParticles(std::list<ParticleData>& particl
 		particle.lifeTime = convergeParameter.lifeTime.value_or(timeToReachTarget);
 
 		particle.easingType = parameter.easingType;
+
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
 
 		particles.push_back(particle);
 	}
@@ -474,6 +493,10 @@ void InjectionVisitor::CreateUniformParticles(std::list<ParticleData>& particles
 		particle.lifeTime = injectionParameter.lifeTime.value_or(6.0f);
 		particle.easingType = parameter.easingType;
 
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
+
 		particles.push_back(particle);
 	}
 
@@ -523,6 +546,10 @@ void InjectionVisitor::CreateNonUniformParticles(std::list<ParticleData>& partic
 
 		particle.lifeTime = injectionParameter.lifeTime.value_or(Random::Generate(2.0f, 8.0f));
 		particle.easingType = parameter.easingType;
+
+		particle.isUseScaledDeltaTime = parameter.isUseScaledDeltaTime;
+		particle.isUseBillboard = parameter.isUseBillboard;
+		particle.moveToDirection = parameter.moveToDirection;
 
 		particles.push_back(particle);
 	}

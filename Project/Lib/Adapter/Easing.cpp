@@ -126,6 +126,11 @@ float EaseInBack(float t) {
 	return c3 * std::powf(t, 3) - c1 * std::powf(t, 2);
 }
 
+float EaseInBounce(float t) {
+
+	return 1.0f - EaseOutBounce(1.0f - t);
+}
+
 // Ease Out Bounce
 float EaseOutBounce(float t) {
 
@@ -143,6 +148,15 @@ float EaseOutBounce(float t) {
 	} else {
 		t -= 2.625f / d1;
 		return n1 * t * t + 0.984375f;
+	}
+}
+
+float EaseInOutBounce(float t) {
+
+	if (t < 0.5f) {
+		return EaseInBounce(t * 2.0f) * 0.5f;
+	} else {
+		return EaseOutBounce(t * 2.0f - 1.0f) * 0.5f + 0.5f;
 	}
 }
 
@@ -170,6 +184,11 @@ float EasedValue(EasingType easingType, float t) {
 	case EasingType::EaseInCirc: return EaseInCirc(t);
 	case EasingType::EaseOutCirc: return EaseOutCirc(t);
 	case EasingType::EaseInOutCirc: return EaseInOutCirc(t);
+	case EasingType::EaseInBack: return EaseInBack(t);
+	case EasingType::EaseOutBack: return EaseOutBack(t);
+	case EasingType::EaseInBounce: return EaseInBounce(t);
+	case EasingType::EaseOutBounce: return EaseOutBounce(t);
+	case EasingType::EaseInOutBounce: return EaseInOutBounce(t);
 	default: return t;
 	}
 }

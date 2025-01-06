@@ -5,6 +5,13 @@
 //============================================================================*/
 #include <Game/3D/Collision/Collider.h>
 
+// particle
+#include <Game/Objects/Player/Particle/HitLineParticle.h>
+#include <Game/Objects/Player/Particle/HitStarParticle.h>
+
+// c++
+#include <array>
+
 // front
 class Player;
 
@@ -26,6 +33,10 @@ public:
 	void Update();
 
 	void ImGui();
+
+	//* collision *//
+
+	void OnCollisionEnter([[maybe_unused]] Collider* other) override;
 
 private:
 	//========================================================================*/
@@ -52,6 +63,12 @@ private:
 	Parameter firstParameter_;
 	Parameter secondParameter_;
 	Parameter thirdParameter_;
+
+	//* particle *//
+
+	std::array<std::unique_ptr<HitLineParticle>, hitLineTypeNum> hitParticles_;
+
+	std::unique_ptr<HitStarParticle> hitStarParticle_;
 
 	//========================================================================*/
 	//* functions

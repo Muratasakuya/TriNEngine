@@ -11,15 +11,6 @@
 //	ParticleParameter classMethods
 //============================================================================*/
 
-void DispersionParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
-	visitor.Visit(particles, *this);
-}
-void ChaseParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
-	visitor.Visit(particles, *this);
-}
-void ConvergeParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
-	visitor.Visit(particles, *this);
-}
-void InjectionParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
+void ParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
 	visitor.Visit(particles, *this);
 }

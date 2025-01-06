@@ -21,7 +21,6 @@ void CameraManager::Init() {
 
 	selectGameCamera_ = false;
 
-
 	// 2D
 	camera2D_ = std::make_unique<Camera2D>();
 	camera2D_->Init();
@@ -48,11 +47,11 @@ void CameraManager::Update() {
 	debugCamera_->Update(camera3D_->GetTranslate(), camera3D_->GetRotate(), camera3D_->GetProjectionMatrix());
 	if (debugCamera_->Enable()) {
 
-		camera3D_->SetCamera(debugCamera_->GetViewProjectionMatrix(), debugCamera_->GetTranslate());
+		camera3D_->SetCamera(debugCamera_->GetViewProjectionMatrix(), debugCamera_->GetCameraMatrix(), debugCamera_->GetTranslate());
 	} else {
 
 		followCamera_->Update();
-		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetTranslate());
+		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetCameraMatrix(), followCamera_->GetTranslate());
 	}
 
 	sunLightCamera_->Update();

@@ -46,7 +46,7 @@ private:
 
 	Player* player_ = nullptr;
 
-	const float initPosY_ = 2.0f;   // 初期Y座標
+	const float initPosY_ = 12.0f;  // 初期Y座標
 	const float initScaleY_ = 0.2f; // 初期Yスケール
 
 	Vector3 velocity_;

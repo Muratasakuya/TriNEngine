@@ -53,6 +53,8 @@ void ParticleRenderer::Clear() {
 
 void ParticleRenderer::SelectParticle() {
 
+	ImGui::Begin("Particle");
+
 	// 他のObjectが選択されていたら選択解除する
 	if (SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
@@ -116,6 +118,8 @@ void ParticleRenderer::SelectParticle() {
 			}
 		}
 	}
+
+	ImGui::End();
 }
 
 void ParticleRenderer::SelectedImGui() {

@@ -5,8 +5,10 @@
 //============================================================================*/
 #include <Game/Utility/Direction.h>
 #include <Game/System/GameSystem.h>
+#include <Game/Utility/GameTimer.h>
 #include <Engine/Process/Input.h>
 #include <Lib/Adapter/JsonAdapter.h>
+#include <Lib/Adapter/Random.h>
 
 // imgui
 #include <imgui.h>
@@ -25,6 +27,8 @@ void FollowCamera::Init(Matrix4x4 projectionMatrix) {
 
 	projectionMatrix_ = projectionMatrix;
 
+	isScreenShake_ = false;
+
 }
 
 void FollowCamera::Update() {
@@ -35,15 +39,17 @@ void FollowCamera::Update() {
 
 	// カメラ移動、回転
 	Move();
+	// 画面シェイク
+	UpdateScreenShake();
 
 	transform_.Update();
 
 	Matrix4x4 rotateMatrix = Quaternion::MakeRotateMatrix(transform_.rotation);
-	Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity4x4();
+	matrix_ = Matrix4x4::MakeIdentity4x4();
 	Matrix4x4 translateMatrix = Matrix4x4::MakeTranslateMatrix(transform_.translation);
-	worldMatrix = rotateMatrix * translateMatrix;
+	matrix_ = rotateMatrix * translateMatrix;
 
-	Matrix4x4 viewMatrix = Matrix4x4::Inverse(worldMatrix);
+	Matrix4x4 viewMatrix = Matrix4x4::Inverse(matrix_);
 	viewProjectionMatrix_ = viewMatrix * projectionMatrix_;
 
 }
@@ -94,6 +100,47 @@ void FollowCamera::ImGui() {
 void FollowCamera::Reset() {
 
 	target_ = nullptr;
+}
+
+void FollowCamera::UpdateScreenShake() {
+
+	// Playerが敵にダメージを与えた時
+	if (isScreenShake_) {
+
+		screenShakeTimer_ += GameTimer::GetScaledDeltaTime();
+
+		// シェイクの残り時間を計算
+		float remainingTime = screenShakeDuration_ - screenShakeTimer_;
+		if (remainingTime > 0.0f) {
+
+			float dampingFactor = remainingTime / screenShakeDuration_;
+			float intensity = screenShakeIntensity_ * dampingFactor;
+
+			float offsetX = Random::Generate(-1.0f, 1.0f) * intensity;
+			float offsetY = Random::Generate(-1.0f, 1.0f) * intensity;
+			float offsetZ = Random::Generate(-1.0f, 1.0f) * intensity;
+
+			Vector3 forward = Vector3(
+				std::cos(transform_.rotation.y) * cos(transform_.rotation.x),
+				std::sin(transform_.rotation.x),
+				std::sin(transform_.rotation.y) * cos(transform_.rotation.x)
+			);
+
+			Vector3 right = Vector3(
+				std::cos(transform_.rotation.y + std::numbers::pi_v<float> / 2.0f),
+				0,
+				std::sin(transform_.rotation.y + std::numbers::pi_v<float> / 2.0f));
+
+			transform_.translation = transform_.translation + forward * offsetZ + right * offsetX;
+			transform_.translation.y += offsetY;
+
+		} else {
+
+			// シェイク終了
+			isScreenShake_ = false;
+			screenShakeTimer_ = 0.0f;
+		}
+	}
 }
 
 void FollowCamera::SetTarget(const AnimationTransform* target) {

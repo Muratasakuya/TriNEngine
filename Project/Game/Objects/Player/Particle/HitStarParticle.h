@@ -6,29 +6,22 @@
 #include <Game/3D/Particle/BaseParticle.h>
 
 //============================================================================*/
-//	TestParticle class
+//	HitStarParticle class
 //============================================================================*/
-class TestParticle
+class HitStarParticle
 	:public BaseParticle<kDispersion> {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	TestParticle() = default;
-	~TestParticle() = default;
+	HitStarParticle() = default;
+	~HitStarParticle() = default;
 
 	void Init() override;
 
 	void Update() override;
 
-private:
-	//========================================================================*/
-	//	private Methods
-	//========================================================================*/
-
-	//========================================================================*/
-	//* variables
-
+	void EmitOnce(const Vector3& translate);
 
 };

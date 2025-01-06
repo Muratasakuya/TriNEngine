@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Game/System/GameSystem.h>
 #include <Game/Objects/Player/Player.h>
 #include <Lib/Adapter/JsonAdapter.h>
 
@@ -27,6 +28,18 @@ void PlayerAttackCollider::Init(Player* player) {
 	Collider::name_ = "playerAttack";
 
 	ApplyJson();
+
+	//========================================================================*/
+	//* particle effect *//
+
+	for (uint32_t index = 0; index < hitLineTypeNum; ++index) {
+
+		hitParticles_[index] = std::make_unique<HitLineParticle>(static_cast<HitLineParticleType>(index));
+		hitParticles_[index]->Init();
+	}
+
+	hitStarParticle_ = std::make_unique<HitStarParticle>();
+	hitStarParticle_->Init();
 
 }
 
@@ -77,7 +90,31 @@ void PlayerAttackCollider::Update() {
 	}
 
 	Collider::OBBUpdate();
+	
+	for (const auto& hitParticle : hitParticles_) {
 
+		hitParticle->Update();
+	}
+
+	hitStarParticle_->Update();
+
+}
+
+void PlayerAttackCollider::OnCollisionEnter(Collider* other) {
+
+	// targetTypeと衝突したら
+	if (other->GetType() == this->targetType_) {
+
+		// Particleを発生させる
+		for (const auto& hitParticle : hitParticles_) {
+
+			hitParticle->EmitOnce(other->GetCenterPos());
+		}
+
+		hitStarParticle_->EmitOnce(other->GetCenterPos());
+
+		GameSystem::GameCamera()->GetFollowCamera()->SetScreenShake();
+	}
 }
 
 void PlayerAttackCollider::ImGui() {

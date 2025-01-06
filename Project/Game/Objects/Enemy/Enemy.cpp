@@ -57,7 +57,7 @@ void Enemy::Init(uint32_t index, const Vector3& translate, Player* player) {
 	moveCoolTime_ = Random::Generate(1.8f, 3.0f);
 
 	startAnimationTimer_ = 0.0f;
-	startAnimationTime_ = 1.0f;
+	startAnimationTime_ = 4.8f;
 
 	isAnimationFinish_ = false;
 
@@ -93,6 +93,7 @@ void Enemy::Draw(RendererPipelineType pipeline) {
 void Enemy::OnCollisionEnter(Collider* other) {
 
 	if (currentHp_ == 0) {
+		Collider::type_ = ColliderType::Type_None;
 		return;
 	}
 

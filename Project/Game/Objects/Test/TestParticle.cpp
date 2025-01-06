@@ -11,26 +11,18 @@
 void TestParticle::Init() {
 
 	BaseParticle::SetParticleRenderer("test");
+	BaseParticle::Create("hitLine.obj");
 
-	parameter_.scale.uniform = Vector3(1.0f, 1.0f, 1.0f);
+	//* 固定設定 *//
 
-	parameter_.count = 8;
-	parameter_.frequency = 0.1f;
-
-	BaseParticle::Create("plane.obj");
-	particleSystem_->SetTexture(GetName(), "circle");
-
-	blendMode_ = kBlendModeAdd;
+	blendMode_ = kBlendModeAdd;        // 加算
+	parameter_.isUniform = true;       // 均一に出る
+	parameter_.isUseBillboard = false; // Billboard無効
 
 }
 
 void TestParticle::Update() {
 
 	particleSystem_->Update();
-
-}
-
-void TestParticle::DerivedImGui() {
-
 
 }
