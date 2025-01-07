@@ -6,7 +6,11 @@
 #include <Game/Editor/Base/BaseEditor.h>
 #include <Game/Objects/Enemy/Enemy.h>
 
+//* particle *//
+#include <Game/Objects/Enemy/Particle/EnemyDeadParticle.h>
+
 // c++
+#include <vector>
 #include <memory>
 #include <list>
 #include <unordered_map>
@@ -77,6 +81,10 @@ private:
 	Vector3 editSpawnPos_;
 
 	SpawnPlace selectedPlace_;
+
+	//* particle *//
+
+	std::vector<std::unique_ptr<EnemyDeadParticle>> deadParticles_;
 
 	//* test *//
 

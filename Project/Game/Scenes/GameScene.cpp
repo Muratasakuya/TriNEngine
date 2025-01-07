@@ -3,7 +3,9 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Base/GraphicsEngine.h>
 #include <Engine/Asset/Asset.h>
+#include <Engine/Process/Audio.h>
 #include <Game/Scenes/Manager/SceneManager.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Utility/GameTimer.h>
@@ -50,6 +52,18 @@ void GameScene::LoadAssets() {
 	Asset::LoadModel("./Resources/Model/Obj/CG", "plane.obj");
 	Asset::LoadModel("./Resources/Model/Obj/Particle", "hitLine.obj");
 
+	//========================================================================*/
+	//* audio
+
+	Audio::GetInstance()->LoadWave("./Resources/Sounds/swordSlash.wav");
+	Audio::GetInstance()->LoadWave("./Resources/Sounds/finishSlow.wav");
+	Audio::GetInstance()->LoadWave("./Resources/Sounds/maou_bgm_cyber43.wav");
+
+	// 音量設定
+	Audio::GetInstance()->SetVolume("swordSlash", 0.01f);
+	Audio::GetInstance()->SetVolume("finishSlow", 0.01f);
+	Audio::GetInstance()->SetVolume("maou_bgm_cyber43", 0.01f);
+
 }
 
 void GameScene::Init() {
@@ -88,9 +102,13 @@ void GameScene::Init() {
 	finishScaleTimer_ = 0.0f;
 	finishScaleTime_ = 0.8f;
 
+	GraphicsEngine::SetPostProcess(PostProcessPipelineType::CopyTexture);
+
 }
 
 void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
+
+	Audio::GetInstance()->PlayWave("maou_bgm_cyber43", true);
 
 	GameSystem::GameCamera()->GetSunLightCamera()->SetTranslate(player_->GetWorldPos());
 
@@ -115,9 +133,13 @@ void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 		if (finishScaleTime_ > finishScaleTimer_) {
 			GameTimer::SetTimeScale(std::lerp(1.0f, 0.08f, easedT));
 			GameTimer::SetReturnScaleEnable(false);
+
+			Audio::GetInstance()->PlaySE("finishSlow");
 		}
 
 		sceneManager->SetNextScene("Title");
+
+		Audio::GetInstance()->StopWave("maou_bgm_cyber43");
 	}
 
 }

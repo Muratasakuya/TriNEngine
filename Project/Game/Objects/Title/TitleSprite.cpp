@@ -6,7 +6,7 @@
 
 void TitleSprite::Init() {
 
-	BaseSprite::Init("title");
+	BaseSprite::Init("Title");
 	BaseSprite::SetSpriteRenderer("titleSprite");
 
 	BaseSprite::SetCenterPos();

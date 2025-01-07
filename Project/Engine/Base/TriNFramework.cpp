@@ -6,6 +6,7 @@
 #include <Engine/Asset/Asset.h>
 #include <Engine/Renderer/ImGuiRenderer.h>
 #include <Engine/Process/Input.h>
+#include <Engine/Process/Audio.h>
 #include <Game/3D/PrimitiveDrawer.h>
 
 //============================================================================*/
@@ -38,6 +39,8 @@ void TriNFramework::Init() {
 	graphicsEngine_->Init();
 	// asset
 	Asset::Init();
+	// audio
+	Audio::GetInstance()->Init();
 	// lineDrawer
 	PrimitiveDrawer::GetInstance()->Init(graphicsEngine_->GetPipeline());
 	// gameSystem
@@ -84,6 +87,7 @@ void TriNFramework::Finalize() {
 	Asset::Finalize();
 	PrimitiveDrawer::Finalize();
 	Input::Finalize();
+	Audio::GetInstance()->Finalize();
 
 	graphicsEngine_.reset();
 

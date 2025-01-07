@@ -163,6 +163,10 @@ void Player::MoveClamp() {
 
 void Player::Move() {
 
+	if (!enemyManager_->IsStart()) {
+		return;
+	}
+
 	MoveClamp(); // 移動処理
 
 	MoveWalk();    // 通常歩き移動

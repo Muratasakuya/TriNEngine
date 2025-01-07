@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Base/GraphicsEngine.h>
 #include <Engine/Asset/Asset.h>
 #include <Engine/Process/Input.h>
 #include <Game/Scenes/Manager/SceneManager.h>
@@ -18,7 +19,7 @@ void TitleScene::LoadAssets() {
 	//========================================================================*/
 	//* textures
 
-	Asset::LoadTexture("title");
+	Asset::LoadTexture("Title");
 
 }
 
@@ -30,6 +31,8 @@ void TitleScene::Init() {
 
 	titleSprite_ = std::make_unique<TitleSprite>();
 	titleSprite_->Init();
+
+	GraphicsEngine::SetPostProcess(PostProcessPipelineType::Vignette);
 
 }
 

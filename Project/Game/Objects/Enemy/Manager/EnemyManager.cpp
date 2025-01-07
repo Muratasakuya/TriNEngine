@@ -32,6 +32,13 @@ void EnemyManager::Init(Player* player) {
 	isStart_ = false;
 	isFinish_ = false;
 
+	deadParticles_.resize(8);
+	for (uint32_t index = 0; index < 8; ++index) {
+
+		deadParticles_[index] = std::make_unique<EnemyDeadParticle>(index);
+		deadParticles_[index]->Init();
+	}
+
 }
 
 void EnemyManager::Update() {
@@ -39,6 +46,15 @@ void EnemyManager::Update() {
 	debugStartTimer_ += GameTimer::GetDeltaTime();
 	if (debugStartTimer_ >= 2.0f) {
 		UpdatePhase();
+	}
+
+	int index = 0;
+	for (const auto& enemy : enemies_) {
+		if (!enemy->IsAlive()) {
+
+			deadParticles_[index]->EmitOnce(enemy->GetTranslation());
+			++index;
+		}
 	}
 
 	// 全ての敵の更新
@@ -57,6 +73,11 @@ void EnemyManager::Update() {
 	for (const auto& enemy : enemies_) {
 
 		enemy->Update();
+	}
+
+	for (const auto& deadParticle : deadParticles_) {
+
+		deadParticle->Update();
 	}
 
 }

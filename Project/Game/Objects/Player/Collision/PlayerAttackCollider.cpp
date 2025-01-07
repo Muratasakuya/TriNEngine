@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Engine/Process/Audio.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Objects/Player/Player.h>
 #include <Lib/Adapter/JsonAdapter.h>
@@ -52,7 +53,7 @@ void PlayerAttackCollider::Update() {
 	forward.Normalize();
 
 	// 最初の攻撃の時
-	if (player_->IsWaitToFirstAttack() &&
+	if (player_->IsWaitToFirstAttack() && !player_->IsDash() &&
 		player_->GetWorldTransform().GetAnimationProgress() >= 0.4f) {
 
 		// オフセット計算
@@ -90,7 +91,7 @@ void PlayerAttackCollider::Update() {
 	}
 
 	Collider::OBBUpdate();
-	
+
 	for (const auto& hitParticle : hitParticles_) {
 
 		hitParticle->Update();
@@ -114,6 +115,8 @@ void PlayerAttackCollider::OnCollisionEnter(Collider* other) {
 		hitStarParticle_->EmitOnce(other->GetCenterPos());
 
 		GameSystem::GameCamera()->GetFollowCamera()->SetScreenShake();
+
+		Audio::GetInstance()->PlaySE("swordSlash");
 	}
 }
 

@@ -43,12 +43,14 @@ public:
 	void DerivedImGui() override;
 
 	//* setter *//
-	
+
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 
 	//* getter *//
 
 	bool IsPosClamped() const { return posClamped_; }
+
+	bool IsDash() const { return isDashing_; }
 
 	bool IsWaitToFirstAttack() const { return firstAttackCollisionEnable_; }
 

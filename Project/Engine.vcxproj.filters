@@ -134,6 +134,7 @@
     <ClCompile Include="Game\Objects\Player\Particle\HitLineParticle.cpp" />
     <ClCompile Include="Game\Objects\Player\Particle\HitStarParticle.cpp" />
     <ClCompile Include="Game\Objects\HUD\PlayerOperatre.cpp" />
+    <ClCompile Include="Game\Objects\Enemy\Particle\EnemyDeadParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -235,5 +236,6 @@
     <ClInclude Include="Game\Objects\Player\Particle\HitLineParticle.h" />
     <ClInclude Include="Game\Objects\Player\Particle\HitStarParticle.h" />
     <ClInclude Include="Game\Objects\HUD\PlayerOperatre.h" />
+    <ClInclude Include="Game\Objects\Enemy\Particle\EnemyDeadParticle.h" />
   </ItemGroup>
 </Project>

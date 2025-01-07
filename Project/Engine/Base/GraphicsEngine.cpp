@@ -19,6 +19,7 @@ std::unique_ptr<DXDevice> GraphicsEngine::device_ = nullptr;
 std::unique_ptr<SrvManager> GraphicsEngine::srvManager_ = nullptr;
 std::unique_ptr<PipelineManager> GraphicsEngine::pipelineManager_ = nullptr;
 std::unique_ptr<ShadowMapRenderer> GraphicsEngine::shadowMapRenderer_ = nullptr;
+PostProcessPipelineType GraphicsEngine::postProcessPipeline_ = PostProcessPipelineType::CopyTexture;
 
 void GraphicsEngine::InitDXDevice() {
 #ifdef _DEBUG
@@ -240,7 +241,7 @@ void GraphicsEngine::RenderOffscreen() {
 	// Offscreen描画
 	const UINT vertexCount = 3;
 
-	pipelineManager_->SetPostProcessPipeline(commandList, PostProcessPipelineType::CopyTexture);
+	pipelineManager_->SetPostProcessPipeline(commandList, postProcessPipeline_);
 	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	commandList->SetGraphicsRootDescriptorTable(0, offscreenRenderer_->GetRenderTextureGPUHandle());
 	commandList->DrawInstanced(vertexCount, 1, 0, 0);
