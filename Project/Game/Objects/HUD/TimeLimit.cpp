@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Game/Objects/Enemy/Manager/EnemyManager.h>
 #include <Game/Utility/GameTimer.h>
 #include "Lib/Adapter/JsonAdapter.h"
 
@@ -30,7 +31,9 @@ void TimeCoron::Init() {
 //	TimeLimit classMethods
 //============================================================================*/
 
-void TimeLimit::Init() {
+void TimeLimit::Init(EnemyManager* enemyManager) {
+
+	enemyManager_ = enemyManager;
 
 	BaseEditor::SetEditor("TimeLimit");
 
@@ -48,17 +51,38 @@ void TimeLimit::Init() {
 
 	accumulatedTime_ = 0.0f;
 
+	isFinish_ = false;
+	isCountStart_ = false;
+
+	waitTimer_ = 0.0f;
+	waitTime_ = 4.0f;
+
 	ApplyJson();
 
 }
 
 void TimeLimit::Update() {
 
-	accumulatedTime_ += GameTimer::GetDeltaTime();
-	if (accumulatedTime_ >= 1.0f) {
+	if (isFinish_) {
+		return;
+	}
 
-		++time_;
-		accumulatedTime_ = 0.0f;
+	if (!isCountStart_ && enemyManager_->IsStart()) {
+
+		waitTimer_ += GameTimer::GetDeltaTime();
+		if (waitTimer_ >= waitTime_) {
+
+			isCountStart_ = true;
+		}
+	}
+
+	if (isCountStart_) {
+		accumulatedTime_ += GameTimer::GetDeltaTime();
+		if (accumulatedTime_ >= 1.0f) {
+
+			++time_;
+			accumulatedTime_ = 0.0f;
+		}
 	}
 
 	// 1文字分のテクスチャサイズ
@@ -95,6 +119,10 @@ void TimeLimit::Update() {
 
 	timeCoron_->SetSize(timeCoron_->GetTextureSize() / 2.0f);
 	timeCoron_->Update();
+
+	if (time_ == timeLimit_) {
+		isFinish_ = true;
+	}
 
 }
 

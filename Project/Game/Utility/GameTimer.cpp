@@ -18,6 +18,7 @@ float GameTimer::timeScale_ = 1.0f;
 float GameTimer::lerpSpeed_ = 1.8f;
 float GameTimer::waitTimer_ = 0.0f;
 float GameTimer::waitTime_ = 0.25f;
+bool GameTimer::returnScaleEnable_ = true;
 
 void GameTimer::Update() {
 
@@ -27,21 +28,23 @@ void GameTimer::Update() {
 
 	lastFrameTime_ = currentFrameTime;
 
-	// timeScaleを1.0fに戻す処理
-	if (timeScale_ != 1.0f) {
+	if (returnScaleEnable_) {
+		// timeScaleを1.0fに戻す処理
+		if (timeScale_ != 1.0f) {
 
-		// 硬直させる
-		waitTimer_ += deltaTime_;
-		if (waitTimer_ >= waitTime_) {
+			// 硬直させる
+			waitTimer_ += deltaTime_;
+			if (waitTimer_ >= waitTime_) {
 
-			float t = lerpSpeed_ * deltaTime_;
-			float easedT = EaseOutExpo(t);
+				float t = lerpSpeed_ * deltaTime_;
+				float easedT = EaseOutExpo(t);
 
-			timeScale_ += (1.0f - timeScale_) * easedT;
-			if (std::abs(1.0f - timeScale_) < 0.01f) {
-				timeScale_ = 1.0f;
+				timeScale_ += (1.0f - timeScale_) * easedT;
+				if (std::abs(1.0f - timeScale_) < 0.01f) {
+					timeScale_ = 1.0f;
 
-				waitTimer_ = 0.0f;
+					waitTimer_ = 0.0f;
+				}
 			}
 		}
 	}

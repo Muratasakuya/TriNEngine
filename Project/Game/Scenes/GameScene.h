@@ -55,9 +55,10 @@ private:
 
 	std::unique_ptr<TimeLimit> timeLimit_;
 
-	//* test *//
+	//* timeScale *//
 
-	std::unique_ptr<TestParticle> testParticle_;
+	float finishScaleTimer_;
+	float finishScaleTime_;
 
 	//========================================================================*/
 	//* function

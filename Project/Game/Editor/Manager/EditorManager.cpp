@@ -27,6 +27,13 @@ void EditorManager::SetEditor(BaseEditor* editor) {
 
 void EditorManager::EraseEditor(BaseEditor* editor) {
 
+	if (selectedEditor_) {
+		if (selectedEditor_->GetName() == editor->GetName()) {
+
+			selectedEditor_ = nullptr;
+		}
+	}
+
 	editors_.erase(std::remove(editors_.begin(), editors_.end(), editor), editors_.end());
 }
 

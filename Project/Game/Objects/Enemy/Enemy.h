@@ -36,6 +36,8 @@ public:
 
 	bool IsAlive() const { return isAlive_; }
 
+	int GetHp() const { return currentHp_; }
+
 private:
 	//========================================================================*/
 	//	private Methods

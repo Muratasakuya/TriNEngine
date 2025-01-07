@@ -29,18 +29,31 @@ void EnemyManager::Init(Player* player) {
 	phase_ = 0;
 	phaseController_ = std::nullopt;
 
+	isStart_ = false;
+	isFinish_ = false;
+
 }
 
 void EnemyManager::Update() {
 
 	debugStartTimer_ += GameTimer::GetDeltaTime();
-	if (debugStartTimer_ >= 4.0f) {
+	if (debugStartTimer_ >= 2.0f) {
 		UpdatePhase();
 	}
 
 	// 全ての敵の更新
 	enemies_.remove_if([](const std::unique_ptr<Enemy>& enemy) {
 		return !enemy->IsAlive(); });
+
+	if (phaseController_.has_value() && phaseController_.value() == 3) {
+		if (enemies_.size() == 1) {
+			if (enemies_.front()->GetHp() == 0) {
+
+				isFinish_ = true;
+			}
+		}
+	}
+
 	for (const auto& enemy : enemies_) {
 
 		enemy->Update();
@@ -49,6 +62,8 @@ void EnemyManager::Update() {
 }
 
 void EnemyManager::UpdatePhase() {
+
+	isStart_ = true;
 
 	// 最初のPhaseから次のPhaseへの処理
 	if (phaseController_.has_value() && phaseController_.value() == 0) {
@@ -67,6 +82,16 @@ void EnemyManager::UpdatePhase() {
 
 			// 次のPhaseに進める
 			phase_ = 2;
+		}
+	}
+
+	// 3回目のPhaseから次のPhase? への処理
+	if (phaseController_.has_value() && phaseController_.value() == 2) {
+		// 敵の数が0になったら
+		if (enemies_.size() == 0) {
+
+			// 最後のPhaseに進める
+			phase_ = 3;
 		}
 	}
 
@@ -173,6 +198,19 @@ void EnemyManager::UpdatePhase() {
 			enemies_.emplace_back(std::move(newEnemy));
 			++enemyIndex_;
 		}
+
+		// 敵の発生処理終了
+		phaseController_ = phase_;
+	}
+
+	//最後(仮)の敵の発生処理
+	if (phase_ == 3 && phaseController_.value() == 2) {
+
+		std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+		newEnemy->Init(enemyIndex_, Vector3(0.0f, 0.0f, 0.0f), player_);
+
+		enemies_.emplace_back(std::move(newEnemy));
+		++enemyIndex_;
 
 		// 敵の発生処理終了
 		phaseController_ = phase_;

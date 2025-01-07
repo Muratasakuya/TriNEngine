@@ -206,10 +206,10 @@ void Enemy::DeadAnimation() {
 	const float dampingFactor = 0.98f; // 減衰係数
 	velocity_ *= dampingFactor;
 
-	velocity_.y += gravity * GameTimer::GetDeltaTime();
-	transform_.translation += velocity_ * GameTimer::GetDeltaTime();
+	velocity_.y += gravity * GameTimer::GetScaledDeltaTime();
+	transform_.translation += velocity_ * GameTimer::GetScaledDeltaTime();
 
-	aliveTimer_ += GameTimer::GetDeltaTime();
+	aliveTimer_ += GameTimer::GetScaledDeltaTime();
 	float t = aliveTimer_ / aliveTime_;
 	float easedT = EaseOutExpo(t);
 	rotateValue_ = std::lerp(0.0f, 0.12f, easedT);
