@@ -21,8 +21,6 @@ void FollowCamera::Init(Matrix4x4 projectionMatrix) {
 
 	transform_.Init();
 
-	ApplyJson();
-
 	transform_.rotation = Quaternion::EulerToQuaternion(eulerRotate_);
 
 	projectionMatrix_ = projectionMatrix;
