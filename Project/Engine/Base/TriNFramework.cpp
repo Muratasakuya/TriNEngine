@@ -44,7 +44,7 @@ void TriNFramework::Init() {
 	gameSystem_ = std::make_unique<GameSystem>();
 	gameSystem_->Init();
 	// scene
-	sceneManager_ = std::make_unique<SceneManager>("Title");
+	sceneManager_ = std::make_unique<SceneManager>("Game");
 
 #ifdef _DEBUG
 	imGuiRenderer_ = std::make_unique<ImGuiRenderer>();

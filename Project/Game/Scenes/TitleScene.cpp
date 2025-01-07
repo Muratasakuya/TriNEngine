@@ -13,36 +13,9 @@
 //	TitleScene classMethods
 //============================================================================*/
 
-void TitleScene::LoadAssets() {
-
-	//========================================================================*/
-	//* textures
-
-	Asset::LoadTexture("title");
-
-}
-
 void TitleScene::Init() {
-
-	GameSystem::GameCamera()->Init();
-
-	LoadAssets();
-
-	titleSprite_ = std::make_unique<TitleSprite>();
-	titleSprite_->Init();
 
 }
 
 void TitleScene::Update([[maybe_unused]] SceneManager* sceneManager) {
-
-	titleSprite_->Update();
-
-	// AボタンでGameSceneに遷移する
-	if (Input::GetInstance()->TriggerGamepadButton(InputGamePadButtons::A)) {
-
-		sceneManager->SetNextScene("Game");
-
-		GameTimer::SetReturnScaleEnable(true);
-	}
-
 }

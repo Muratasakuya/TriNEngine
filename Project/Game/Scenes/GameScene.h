@@ -5,20 +5,10 @@
 //============================================================================*/
 #include <Game/Scenes/Methods/IScene.h>
 
-// object
+// environment
 #include <Game/Objects/Environment/Field.h>
-#include <Game/Objects/Environment/Wall.h>
-#include <Game/Objects/Player/Player.h>
-#include <Game/Objects/Enemy/Manager/EnemyManager.h>
-
-// particle
-#include <Game/Objects/Test/TestParticle.h>
-
-// HUD
-#include <Game/Objects/HUD/TimeLimit.h>
 
 // c++
-#include <string>
 #include <memory>
 
 //============================================================================*/
@@ -47,21 +37,9 @@ private:
 	//* variables
 
 	std::unique_ptr<Field> field_;
-	std::vector<std::unique_ptr<Wall>> walls_;
-
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EnemyManager> enemyManager_;
-
-	std::unique_ptr<TimeLimit> timeLimit_;
-
-	//* timeScale *//
-
-	float finishScaleTimer_;
-	float finishScaleTime_;
 
 	//========================================================================*/
-	//* function
+	//* functions
 
 	void LoadAssets();
 

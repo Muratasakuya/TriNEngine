@@ -51,8 +51,7 @@ void CameraManager::Update() {
 		camera3D_->SetCamera(debugCamera_->GetViewProjectionMatrix(), debugCamera_->GetCameraMatrix(), debugCamera_->GetTranslate());
 	} else {
 
-		followCamera_->Update();
-		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetCameraMatrix(), followCamera_->GetTranslate());
+		camera3D_->Update();
 	}
 
 	sunLightCamera_->Update();

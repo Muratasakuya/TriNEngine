@@ -108,19 +108,12 @@
     <ClCompile Include="Game\Objects\Environment\Field.cpp" />
     <ClCompile Include="Game\2D\Sprite.cpp" />
     <ClCompile Include="Game\Camera\Camera2D.cpp" />
-    <ClCompile Include="Game\Objects\Player\Player.cpp" />
     <ClCompile Include="Engine\Base\TriNFramework.cpp" />
     <ClCompile Include="Engine\DXClass\DXCommand.cpp" />
     <ClCompile Include="Game\Utility\GameTimer.cpp" />
     <ClCompile Include="Game\Objects\Test\Cube.cpp" />
-    <ClCompile Include="Game\Objects\Player\Collision\PlayerAttackCollider.cpp" />
-    <ClCompile Include="Game\Objects\Enemy\Enemy.cpp" />
-    <ClCompile Include="Game\Objects\Enemy\Manager\EnemyManager.cpp" />
-    <ClCompile Include="Game\Objects\HUD\TimeLimit.cpp" />
     <ClCompile Include="Game\2D\Base\BaseSprite.cpp" />
     <ClCompile Include="Engine\Renderer\SpriteRenderer.cpp" />
-    <ClCompile Include="Game\Objects\Environment\Wall.cpp" />
-    <ClCompile Include="Game\Objects\Title\TitleSprite.cpp" />
     <ClCompile Include="Game\Scenes\Methods\SceneTransition.cpp" />
     <ClCompile Include="Engine\CBuffer\ParticleBuffer.cpp" />
     <ClCompile Include="Game\3D\Particle\BaseParticle.cpp" />
@@ -131,8 +124,6 @@
     <ClCompile Include="Game\3D\Particle\ParticleVisitor.cpp" />
     <ClCompile Include="Game\Objects\Test\TestParticle.cpp" />
     <ClCompile Include="Engine\Renderer\ParticleRenderer.cpp" />
-    <ClCompile Include="Game\Objects\Player\Particle\HitLineParticle.cpp" />
-    <ClCompile Include="Game\Objects\Player\Particle\HitStarParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -206,19 +197,12 @@
     <ClInclude Include="Game\Objects\Environment\Field.h" />
     <ClInclude Include="Game\2D\Sprite.h" />
     <ClInclude Include="Game\Camera\Camera2D.h" />
-    <ClInclude Include="Game\Objects\Player\Player.h" />
     <ClInclude Include="Engine\Base\TriNFramework.h" />
     <ClInclude Include="Engine\DXClass\DXCommand.h" />
     <ClInclude Include="Game\Utility\GameTimer.h" />
     <ClInclude Include="Game\Objects\Test\Cube.h" />
-    <ClInclude Include="Game\Objects\Player\Collision\PlayerAttackCollider.h" />
-    <ClInclude Include="Game\Objects\Enemy\Enemy.h" />
-    <ClInclude Include="Game\Objects\Enemy\Manager\EnemyManager.h" />
-    <ClInclude Include="Game\Objects\HUD\TimeLimit.h" />
     <ClInclude Include="Game\2D\Base\BaseSprite.h" />
     <ClInclude Include="Engine\Renderer\SpriteRenderer.h" />
-    <ClInclude Include="Game\Objects\Environment\Wall.h" />
-    <ClInclude Include="Game\Objects\Title\TitleSprite.h" />
     <ClInclude Include="Game\Scenes\Methods\SceneTransition.h" />
     <ClInclude Include="Engine\CBuffer\ParticleBuffer.h" />
     <ClInclude Include="Game\3D\Particle\BaseParticle.h" />
@@ -231,7 +215,5 @@
     <ClInclude Include="Game\3D\Particle\ParticleVisitor.h" />
     <ClInclude Include="Game\Objects\Test\TestParticle.h" />
     <ClInclude Include="Engine\Renderer\ParticleRenderer.h" />
-    <ClInclude Include="Game\Objects\Player\Particle\HitLineParticle.h" />
-    <ClInclude Include="Game\Objects\Player\Particle\HitStarParticle.h" />
   </ItemGroup>
 </Project>
