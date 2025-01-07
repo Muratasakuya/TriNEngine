@@ -20,12 +20,14 @@ void GameScene::LoadAssets() {
 
 	Asset::LoadTexture("white");
 
-	// timer
-	Asset::LoadTexture("timeNumber");
-	Asset::LoadTexture("coron");
 	// environment
 	Asset::LoadTexture("fieldBaseTile");
 	Asset::LoadTexture("wall");
+
+	// HUD
+	Asset::LoadTexture("timeNumber");
+	Asset::LoadTexture("coron");
+	Asset::LoadTexture("operation");
 
 	// particle
 	Asset::LoadTexture("circle");
@@ -76,10 +78,12 @@ void GameScene::Init() {
 	timeLimit_ = std::make_unique<TimeLimit>();
 	timeLimit_->Init(enemyManager_.get());
 
+	playerOperate_ = std::make_unique<PlayerOperatre>();
+	playerOperate_->Init();
+
 	GameSystem::GameCamera()->GetFollowCamera()->SetTarget(&player_->GetWorldTransform());
 
 	//* timeScale *//
-
 
 	finishScaleTimer_ = 0.0f;
 	finishScaleTime_ = 0.8f;
@@ -100,6 +104,8 @@ void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 	enemyManager_->Update();
 
 	timeLimit_->Update();
+	playerOperate_->Update();
+
 	if (timeLimit_->IsFinish() || enemyManager_->IsFinish()) {
 
 		finishScaleTimer_ += GameTimer::GetDeltaTime();

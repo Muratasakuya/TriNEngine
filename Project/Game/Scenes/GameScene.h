@@ -16,6 +16,7 @@
 
 // HUD
 #include <Game/Objects/HUD/TimeLimit.h>
+#include <Game/Objects/HUD/PlayerOperatre.h>
 
 // c++
 #include <string>
@@ -54,6 +55,8 @@ private:
 	std::unique_ptr<EnemyManager> enemyManager_;
 
 	std::unique_ptr<TimeLimit> timeLimit_;
+
+	std::unique_ptr<PlayerOperatre> playerOperate_;
 
 	//* timeScale *//
 

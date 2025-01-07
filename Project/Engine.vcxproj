@@ -434,6 +434,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\CBuffer\ParticleBuffer.cpp" />
     <ClCompile Include="Game\Objects\Test\TestParticle.cpp" />
     <ClCompile Include="Engine\Renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Game\Objects\HUD\PlayerOperatre.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\2D\Base\BaseSprite.h" />
@@ -534,6 +535,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\CBuffer\ParticleBuffer.h" />
     <ClInclude Include="Game\Objects\Test\TestParticle.h" />
     <ClInclude Include="Engine\Renderer\ParticleRenderer.h" />
+    <ClInclude Include="Game\Objects\HUD\PlayerOperatre.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
