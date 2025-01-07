@@ -79,6 +79,7 @@ void ImGuiRenderer::GameView() {
 	ImGui::Begin("GameObject");
 
 	GameSystem::GameCamera()->SelectGameCamera();
+	GameSystem::GameLight()->SelectGameLight();
 	MeshRenderer::SelectGameObject();
 
 	ImGui::End();
@@ -99,6 +100,7 @@ void ImGuiRenderer::InspectorView() {
 	ParticleRenderer::SelectedImGui();
 	SpriteRenderer::SelectedImGui();
 	GameSystem::GameCamera()->ImGui();
+	GameSystem::GameLight()->ImGui();
 	EditorManager::SelectedImGui();
 
 	ImGui::End();

@@ -17,7 +17,7 @@ float GameTimer::deltaTime_ = 0.0f;
 float GameTimer::timeScale_ = 1.0f;
 float GameTimer::lerpSpeed_ = 1.8f;
 float GameTimer::waitTimer_ = 0.0f;
-float GameTimer::waitTime_ = 0.16f;
+float GameTimer::waitTime_ = 0.25f;
 
 void GameTimer::Update() {
 

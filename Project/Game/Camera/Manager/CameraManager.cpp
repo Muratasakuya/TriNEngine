@@ -7,6 +7,7 @@
 #include <Engine/Renderer/SpriteRenderer.h>
 #include <Engine/Renderer/ParticleRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
+#include <Game/System/GameSystem.h>
 
 // imgui
 #include <imgui.h>
@@ -67,7 +68,8 @@ void CameraManager::DrawDebug() {
 void CameraManager::SelectGameCamera() {
 
 	// 他のObjectが選択された場合は選択解除する
-	if (ParticleRenderer::GetSelectedParticle() ||
+	if (GameSystem::GameLight()->SelectedGameLight() ||
+		ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
@@ -85,6 +87,9 @@ void CameraManager::SelectGameCamera() {
 void CameraManager::ImGui() {
 
 	if (!selectGameCamera_ ||
+		GameSystem::GameLight()->SelectedGameLight() ||
+		ParticleRenderer::GetSelectedParticle() ||
+		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
 		return;

@@ -85,6 +85,7 @@ void MeshRenderer::SelectGameObject() {
 	if (ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		EditorManager::GetSelectedEditor() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 
 		currentObjectIndex_ = -1;

@@ -40,17 +40,24 @@ void IBaseGameObject::ImGui() {
 
 			std::string materialLabel;
 			if (materials_.size() == 1) {
-				materialLabel = "Color";
+				materialLabel = "Material";
 			} else {
-				materialLabel = "Color " + std::to_string(i);
+				materialLabel = "Material " + std::to_string(i);
 			}
 
 			if (ImGui::TreeNode(materialLabel.c_str())) {
 
-				ImGui::ColorEdit4("", &materials_[i].properties.color.r);
+				ImGui::ColorEdit4("color", &materials_[i].properties.color.r);
 				ImGui::Text("R:%4.2f G:%4.2f B:%4.2f A:%4.2f",
 					materials_[i].properties.color.r, materials_[i].properties.color.g,
 					materials_[i].properties.color.b, materials_[i].properties.color.a);
+
+				if (materials_[i].properties.enableBlinnPhongReflection) {
+
+					ImGui::ColorEdit3("specularColor", &materials_[i].properties.specularColor.x);
+					ImGui::DragFloat("phongRefShininess", &materials_[i].properties.phongRefShininess, 0.01f);
+				}
+
 				ImGui::TreePop();
 			}
 		}
@@ -125,5 +132,15 @@ void IBaseGameObject::SetLightingEnable(bool enable) {
 
 	for (auto& material : materials_) {
 		material.properties.enableLighting = enable;
+	}
+}
+
+void IBaseGameObject::SetBlinnPhongLightingEnable(bool enable) {
+
+	for (auto& material : materials_) {
+
+		material.properties.enableHalfLambert = false;
+		material.properties.enablePhongReflection = false;
+		material.properties.enableBlinnPhongReflection = enable;
 	}
 }

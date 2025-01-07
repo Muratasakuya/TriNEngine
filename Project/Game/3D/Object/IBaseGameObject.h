@@ -58,6 +58,7 @@ public:
 	void SetUVTransform(const UVTransform& uvTransform);
 
 	void SetLightingEnable(bool enable);
+	void SetBlinnPhongLightingEnable(bool enable);
 
 	//* getter *//
 

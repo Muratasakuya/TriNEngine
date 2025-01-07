@@ -59,6 +59,7 @@ void ParticleRenderer::SelectParticle() {
 	if (SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 
 		currentParticleIndex_ = -1;

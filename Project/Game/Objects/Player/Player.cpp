@@ -41,8 +41,13 @@ void Player::Init() {
 
 	BaseAnimationObject::Init(modelName, animationNames_[currentAnimationKey_]);
 	BaseAnimationObject::SetMeshRenderer("player");
-	parentFolderName_ = "Player/";
 
+	// Light
+	BaseAnimationObject::SetBlinnPhongLightingEnable(true);
+	// material
+	materials_.front().properties.phongRefShininess = 8.0f;
+
+	parentFolderName_ = "Player/";
 	model_->SetTexture("white");
 
 	// InitAnimation

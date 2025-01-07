@@ -21,6 +21,12 @@ void Field::Init() {
 
 	BaseGameObject::SetMeshRenderer("field");
 
+	// Light
+	BaseGameObject::SetBlinnPhongLightingEnable(true);
+	// material
+	materials_.front().properties.specularColor = Vector3(0.869f, 0.479f, 0.447f);
+	materials_.front().properties.phongRefShininess = 2.8f;
+
 	drawDepthShadowEnable_ = false;
 
 	model_->SetTexture("fieldBaseTile");

@@ -44,6 +44,7 @@ void EditorManager::SelectEditor() {
 	if (SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		ParticleRenderer::GetSelectedParticle() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 		selectedEditor_ = nullptr;
 		currentEditorIndex_ = -1;

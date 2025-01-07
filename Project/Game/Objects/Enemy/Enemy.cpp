@@ -22,6 +22,11 @@ void Enemy::Init(uint32_t index, const Vector3& translate, Player* player) {
 
 	BaseGameObject::SetMeshRenderer("enemy", index);
 
+	// Light
+	BaseGameObject::SetBlinnPhongLightingEnable(true);
+	// material
+	materials_.front().properties.phongRefShininess = 32.0f;
+
 	// 初期座標設定
 	transform_.translation = translate;
 	transform_.translation.y = initPosY_;

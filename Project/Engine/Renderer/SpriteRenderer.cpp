@@ -69,6 +69,7 @@ void SpriteRenderer::SelectSprite() {
 	if (ParticleRenderer::GetSelectedParticle() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 
 		currentSpriteIndex_ = -1;
