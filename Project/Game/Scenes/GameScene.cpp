@@ -4,7 +4,10 @@
 //	include
 //============================================================================*/
 #include <Engine/Asset/Asset.h>
+#include <Game/Scenes/Manager/SceneManager.h>
 #include <Game/System/GameSystem.h>
+#include <Game/Utility/GameTimer.h>
+#include <Lib/Adapter/Easing.h>
 
 //============================================================================*/
 //	GameScene classMethods
@@ -68,15 +71,18 @@ void GameScene::Init() {
 	enemyManager_ = std::make_unique<EnemyManager>();
 	enemyManager_->Init(player_.get());
 
+	player_->SetEnemyManager(enemyManager_.get());
+
 	timeLimit_ = std::make_unique<TimeLimit>();
-	timeLimit_->Init();
+	timeLimit_->Init(enemyManager_.get());
 
 	GameSystem::GameCamera()->GetFollowCamera()->SetTarget(&player_->GetWorldTransform());
 
-	//* test *//
+	//* timeScale *//
 
-	testParticle_ = std::make_unique<TestParticle>();
-	testParticle_->Init();
+
+	finishScaleTimer_ = 0.0f;
+	finishScaleTime_ = 0.8f;
 
 }
 
@@ -94,9 +100,18 @@ void GameScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 	enemyManager_->Update();
 
 	timeLimit_->Update();
+	if (timeLimit_->IsFinish() || enemyManager_->IsFinish()) {
 
-	//* test *//
+		finishScaleTimer_ += GameTimer::GetDeltaTime();
+		float t = finishScaleTimer_ / finishScaleTime_;
+		float easedT = EaseOutExpo(t);
 
-	testParticle_->Update();
+		if (finishScaleTime_ > finishScaleTimer_) {
+			GameTimer::SetTimeScale(std::lerp(1.0f, 0.08f, easedT));
+			GameTimer::SetReturnScaleEnable(false);
+		}
+
+		sceneManager->SetNextScene("Title");
+	}
 
 }

@@ -148,7 +148,7 @@ void AnimationTransform::Update() {
 	else {
 
 		// 遷移時間を進める
-		transitionTimer_ += GameTimer::GetDeltaTime();
+		transitionTimer_ += GameTimer::GetScaledDeltaTime();
 		float alpha = transitionTimer_ / transitionDuration_;
 		if (alpha > 1.0f) {
 			alpha = 1.0f;

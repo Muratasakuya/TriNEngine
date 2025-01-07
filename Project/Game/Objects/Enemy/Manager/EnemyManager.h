@@ -33,6 +33,11 @@ public:
 
 	void ImGui() override;
 
+	//* getter *//
+
+	bool IsStart() const { return isStart_; }
+	bool IsFinish() const { return isFinish_; }
+
 private:
 	//========================================================================*/
 	//	private Methods
@@ -57,6 +62,9 @@ private:
 
 	std::list<std::unique_ptr<Enemy>> enemies_;
 	uint32_t enemyIndex_;
+
+	bool isStart_;
+	bool isFinish_;
 
 	// キーごとの敵の出現座標
 	std::unordered_map<SpawnPlace, std::vector<Vector3>> spawnPositions_;

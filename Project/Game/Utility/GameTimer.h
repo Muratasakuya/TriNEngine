@@ -35,6 +35,8 @@ public:
 
 	static void SetTimeScale(float timeScale) { timeScale_ = timeScale; }
 
+	static void SetReturnScaleEnable(bool enable) { returnScaleEnable_ = enable; }
+
 private:
 	//========================================================================*/
 	//	private Methods
@@ -53,5 +55,7 @@ private:
 
 	static float waitTimer_;
 	static float waitTime_;
+
+	static bool returnScaleEnable_;
 
 };

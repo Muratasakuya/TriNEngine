@@ -15,6 +15,8 @@
 #include <initializer_list>
 #include <unordered_set>
 
+// front
+class EnemyManager;
 class FollowCamera;
 
 //============================================================================*/
@@ -39,6 +41,10 @@ public:
 	//* imgui *//
 
 	void DerivedImGui() override;
+
+	//* setter *//
+	
+	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 
 	//* getter *//
 
@@ -89,6 +95,7 @@ private:
 
 	Input* input_ = nullptr;
 	FollowCamera* followCamera_ = nullptr;
+	EnemyManager* enemyManager_ = nullptr;
 
 	std::unique_ptr<PlayerAttackCollider> attackCollider_;
 

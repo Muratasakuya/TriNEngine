@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Utility/Environment.h>
+#include <Game/Objects/Enemy/Manager/EnemyManager.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Utility/GameTimer.h>
 #include <Lib/Adapter/JsonAdapter.h>
@@ -311,6 +312,10 @@ void Player::MoveWalk() {
 	if (isWaitToFirstAttack_ || isWaitToSecondAttackEnable_ || isWaitToThirdAttackEnable_) {
 		return;
 	}
+	// ゲームが終了した後も動けない
+	if (enemyManager_->IsFinish()) {
+		return;
+	}
 
 	Vector2 leftStickVal = input_->GetLeftStickVal();
 
@@ -341,6 +346,11 @@ void Player::MoveWalk() {
 }
 
 void Player::MoveDash() {
+
+	// ゲームが終了した後も動けない
+	if (enemyManager_->IsFinish()) {
+		return;
+	}
 
 	// 補間処理をダッシュ中のみに限定
 	if (!isDashing_) {

@@ -6,6 +6,8 @@
 #include <Engine/Asset/Asset.h>
 #include <Engine/Process/Input.h>
 #include <Game/Scenes/Manager/SceneManager.h>
+#include <Game/System/GameSystem.h>
+#include <Game/Utility/GameTimer.h>
 
 //============================================================================*/
 //	TitleScene classMethods
@@ -22,6 +24,8 @@ void TitleScene::LoadAssets() {
 
 void TitleScene::Init() {
 
+	GameSystem::GameCamera()->Init();
+
 	LoadAssets();
 
 	titleSprite_ = std::make_unique<TitleSprite>();
@@ -37,6 +41,8 @@ void TitleScene::Update([[maybe_unused]] SceneManager* sceneManager) {
 	if (Input::GetInstance()->TriggerGamepadButton(InputGamePadButtons::A)) {
 
 		sceneManager->SetNextScene("Game");
+
+		GameTimer::SetReturnScaleEnable(true);
 	}
 
 }
