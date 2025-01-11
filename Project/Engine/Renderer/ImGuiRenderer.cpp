@@ -158,21 +158,24 @@ void ImGuiRenderer::DisplayVector3(const std::string& windowName, const Vector3&
 
 void ImGuiRenderer::RenderTask() {
 
-	Quaternion rotation = Quaternion::MakeRotateAxisAngleQuaternion(
-		Vector3(1.0f, 0.4f, -0.2f).Normalize(), 0.45f);
+	Quaternion rotation0 =
+		Quaternion::MakeRotateAxisAngleQuaternion(Vector3(0.71f, 0.71f, 0.0f), 0.3f);
 
-	Vector3 pointY = Vector3(2.1f, -0.9f, 1.3f);
+	Quaternion rotation1 =
+		Quaternion::MakeRotateAxisAngleQuaternion(Vector3(0.71f, 0.0f, 0.71f), 3.141592f);
 
-	Matrix4x4 rotateMatrix = Quaternion::MakeRotateMatrix(rotation);
-	Vector3 rotateByQuaternion = Quaternion::RotateVector(pointY, rotation);
-	Vector3 rotateByMatrix = Vector3::Transform(pointY, rotateMatrix);
+	Quaternion interpolate0 = Quaternion::Slerp(rotation0, rotation1, 0.0f);
+	Quaternion interpolate1 = Quaternion::Slerp(rotation0, rotation1, 0.3f);
+	Quaternion interpolate2 = Quaternion::Slerp(rotation0, rotation1, 0.5f);
+	Quaternion interpolate3 = Quaternion::Slerp(rotation0, rotation1, 0.7f);
+	Quaternion interpolate4 = Quaternion::Slerp(rotation0, rotation1, 1.0f);
 
 	// 値の表示
 	ImGui::Begin("MT4");
-	DisplayQuaternion(": rotation", rotation);
-	DisplayMatrix("rotateMatrix", rotateMatrix);
-	DisplayVector3(" : rotateByQuaternion", rotateByQuaternion);
-	DisplayVector3(" : rotateByMatrix", rotateByMatrix);
-
+	DisplayQuaternion(": interpolate0 Slerp(q0,q1,0.0f)", interpolate0);
+	DisplayQuaternion(": interpolate1 Slerp(q0,q1,0.3f)", interpolate1);
+	DisplayQuaternion(": interpolate2 Slerp(q0,q1,0.5f)", interpolate2);
+	DisplayQuaternion(": interpolate3 Slerp(q0,q1,0.7f)", interpolate3);
+	DisplayQuaternion(": interpolate4 Slerp(q0,q1,1.0f)", interpolate4);
 	ImGui::End();
 }
