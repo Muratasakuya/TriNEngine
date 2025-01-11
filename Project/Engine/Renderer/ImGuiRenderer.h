@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Lib/MathUtils/Vector3.h>
 #include <Lib/MathUtils/Matrix4x4.h>
 #include <Lib/MathUtils/Quaternion.h>
 
@@ -66,5 +67,7 @@ private:
 	void DisplayMatrix(const std::string& windowName, const Matrix4x4& matrix);
 
 	void DisplayQuaternion(const std::string& windowName, const Quaternion& quaternion);
+
+	void DisplayVector3(const std::string& windowName, const Vector3& vector);
 
 };

@@ -141,27 +141,38 @@ void ImGuiRenderer::DisplayQuaternion(const std::string& windowName, const Quate
 	displayFunction();
 }
 
+void ImGuiRenderer::DisplayVector3(const std::string& windowName, const Vector3& vector) {
+
+	auto displayFunction = [windowName, &vector]() {
+
+		ImGui::Text("%.2f", vector.x);
+		ImGui::SameLine();
+		ImGui::Text("%.2f", vector.y);
+		ImGui::SameLine();
+		ImGui::Text("%.2f", vector.z);
+		ImGui::SameLine();
+		ImGui::Text(windowName.c_str());
+		};
+	displayFunction();
+}
+
 void ImGuiRenderer::RenderTask() {
 
-	Quaternion q1 = Quaternion(2.0f, 3.0f, 4.0f, 1.0f);
-	Quaternion q2 = Quaternion(1.0f, 3.0f, 5.0f, 2.0f);
+	Quaternion rotation = Quaternion::MakeRotateAxisAngleQuaternion(
+		Vector3(1.0f, 0.4f, -0.2f).Normalize(), 0.45f);
 
-	Quaternion identity = Quaternion::IdentityQuaternion();
-	Quaternion conj = Quaternion::Conjugate(q1);
-	Quaternion inv = Quaternion::Inverse(q1);
-	Quaternion normal = Quaternion::Normalize(q1);
-	Quaternion mul1 = Quaternion::Multiply(q1, q2);
-	Quaternion mul2 = Quaternion::Multiply(q2, q1);
-	float norm = Quaternion::Norm(q1);
+	Vector3 pointY = Vector3(2.1f, -0.9f, 1.3f);
+
+	Matrix4x4 rotateMatrix = Quaternion::MakeRotateMatrix(rotation);
+	Vector3 rotateByQuaternion = Quaternion::RotateVector(pointY, rotation);
+	Vector3 rotateByMatrix = Vector3::Transform(pointY, rotateMatrix);
 
 	// 値の表示
 	ImGui::Begin("MT4");
-	DisplayQuaternion(" : Identity", identity);
-	DisplayQuaternion(" : Conjugate", conj);
-	DisplayQuaternion(" : Inverse", inv);
-	DisplayQuaternion(" : Normalize", normal);
-	DisplayQuaternion(" : Multiply(q1, q2)", mul1);
-	DisplayQuaternion(" : Multiply(q2, q1)", mul2);
-	ImGui::Text("%.2f : Norm", norm);
+	DisplayQuaternion(": rotation", rotation);
+	DisplayMatrix("rotateMatrix", rotateMatrix);
+	DisplayVector3(" : rotateByQuaternion", rotateByQuaternion);
+	DisplayVector3(" : rotateByMatrix", rotateByMatrix);
+
 	ImGui::End();
 }
