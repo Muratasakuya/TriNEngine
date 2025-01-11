@@ -3,12 +3,17 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Lib/MathUtils/Matrix4x4.h>
 
 // imgui
 #include <imgui.h>
 
 // directX
 #include <d3d12.h>
+
+// c++
+#include <string>
+#include <functional>
 
 //============================================================================*/
 //	ImGuiRenderer class
@@ -26,6 +31,10 @@ public:
 		const D3D12_GPU_DESCRIPTOR_HANDLE& demoSceneRenderTextureGPUHandle);
 
 	void Render();
+
+	//* task *//
+
+	void RenderTask();
 
 private:
 	//========================================================================*/
@@ -50,5 +59,9 @@ private:
 	void GameView();
 
 	void InspectorView();
+
+	//* task *//
+
+	void DisplayMatrix(const std::string& windowName, const Matrix4x4& matrix);
 
 };

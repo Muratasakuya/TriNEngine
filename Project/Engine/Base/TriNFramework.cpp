@@ -61,7 +61,9 @@ void TriNFramework::Update() {
 	graphicsEngine_->BeginRenderFrame();
 
 	gameSystem_->Update();
-	imGuiRenderer_->Render();
+	//imGuiRenderer_->Render();
+	// task
+	imGuiRenderer_->RenderTask();
 
 	sceneManager_->Update();
 

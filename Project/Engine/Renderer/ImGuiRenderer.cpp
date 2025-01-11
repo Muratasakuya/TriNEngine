@@ -109,3 +109,29 @@ void ImGuiRenderer::InspectorView() {
 
 	ImGui::End();
 }
+
+void ImGuiRenderer::DisplayMatrix(const std::string& windowName, const Matrix4x4& matrix) {
+
+	auto displayFunction = [windowName, &matrix]() {
+
+		ImGui::Text(windowName.c_str());
+		for (int i = 0; i < 4; ++i) {
+			ImGui::Text("%.3f %.3f %.3f %.3f",
+				matrix.m[i][0], matrix.m[i][1], matrix.m[i][2], matrix.m[i][3]);
+		}
+		};
+	displayFunction();
+}
+
+void ImGuiRenderer::RenderTask() {
+
+	Vector3 axis = Vector3(1.0f, 1.0f, 1.0f).Normalize();
+	float angle = 0.44f;
+	Quaternion quaternion = Quaternion::MakeRotateAxisAngleQuaternion(axis, angle);
+	Matrix4x4 rotateMatrix = Quaternion::MakeRotateMatrix(quaternion);
+
+	// 値の表示
+	ImGui::Begin("MT4");
+	DisplayMatrix("rotateMatrix", rotateMatrix);
+	ImGui::End();
+}
