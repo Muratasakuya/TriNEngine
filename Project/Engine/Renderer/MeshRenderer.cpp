@@ -82,8 +82,7 @@ void MeshRenderer::Clear() {
 void MeshRenderer::SelectGameObject() {
 
 	// 他のObjectが選択されていたら選択解除する
-	if (ParticleRenderer::GetSelectedParticle() ||
-		SpriteRenderer::GetSelectedSprite() ||
+	if (SpriteRenderer::GetSelectedSprite() ||
 		EditorManager::GetSelectedEditor() ||
 		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {

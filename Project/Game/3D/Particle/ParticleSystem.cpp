@@ -22,11 +22,18 @@ void ParticleSystem::CreateVertexData(const std::string& name) {
 
 }
 
-Matrix4x4 ParticleSystem::CalBillboardMatrix() const {
+Matrix4x4 ParticleSystem::CalBillboardMatrix(ParticleRenderTarget renderTarget) const {
 
 	Matrix4x4 backToFrontMatrix = Matrix4x4::MakeYawMatrix(std::numbers::pi_v<float>);
-	Matrix4x4 billboardMatrix =
-		Matrix4x4::Multiply(backToFrontMatrix, GameSystem::GameCamera()->GetCamera3D()->GetCameraMatrix());
+
+	Matrix4x4 cameraMatrix = Matrix4x4::MakeIdentity4x4();
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		cameraMatrix = GameSystem::GameCamera()->GetCamera3D()->GetCameraMatrix();
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		cameraMatrix = GameSystem::GameCamera()->GetDemoDebugCamera()->GetCameraMatrix();
+	}
+
+	Matrix4x4 billboardMatrix = Matrix4x4::Multiply(backToFrontMatrix, cameraMatrix);
 	billboardMatrix.m[3][0] = 0.0f;
 	billboardMatrix.m[3][1] = 0.0f;
 	billboardMatrix.m[3][2] = 0.0f;
@@ -36,7 +43,6 @@ Matrix4x4 ParticleSystem::CalBillboardMatrix() const {
 
 void ParticleSystem::Update() {
 
-	Matrix4x4 billboardMatrix = CalBillboardMatrix();
 	for (auto& [name, group] : particleGroups_) {
 
 		auto& particles = group.particles;
@@ -51,7 +57,9 @@ void ParticleSystem::Update() {
 				continue;
 			}
 
-			group.behavior->Update(*it, billboardMatrix);
+			Matrix4x4 billboardMatrix = CalBillboardMatrix(group.renderTarget);
+
+			group.behavior->Update(*it, billboardMatrix, group.renderTarget);
 
 			int index = static_cast<uint32_t>(std::distance(particles.begin(), it));
 			if (index < group.particleBuffer.properties.size()) {
@@ -88,27 +96,28 @@ void ParticleSystem::Draw(const std::string& name, BlendMode blendMode) {
 
 void ParticleSystem::CreateParticle(
 	const std::string& modelName, const std::string& name,
-	ParticleType particleType, ParticleParameter& parameter) {
+	ParticleType particleType, ParticleParameter& parameter, ParticleRenderTarget renderTarget) {
 
 	assert(particleGroups_.find(name) == particleGroups_.end() && "Particle group with this name already exists");
 
+	// behaivior作成
 	particleGroups_[name].behavior = ParticleBehaviorFactory::CreateBehavior(particleType);
-
 	particleGroups_[name].behavior->Create(particleGroups_[name].particles, parameter);
+	// 描画先の指定
+	particleGroups_[name].renderTarget = renderTarget;
 
 	// 最初は0.0fにして暴発しないようにする
 	for (auto& particle : particleGroups_[name].particles) {
 		particle.lifeTime = 0.0f;
 	}
 
-	//!! alreadyLoadModel !!//
+	// 使用するModelの指定とIAの作成
 	particleGroups_[name].model.data = Asset::GetModel()->GetModelData(modelName);
 	CreateVertexData(name);
 	particleGroups_[name].model.data.meshes
 		[static_cast<int>(particleGroups_[name].model.data.meshes.size() - 1)].textureName =
 		Asset::GetModel()->GetModelData(modelName).meshes.front().textureName.value_or("assert");
-
-	//* CreateStructureBuffer *//
+	// StructuredBufferの作成
 	particleGroups_[name].srvIndex = GraphicsEngine::SRV()->Allocate();
 	particleGroups_[name].numInstance = instanceMaxCount_;
 	particleGroups_[name].particleBuffer.Init(particleGroups_[name].numInstance);

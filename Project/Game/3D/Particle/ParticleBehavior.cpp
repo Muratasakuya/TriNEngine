@@ -18,7 +18,7 @@ void DispersionBehavior::Create(std::list<ParticleData>& particles, ParticlePara
 	parameter.Accept(visitor, particles);
 }
 
-void DispersionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
+void DispersionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) {
 
 	float deltaTime;
 	if (particle.isUseScaledDeltaTime) {
@@ -88,7 +88,14 @@ void DispersionBehavior::Update(ParticleData& particle, const Matrix4x4& billboa
 	} else {
 		particle.worldMatrix = Matrix4x4::MakeAffineMatrix(scaledTransform, rotate, particle.transform.translate);
 	}
-	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+
+	Matrix4x4 viewProjection = Matrix4x4::MakeIdentity4x4();
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		viewProjection = GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		viewProjection = GameSystem::GameCamera()->GetDemoDebugCamera()->GetViewProjectionMatrix();
+	}
+	particle.wvpMatrix = particle.worldMatrix * viewProjection;
 
 }
 
@@ -102,7 +109,7 @@ void ChaseBehavior::Create(std::list<ParticleData>& particles, ParticleParameter
 	parameter.Accept(visitor, particles);
 }
 
-void ChaseBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
+void ChaseBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) {
 
 	float deltaTime;
 	if (particle.isUseScaledDeltaTime) {
@@ -155,8 +162,14 @@ void ChaseBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMat
 	} else {
 		particle.worldMatrix = scaleMatrix * translateMatrix;
 	}
-	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
 
+	Matrix4x4 viewProjection = Matrix4x4::MakeIdentity4x4();
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		viewProjection = GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		viewProjection = GameSystem::GameCamera()->GetDemoDebugCamera()->GetViewProjectionMatrix();
+	}
+	particle.wvpMatrix = particle.worldMatrix * viewProjection;
 }
 
 //============================================================================*/
@@ -169,7 +182,7 @@ void ConvergeBehavior::Create(std::list<ParticleData>& particles, ParticleParame
 	parameter.Accept(visitor, particles);
 }
 
-void ConvergeBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
+void ConvergeBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) {
 
 	float deltaTime;
 	if (particle.isUseScaledDeltaTime) {
@@ -223,8 +236,14 @@ void ConvergeBehavior::Update(ParticleData& particle, const Matrix4x4& billboard
 	} else {
 		particle.worldMatrix = scaleMatrix * translateMatrix;
 	}
-	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
 
+	Matrix4x4 viewProjection = Matrix4x4::MakeIdentity4x4();
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		viewProjection = GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		viewProjection = GameSystem::GameCamera()->GetDemoDebugCamera()->GetViewProjectionMatrix();
+	}
+	particle.wvpMatrix = particle.worldMatrix * viewProjection;
 }
 
 //============================================================================*/
@@ -237,7 +256,7 @@ void InjectionBehavior::Create(std::list<ParticleData>& particles, ParticleParam
 	parameter.Accept(visitor, particles);
 }
 
-void InjectionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix) {
+void InjectionBehavior::Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) {
 
 	float deltaTime;
 	if (particle.isUseScaledDeltaTime) {
@@ -309,7 +328,14 @@ void InjectionBehavior::Update(ParticleData& particle, const Matrix4x4& billboar
 	} else {
 		particle.worldMatrix = scaleMatrix * translateMatrix;
 	}
-	particle.wvpMatrix = particle.worldMatrix * GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+
+	Matrix4x4 viewProjection = Matrix4x4::MakeIdentity4x4();
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		viewProjection = GameSystem::GameCamera()->GetCamera3D()->GetViewProjectionMatrix();
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		viewProjection = GameSystem::GameCamera()->GetDemoDebugCamera()->GetViewProjectionMatrix();
+	}
+	particle.wvpMatrix = particle.worldMatrix * viewProjection;
 }
 
 //============================================================================*/

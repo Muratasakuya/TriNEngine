@@ -57,6 +57,8 @@ public:
 	Skeleton GetSkeletonData(const std::string& animationName);
 	SkinCluster GetSkinClusterData(const std::string& animationName);
 
+	std::vector<std::string> GetModelKeys() const;
+
 private:
 	//========================================================================*/
 	//	private Methods

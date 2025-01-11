@@ -7,6 +7,7 @@
 #include <Game/Camera/Camera3D.h>
 #include <Game/Camera/FollowCamera.h>
 #include <Game/Camera/DebugCamera.h>
+#include <Game/Camera/DemoDebugCamera.h>
 #include <Game/Camera/SunLightCamera.h>
 
 // c++
@@ -43,6 +44,8 @@ public:
 
 	FollowCamera* GetFollowCamera() const { return followCamera_.get(); }
 
+	DemoDebugCamera* GetDemoDebugCamera() const { return demoDebugCamera_.get(); }
+
 	SunLightCamera* GetSunLightCamera() const { return sunLightCamera_.get(); }
 
 	bool SelectedGameCamera() const { return selectGameCamera_; }
@@ -62,6 +65,8 @@ private:
 	std::unique_ptr<FollowCamera> followCamera_;
 
 	std::unique_ptr<DebugCamera> debugCamera_;
+
+	std::unique_ptr<DemoDebugCamera> demoDebugCamera_;
 
 	std::unique_ptr<SunLightCamera> sunLightCamera_;
 

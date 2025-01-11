@@ -202,3 +202,14 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string textur
 
 	return textureData.metadata;
 }
+
+std::vector<std::string> TextureManager::GetTextureKeys() const {
+
+	std::vector<std::string> keys;
+	keys.reserve(textures_.size());
+	for (const auto& pair : textures_) {
+
+		keys.push_back(pair.first);
+	}
+	return keys;
+}

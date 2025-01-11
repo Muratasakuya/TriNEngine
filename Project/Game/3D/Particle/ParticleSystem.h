@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Game/3D/Particle/IBaseParticle.h>
 #include <Engine/CBuffer/ParticleBuffer.h>
 #include <Engine/CBuffer/InputAssembler.h>
 #include <Game/3D/Particle/ParticleBehavior.h>
@@ -42,6 +43,7 @@ private:
 		uint32_t numInstance;
 		uint32_t instancingSrvIndex;
 		ParticleBuffer particleBuffer;
+		ParticleRenderTarget renderTarget;
 	};
 
 public:
@@ -58,7 +60,7 @@ public:
 
 	void CreateParticle(
 		const std::string& modelName, const std::string& name,
-		ParticleType particleType, ParticleParameter& parameter);
+		ParticleType particleType, ParticleParameter& parameter, ParticleRenderTarget renderTarget);
 
 	void EmitParticle(
 		const std::string& name, ParticleType particleType, ParticleParameter& parameter);
@@ -81,6 +83,6 @@ private:
 	///* functions
 
 	void CreateVertexData(const std::string& name);
-	Matrix4x4 CalBillboardMatrix() const;
+	Matrix4x4 CalBillboardMatrix(ParticleRenderTarget renderTarget) const;
 
 };

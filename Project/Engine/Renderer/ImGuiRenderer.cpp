@@ -17,10 +17,12 @@
 //	ImGuiRenderer classMethods
 //============================================================================*/
 
-void ImGuiRenderer::Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle) {
+void ImGuiRenderer::Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle,
+	const D3D12_GPU_DESCRIPTOR_HANDLE& demoSceneRenderTextureGPUHandle) {
 
 	// RenderTextureのGpuHandleの取得
 	renderTextureGPUHandle_ = renderTextureGPUHandle;
+	demoSceneRenderTextureGPUHandle_ = demoSceneRenderTextureGPUHandle;
 
 	windowFlag_ = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 
@@ -48,13 +50,18 @@ void ImGuiRenderer::Render() {
 
 void ImGuiRenderer::MainWindow() {
 
-	ImGui::Begin("GameView", nullptr, windowFlag_);
+	ImGui::Begin("Game", nullptr, windowFlag_);
 
 	const ImVec2 imageSize(768.0f, 432.0f);
 	ImGui::Image(ImTextureID(renderTextureGPUHandle_.ptr), imageSize);
 
 	ImGui::End();
-	ImGui::ShowDemoWindow();
+
+	ImGui::Begin("DemoScene", nullptr, windowFlag_);
+
+	ImGui::Image(ImTextureID(demoSceneRenderTextureGPUHandle_.ptr), imageSize);
+
+	ImGui::End();
 
 }
 
@@ -66,7 +73,7 @@ void ImGuiRenderer::EngineView() {
 
 	ImGui::End();
 
-	ImGui::Begin("Engine", nullptr, windowFlag_);
+	ImGui::Begin("Engine");
 
 	GameTimer::ImGui();
 
@@ -84,8 +91,6 @@ void ImGuiRenderer::GameView() {
 
 	ImGui::End();
 
-	ParticleRenderer::SelectParticle();
-
 	EditorManager::SelectEditor();
 
 	SpriteRenderer::SelectSprite();
@@ -97,7 +102,6 @@ void ImGuiRenderer::InspectorView() {
 	ImGui::Begin("Inspector");
 
 	MeshRenderer::SelectedImGui();
-	ParticleRenderer::SelectedImGui();
 	SpriteRenderer::SelectedImGui();
 	GameSystem::GameCamera()->ImGui();
 	GameSystem::GameLight()->ImGui();

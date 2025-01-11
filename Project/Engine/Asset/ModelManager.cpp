@@ -564,6 +564,17 @@ SkinCluster ModelManager::GetSkinClusterData(const std::string& animationName) {
 	return skinClusters_[animationName];
 }
 
+std::vector<std::string> ModelManager::GetModelKeys() const {
+
+	std::vector<std::string> keys;
+	keys.reserve(models_.size());
+	for (const auto& pair : models_) {
+
+		keys.push_back(pair.first);
+	}
+	return keys;
+}
+
 ComPtr<ID3D12Resource> ModelManager::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 
 	HRESULT hr;

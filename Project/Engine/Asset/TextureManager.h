@@ -35,6 +35,8 @@ public:
 
 	const DirectX::TexMetadata& GetMetaData(const std::string textureName);
 
+	std::vector<std::string> GetTextureKeys() const;
+
 private:
 	//========================================================================*/
 	//	private Methods

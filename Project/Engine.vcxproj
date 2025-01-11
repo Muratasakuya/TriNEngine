@@ -345,6 +345,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Camera\DemoDebugCamera.cpp" />
+    <ClCompile Include="Game\Scenes\Editor\DemoEditorScene.cpp" />
+    <ClCompile Include="Engine\Renderer\EffectSceneRenderer.cpp" />
     <ClCompile Include="Game\2D\Base\BaseSprite.cpp" />
     <ClCompile Include="Game\3D\Particle\BaseParticle.cpp" />
     <ClCompile Include="Game\3D\Particle\IBaseParticle.cpp" />
@@ -423,10 +426,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Renderer\SpriteRenderer.cpp" />
     <ClCompile Include="Game\Scenes\Methods\SceneTransition.cpp" />
     <ClCompile Include="Engine\CBuffer\ParticleBuffer.cpp" />
-    <ClCompile Include="Game\Objects\Test\TestParticle.cpp" />
     <ClCompile Include="Engine\Renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Game\Editor\ParticleEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Camera\DemoDebugCamera.h" />
+    <ClInclude Include="Game\Scenes\Editor\DemoEditorScene.h" />
+    <ClInclude Include="Engine\Renderer\EffectSceneRenderer.h" />
     <ClInclude Include="Game\2D\Base\BaseSprite.h" />
     <ClInclude Include="Game\3D\Particle\BaseParticle.h" />
     <ClInclude Include="Game\3D\Particle\IBaseParticle.h" />
@@ -514,8 +520,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Renderer\SpriteRenderer.h" />
     <ClInclude Include="Game\Scenes\Methods\SceneTransition.h" />
     <ClInclude Include="Engine\CBuffer\ParticleBuffer.h" />
-    <ClInclude Include="Game\Objects\Test\TestParticle.h" />
     <ClInclude Include="Engine\Renderer\ParticleRenderer.h" />
+    <ClInclude Include="Game\Editor\ParticleEditor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

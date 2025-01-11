@@ -3,24 +3,28 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Game/3D/Particle/BaseParticle.h>
+
+// editors
+#include <Game/Editor/ParticleEditor.h>
+
+// c++
+#include <memory>
 
 //============================================================================*/
-//	TestParticle class
+//	DemoEditorScene class
 //============================================================================*/
-class TestParticle
-	:public BaseParticle<kDispersion> {
+class DemoEditorScene {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	TestParticle() = default;
-	~TestParticle() = default;
+	DemoEditorScene() = default;
+	~DemoEditorScene() = default;
 
-	void Init() override;
+	void Init();
 
-	void Update() override;
+	void Update();
 
 private:
 	//========================================================================*/
@@ -30,5 +34,6 @@ private:
 	//========================================================================*/
 	//* variables
 
+	std::unique_ptr<ParticleEditor> particleEditor_;
 
 };

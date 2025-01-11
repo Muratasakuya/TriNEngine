@@ -27,21 +27,14 @@ public:
 
 	static void Render();
 
+	static void RenderDemo();
+
 	static void SetParticle(IBaseParticle* particle);
+	static void SetDemoParticle(IBaseParticle* demoParticle);
 
 	static void EraseParticle(IBaseParticle* particle);
 
 	static void Clear();
-
-	//* imgui *//
-
-	static void SelectParticle();
-
-	static void SelectedImGui();
-
-	//* getter *//
-
-	static IBaseParticle* GetSelectedParticle() { return selectedParticle_; };
 
 private:
 	//========================================================================*/
@@ -52,9 +45,6 @@ private:
 	///* variables
 
 	static std::vector<IBaseParticle*> particles_;
-
-	static IBaseParticle* selectedParticle_;
-
-	static int currentParticleIndex_;
+	static std::vector<IBaseParticle*> demoParticles_;
 
 };

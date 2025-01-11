@@ -44,7 +44,6 @@ void LightManager::SelectGameLight() {
 
 	// 他のObjectが選択された場合は選択解除する
 	if (GameSystem::GameCamera()->SelectedGameCamera()||
-		ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
@@ -63,7 +62,6 @@ void LightManager::ImGui() {
 
 	if (!selectGameLight_ ||
 		GameSystem::GameCamera()->SelectedGameCamera() ||
-		ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {

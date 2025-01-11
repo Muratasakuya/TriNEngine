@@ -48,7 +48,8 @@ void TriNFramework::Init() {
 
 #ifdef _DEBUG
 	imGuiRenderer_ = std::make_unique<ImGuiRenderer>();
-	imGuiRenderer_->Init(graphicsEngine_->GetGuiTextureGPUHandle());
+	imGuiRenderer_->Init(graphicsEngine_->GetGuiTextureGPUHandle(),
+		graphicsEngine_->GetDemoSceneGuiTextureGPUHandle());
 #endif // _DEBUG
 
 }

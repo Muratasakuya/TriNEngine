@@ -5,6 +5,7 @@
 //============================================================================*/
 #include <Game/3D/Particle/ParticleParameter.h>
 #include <Game/Utility/Direction.h>
+#include <Game/3D/Particle/IBaseParticle.h>
 
 // c++
 #include <memory>
@@ -39,7 +40,7 @@ public:
 
 	virtual void Create(std::list<ParticleData>& particles, ParticleParameter& parameter) = 0;
 
-	virtual void Update(ParticleData& particle, const Matrix4x4& billboardMatrix) = 0;
+	virtual void Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) = 0;
 
 	//* getter *//
 
@@ -72,7 +73,7 @@ public:
 
 	void Create(std::list<ParticleData>& particles, ParticleParameter& parameter) override;
 
-	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix) override;
+	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) override;
 
 };
 
@@ -91,7 +92,7 @@ public:
 
 	void Create(std::list<ParticleData>& particles, ParticleParameter& parameter) override;
 
-	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix) override;
+	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) override;
 
 };
 
@@ -110,7 +111,7 @@ public:
 
 	void Create(std::list<ParticleData>& particles, ParticleParameter& parameter) override;
 
-	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix) override;
+	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) override;
 
 };
 
@@ -129,7 +130,7 @@ public:
 
 	void Create(std::list<ParticleData>& particles, ParticleParameter& parameter) override;
 
-	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix) override;
+	void Update(ParticleData& particle, const Matrix4x4& billboardMatrix, ParticleRenderTarget renderTarget) override;
 
 };
 

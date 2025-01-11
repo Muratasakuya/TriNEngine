@@ -22,7 +22,8 @@ public:
 	ImGuiRenderer() = default;
 	~ImGuiRenderer() = default;
 
-	void Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle);
+	void Init(const D3D12_GPU_DESCRIPTOR_HANDLE& renderTextureGPUHandle,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& demoSceneRenderTextureGPUHandle);
 
 	void Render();
 
@@ -35,6 +36,7 @@ private:
 	//* variables
 
 	D3D12_GPU_DESCRIPTOR_HANDLE renderTextureGPUHandle_;
+	D3D12_GPU_DESCRIPTOR_HANDLE demoSceneRenderTextureGPUHandle_;
 
 	ImGuiWindowFlags windowFlag_;
 

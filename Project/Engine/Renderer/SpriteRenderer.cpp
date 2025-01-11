@@ -66,8 +66,7 @@ void SpriteRenderer::SelectSprite() {
 	ImGui::Begin("Sprite");
 
 	// 他のObjectが選択されていたら選択解除する
-	if (ParticleRenderer::GetSelectedParticle() ||
-		MeshRenderer::GetSelectedObject() ||
+	if (MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor() ||
 		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {

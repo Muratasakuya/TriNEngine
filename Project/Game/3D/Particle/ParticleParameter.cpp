@@ -12,5 +12,8 @@
 //============================================================================*/
 
 void ParticleParameter::Accept(ParticleVisitor& visitor, std::list<ParticleData>& particles) {
+
+	scale.Init();
+
 	visitor.Visit(particles, *this);
 }

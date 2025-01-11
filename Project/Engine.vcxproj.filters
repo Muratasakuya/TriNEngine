@@ -122,8 +122,11 @@
     <ClCompile Include="Game\3D\Particle\ParticleParameter.cpp" />
     <ClCompile Include="Game\3D\Particle\ParticleSystem.cpp" />
     <ClCompile Include="Game\3D\Particle\ParticleVisitor.cpp" />
-    <ClCompile Include="Game\Objects\Test\TestParticle.cpp" />
     <ClCompile Include="Engine\Renderer\ParticleRenderer.cpp" />
+    <ClCompile Include="Engine\Renderer\EffectSceneRenderer.cpp" />
+    <ClCompile Include="Game\Scenes\Editor\DemoEditorScene.cpp" />
+    <ClCompile Include="Game\Editor\ParticleEditor.cpp" />
+    <ClCompile Include="Game\Camera\DemoDebugCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Utility\Environment.h" />
@@ -213,7 +216,10 @@
     <ClInclude Include="Game\3D\Particle\ParticleSystem.h" />
     <ClInclude Include="Game\3D\Particle\ParticleTraits.h" />
     <ClInclude Include="Game\3D\Particle\ParticleVisitor.h" />
-    <ClInclude Include="Game\Objects\Test\TestParticle.h" />
     <ClInclude Include="Engine\Renderer\ParticleRenderer.h" />
+    <ClInclude Include="Engine\Renderer\EffectSceneRenderer.h" />
+    <ClInclude Include="Game\Scenes\Editor\DemoEditorScene.h" />
+    <ClInclude Include="Game\Editor\ParticleEditor.h" />
+    <ClInclude Include="Game\Camera\DemoDebugCamera.h" />
   </ItemGroup>
 </Project>

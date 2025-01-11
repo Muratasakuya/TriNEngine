@@ -36,6 +36,7 @@ void CameraManager::Init() {
 
 	// Debug
 	debugCamera_ = std::make_unique<DebugCamera>();
+	demoDebugCamera_ = std::make_unique<DemoDebugCamera>();
 
 	// Sun
 	sunLightCamera_ = std::make_unique<SunLightCamera>();
@@ -54,6 +55,8 @@ void CameraManager::Update() {
 		camera3D_->Update();
 	}
 
+	demoDebugCamera_->Update(camera3D_->GetProjectionMatrix());
+
 	sunLightCamera_->Update();
 
 }
@@ -68,7 +71,6 @@ void CameraManager::SelectGameCamera() {
 
 	// 他のObjectが選択された場合は選択解除する
 	if (GameSystem::GameLight()->SelectedGameLight() ||
-		ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
@@ -87,7 +89,6 @@ void CameraManager::ImGui() {
 
 	if (!selectGameCamera_ ||
 		GameSystem::GameLight()->SelectedGameLight() ||
-		ParticleRenderer::GetSelectedParticle() ||
 		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {

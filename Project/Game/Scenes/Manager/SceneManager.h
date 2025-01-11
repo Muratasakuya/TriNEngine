@@ -6,6 +6,7 @@
 #include <Game/Scenes/Methods/IScene.h>
 #include <Game/Scenes/Methods/SceneFactory.h>
 #include <Game/Scenes/Methods/SceneTransition.h>
+#include <Game/Scenes/Editor/DemoEditorScene.h>
 
 // c++
 #include <string>
@@ -31,12 +32,7 @@ public:
 
 	void SetNextScene(const std::string& sceneName);
 
-
 	void Finalize();
-
-	//* imgui *//
-
-	void ImGui();
 
 private:
 	//========================================================================*/
@@ -47,6 +43,7 @@ private:
 	//* variables
 
 	std::unique_ptr<IScene> currentScene_;
+	std::unique_ptr<DemoEditorScene> demoEditorScene_;
 
 	std::unique_ptr<SceneTransition> sceneTransition_;
 

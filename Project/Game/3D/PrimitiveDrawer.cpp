@@ -86,6 +86,26 @@ void PrimitiveDrawer::DrawLine3D(const Vector3& pointA, const Vector3& pointB, c
 	commandList->DrawInstanced(kVertexCountLine_, 1, indexLine_ - kVertexCountLine_, 0);
 }
 
+void PrimitiveDrawer::DemoDrawLine3D(const Vector3& pointA, const Vector3& pointB, const LineColor& color) {
+
+	assert(indexLine_ < kMaxLineCount_);
+
+	auto commandList = GraphicsEngine::GetCommand()->GetCommandList();
+	PrimitiveMaterial& material = lineMaterials_[color];
+
+	vertexBuffer_.pos[indexLine_] = { pointA.x,pointA.y,pointA.z,1.0f };
+	indexLine_++;
+	vertexBuffer_.pos[indexLine_] = { pointB.x,pointB.y,pointB.z,1.0f };
+	indexLine_++;
+
+	pipeline_->SetRendererPipeline(commandList, PrimitiveLine, kBlendModeNormal);
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	commandList->IASetVertexBuffers(0, 1, &vertexBuffer_.GetVertexBuffer());
+	material.SetCommand(commandList);
+	GameSystem::GameCamera()->GetDemoDebugCamera()->GetViewProBuffer().SetCommand(commandList);
+	commandList->DrawInstanced(kVertexCountLine_, 1, indexLine_ - kVertexCountLine_, 0);
+}
+
 void PrimitiveDrawer::DrawGrid() {
 #ifdef _DEBUG
 
@@ -100,12 +120,12 @@ void PrimitiveDrawer::DrawGrid() {
 		// 横
 		Vector3 verticalStart(offset, 0.0f, kGridHalfWidth);
 		Vector3 verticalEnd(offset, 0.0f, -kGridHalfWidth);
-		DrawLine3D(verticalStart, verticalEnd, LineColor::White);
+		DemoDrawLine3D(verticalStart, verticalEnd, LineColor::White);
 
 		// 縦
 		Vector3 horizontalStart(-kGridHalfWidth, 0.0f, offset);
 		Vector3 horizontalEnd(kGridHalfWidth, 0.0f, offset);
-		DrawLine3D(horizontalStart, horizontalEnd, LineColor::White);
+		DemoDrawLine3D(horizontalStart, horizontalEnd, LineColor::White);
 	}
 
 #endif // _DEBUG

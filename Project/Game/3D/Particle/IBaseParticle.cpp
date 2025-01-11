@@ -13,13 +13,14 @@ IBaseParticle::~IBaseParticle() {
 	ParticleRenderer::EraseParticle(this);
 }
 
-void IBaseParticle::SetParticleRenderer(const std::string& name, uint32_t index) {
+void IBaseParticle::SetParticleRenderer(const std::string& name, ParticleRenderTarget renderTarget) {
 
 	name_ = name;
-	if (index != 0) {
 
-		name_ = name_ + std::to_string(index);
+	if (renderTarget == ParticleRenderTarget::GameScene) {
+		ParticleRenderer::SetParticle(this);
+	} else if (renderTarget == ParticleRenderTarget::DemoScene) {
+		ParticleRenderer::SetDemoParticle(this);
 	}
 
-	ParticleRenderer::SetParticle(this);
 }

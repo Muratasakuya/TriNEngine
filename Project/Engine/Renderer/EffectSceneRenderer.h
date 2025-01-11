@@ -3,48 +3,34 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Engine/DXClass/Pipeline/PipelineTypes.h>
+#include <Engine/DXClass/ComPtr.h>
 
-// c++
-#include <string>
+// directX
+#include <d3d12.h>
 
-//============================================================================*/
-// enum class
-
-enum class ParticleRenderTarget {
-
-	GameScene, // 実際のゲーム画面
-	DemoScene  // Edit用の画面
-};
+// front
+class SrvManager;
+class RtvManager;
 
 //============================================================================*/
-//	IBaseParticle class
+//	EffectSceneRenderer class
 //============================================================================*/
-class IBaseParticle {
+class EffectSceneRenderer {
 public:
 	//========================================================================*/
 	//	public Methods
 	//========================================================================*/
 
-	IBaseParticle() = default;
-	virtual ~IBaseParticle();
+	EffectSceneRenderer() = default;
+	~EffectSceneRenderer() = default;
 
-	virtual void Init(const std::string& particleName, const std::string modelName,
-		const std::string textureName, ParticleRenderTarget renderTarget) = 0;
-
-	virtual void Update() = 0;
-
-	virtual void Draw() = 0;
-
-	virtual void ImGui() = 0;
+	void Init(SrvManager* srvManager, RtvManager* rtvManager);
 
 	//* getter *//
 
-	virtual std::string GetName() const { return name_; };
+	ID3D12Resource* GetRenderTexture() const { return renderTextureResource_.Get(); }
 
-	//* setter *//
-
-	virtual void SetParticleRenderer(const std::string& name, ParticleRenderTarget renderTarget);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetRenderTextureGPUHandle() const { return renderTextureGpuHandle_; }
 
 private:
 	//========================================================================*/
@@ -54,6 +40,12 @@ private:
 	//========================================================================*/
 	//* variables
 
-	std::string name_;
+	ComPtr<ID3D12Resource> renderTextureResource_;
+	D3D12_GPU_DESCRIPTOR_HANDLE renderTextureGpuHandle_;
+
+	//========================================================================*/
+	//* function
+
+	ComPtr<ID3D12Resource> CreateTextureResource();
 
 };

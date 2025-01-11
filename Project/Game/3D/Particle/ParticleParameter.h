@@ -31,7 +31,7 @@ public:
 
 	//* commonParameters *//
 
-	bool isUniform; //* 均一か非均一か決めるフラグ
+	bool isUniform = true; //* 均一か非均一か決めるフラグ
 
 	ParticleValue scale; //* S
 	AABB aabb;           //* Emiterの場所、範囲
@@ -57,9 +57,9 @@ public:
 	std::optional<EasingType> easingType = std::nullopt;
 
 	//* emitter 
-	uint32_t count;      // 個数
-	float frequency;     // ~秒置き、発生頻度
-	float frequencyTime; // 発生頻度用の時刻
+	uint32_t count = 16;    // 個数
+	float frequency = 4.0f; // ~秒置き、発生頻度
+	float frequencyTime;    // 発生頻度用の時刻
 
 };
 

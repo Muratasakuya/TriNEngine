@@ -14,6 +14,7 @@
 #include <Engine/DXClass/Managers/PipelineManager.h>
 #include <Engine/Renderer/OffscreenRenderer.h>
 #include <Engine/Renderer/ShadowMapRenderer.h>
+#include <Engine/Renderer/EffectSceneRenderer.h>
 #include <Engine/External/ImGuiManager.h>
 #include <Engine/Window/WinApp.h>
 
@@ -64,6 +65,8 @@ public:
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGuiTextureGPUHandle() const { return offscreenRenderer_->GetGuiGPUHandle(); }
 
+	D3D12_GPU_DESCRIPTOR_HANDLE GetDemoSceneGuiTextureGPUHandle() const { return effectSceneRenderer_->GetRenderTextureGPUHandle(); }
+
 private:
 	//========================================================================*/
 	//	private Methods
@@ -88,6 +91,7 @@ private:
 	UINT backBufferIndex_;
 
 	std::unique_ptr<OffscreenRenderer> offscreenRenderer_;
+	std::unique_ptr<EffectSceneRenderer> effectSceneRenderer_;
 
 	std::unique_ptr<ImGuiManager> imguiManager_;
 
@@ -96,12 +100,16 @@ private:
 
 	void InitDXDevice();
 
+	// shadowPre
 	void BeginPreShadowDepth();
-
+	// renderTexturePre
 	void BeginPreOffscreen();
+	// effectSceneRenderTexturePre
+	void BeginPreEffectScene();
 
 	void SetViewportAndScissor(uint32_t width, uint32_t height);
 
+	// RenderTexture
 	void RenderOffscreen();
 
 };

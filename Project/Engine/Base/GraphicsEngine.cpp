@@ -9,6 +9,7 @@
 #include <Engine/Renderer/ParticleRenderer.h>
 #include <Engine/Renderer/SpriteRenderer.h>
 #include <Engine/Process/Input.h>
+#include <Game/3D/PrimitiveDrawer.h>
 
 //============================================================================*/
 //	GraphicsEngine classMethods
@@ -111,6 +112,10 @@ void GraphicsEngine::Init() {
 	shadowMapRenderer_ = std::make_unique<ShadowMapRenderer>();
 	shadowMapRenderer_->Init(srvManager_.get(), dsvManager_.get());
 
+	// effectScene用RenderTexture作成
+	effectSceneRenderer_ = std::make_unique<EffectSceneRenderer>();
+	effectSceneRenderer_->Init(srvManager_.get(), rtvManager_.get());
+
 	pipelineManager_ = std::make_unique<PipelineManager>();
 	pipelineManager_->Create(device_->Get());
 
@@ -138,6 +143,7 @@ void GraphicsEngine::Finalize() {
 	swapChain_.reset();
 	offscreenRenderer_.reset();
 	shadowMapRenderer_.reset();
+	effectSceneRenderer_.reset();
 	imguiManager_.reset();
 
 	// ComFinalize
@@ -177,6 +183,18 @@ void GraphicsEngine::Render() {
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
+#ifdef _DEBUG
+
+	// EffectScene
+	BeginPreEffectScene();
+	PrimitiveDrawer::GetInstance()->DrawGrid();
+	ParticleRenderer::RenderDemo();
+	command_->TransitionBarrier(effectSceneRenderer_->GetRenderTexture(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+#endif // _DEBUG
+
 	// SwapChain
 	RenderOffscreen();
 
@@ -208,6 +226,16 @@ void GraphicsEngine::BeginPreOffscreen() {
 	dsvManager_->ClearDepthStencilView(commandList);
 	SetViewportAndScissor(kWindowWidth, kWindowHeight);
 
+}
+
+void GraphicsEngine::BeginPreEffectScene() {
+
+	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvCPUHandle = dsvManager_->GetNoramlCPUHandle();
+
+	rtvManager_->BeginOffscreenSetRenderTargets(commandList, dsvCPUHandle);
+	dsvManager_->ClearDepthStencilView(commandList);
+	SetViewportAndScissor(kWindowWidth, kWindowHeight);
 }
 
 void GraphicsEngine::SetViewportAndScissor(uint32_t width, uint32_t height) {
@@ -262,6 +290,9 @@ void GraphicsEngine::EndRenderFrame() {
 	imguiManager_->Draw(command_->GetCommandList());
 
 	command_->TransitionBarrier(offscreenRenderer_->GetGuiTexture(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+	command_->TransitionBarrier(effectSceneRenderer_->GetRenderTexture(),
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
 #endif

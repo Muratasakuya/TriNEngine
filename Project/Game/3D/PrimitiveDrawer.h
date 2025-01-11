@@ -59,6 +59,8 @@ public:
 
 	void DrawLine3D(const Vector3& pointA, const Vector3& pointB, const LineColor& color = LineColor::White);
 
+	void DemoDrawLine3D(const Vector3& pointA, const Vector3& pointB, const LineColor& color = LineColor::White);
+
 	void DrawGrid();
 
 	void DrawSphere(float radius, const Vector3& centerPos, const LineColor& color);

@@ -50,7 +50,6 @@ void EditorManager::SelectEditor() {
 	// 他のオブジェクトが選択されていたら選択解除
 	if (SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
-		ParticleRenderer::GetSelectedParticle() ||
 		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 		selectedEditor_ = nullptr;
