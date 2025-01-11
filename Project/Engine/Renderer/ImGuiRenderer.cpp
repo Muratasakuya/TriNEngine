@@ -158,23 +158,22 @@ void ImGuiRenderer::DisplayVector3(const std::string& windowName, const Vector3&
 
 void ImGuiRenderer::RenderTask() {
 
-	Quaternion rotation0 =
-		Quaternion::MakeRotateAxisAngleQuaternion(Vector3(0.71f, 0.71f, 0.0f), 0.3f);
+	Vector3 from0 = Vector3(1.0f, 0.7f, 0.5f);
+	Vector3 to0 = Vector3(-from0.x, -from0.y, -from0.z);
 
-	Quaternion rotation1 = Quaternion(-rotation0.x, -rotation0.y, -rotation0.z, -rotation0.w);
+	Vector3 from1 = Vector3(-0.6f, 0.9f, 0.2f).Normalize();
+	Vector3 to1 = Vector3(0.4f, 0.7f, -0.5f).Normalize();
 
-	Quaternion interpolate0 = Quaternion::Slerp(rotation0, rotation1, 0.0f);
-	Quaternion interpolate1 = Quaternion::Slerp(rotation0, rotation1, 0.3f);
-	Quaternion interpolate2 = Quaternion::Slerp(rotation0, rotation1, 0.5f);
-	Quaternion interpolate3 = Quaternion::Slerp(rotation0, rotation1, 0.7f);
-	Quaternion interpolate4 = Quaternion::Slerp(rotation0, rotation1, 1.0f);
+	Matrix4x4 rotateMatrix0 = Matrix4x4::DirectionToDirection(
+		Vector3(1.0f, 0.0f, 0.0f).Normalize(), Vector3(-1.0f, 0.0f, 0.0f).Normalize());
+
+	Matrix4x4 rotateMatrix1 = Matrix4x4::DirectionToDirection(from0, to0);
+	Matrix4x4 rotateMatrix2 = Matrix4x4::DirectionToDirection(from1, to1);
 
 	// 値の表示
 	ImGui::Begin("MT4");
-	DisplayQuaternion(": interpolate0 Slerp(q0,q1,0.0f)", interpolate0);
-	DisplayQuaternion(": interpolate1 Slerp(q0,q1,0.3f)", interpolate1);
-	DisplayQuaternion(": interpolate2 Slerp(q0,q1,0.5f)", interpolate2);
-	DisplayQuaternion(": interpolate3 Slerp(q0,q1,0.7f)", interpolate3);
-	DisplayQuaternion(": interpolate4 Slerp(q0,q1,1.0f)", interpolate4);
+	DisplayMatrix("rotateMatrix0", rotateMatrix0);
+	DisplayMatrix("rotateMatrix1", rotateMatrix1);
+	DisplayMatrix("rotateMatrix2", rotateMatrix2);
 	ImGui::End();
 }

@@ -424,42 +424,28 @@ Matrix4x4 Matrix4x4::DirectionToDirection(const Vector3& from, const Vector3& to
 	Vector3 v = Vector3::Normalize(to);
 
 	float dot = Vector3::Dot(u, v);
-	if (dot > 0.9999f) {
-		return Matrix4x4::MakeIdentity4x4();
-	} else if (dot < -0.9999f) {
-		Vector3 axis;
-		if (std::abs(u.x) < std::abs(u.y) && std::abs(u.x) < std::abs(u.z)) {
-			axis = Vector3(0, -u.z, u.y);
-		} else if (std::abs(u.y) < std::abs(u.z)) {
-			axis = Vector3(-u.z, 0, u.x);
-		} else {
-			axis = Vector3(-u.y, u.x, 0);
+	dot = std::clamp(dot, -1.0f, 1.0f);
+
+	if (fabs(dot + 1.0f) < 1.0e-6f) {
+
+		Vector3 axis = Vector3::Cross(u, Vector3(0.0f, 0.0f, 1.0f));
+		if (axis.Length() < 1.0e-6f) {
+			axis = Vector3::Cross(u, Vector3(0.0f, 1.0f, 0.0f));
 		}
 		axis = Vector3::Normalize(axis);
 
-		// 180度回転の行列を構築
-		float x = axis.x, y = axis.y, z = axis.z;
-		return Matrix4x4(
-			-1 + 2 * x * x, 2 * x * y, 2 * x * z, 0,
-			2 * x * y, -1 + 2 * y * y, 2 * y * z, 0,
-			2 * x * z, 2 * y * z, -1 + 2 * z * z, 0,
-			0, 0, 0, 1
-		);
+		Quaternion rotate = Quaternion::MakeRotateAxisAngleQuaternion(axis, std::numbers::pi_v<float>);
+		return Quaternion::MakeRotateMatrix(rotate);
 	}
 
-	Vector3 axis = Vector3::Normalize(Vector3::Cross(u, v));
-	float angle = acosf(dot);
+	float cosTheta = dot;
+	float theta = acosf(cosTheta);
+	Vector3 n = Vector3::Cross(u, v);
 
-	// 回転行列を構築
-	float c = cosf(angle);
-	float s = sinf(angle);
-	float t = 1 - c;
+	n = Vector3::Normalize(n);
 
-	float x = axis.x, y = axis.y, z = axis.z;
+	Quaternion rotate = Quaternion::MakeRotateAxisAngleQuaternion(n, theta);
+	rotate.Normalize(rotate);
 
-	return Matrix4x4(
-		t * x * x + c, t * x * y - s * z, t * x * z + s * y, 0,
-		t * x * y + s * z, t * y * y + c, t * y * z - s * x, 0,
-		t * x * z - s * y, t * y * z + s * x, t * z * z + c, 0,
-		0, 0, 0, 1);
+	return Quaternion::MakeRotateMatrix(rotate);
 }

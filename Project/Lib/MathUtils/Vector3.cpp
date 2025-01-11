@@ -184,3 +184,13 @@ Vector3 Vector3::TransferNormal(const Vector3& v, const Matrix4x4& m) {
 
 	return vector;
 }
+
+Vector3 Vector3::Perpendicular(const Vector3& vec) {
+
+	// 入力ベクトルがX軸に近い場合はY軸とクロス積を取る
+	if (std::abs(vec.x) > std::abs(vec.z)) {
+		return Vector3(-vec.y, vec.x, 0.0f);  // クロス積 (0, 0, 1) と同等
+	} else {
+		return Vector3(0.0f, -vec.z, vec.y);  // クロス積 (1, 0, 0) と同等
+	}
+}

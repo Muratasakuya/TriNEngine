@@ -77,4 +77,6 @@ public:
 
 	static Vector3 TransferNormal(const Vector3& v, const Matrix4x4& m);
 
+	static Vector3 Perpendicular(const Vector3& vec);
+
 };
