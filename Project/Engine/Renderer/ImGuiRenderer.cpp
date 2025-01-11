@@ -3,6 +3,7 @@
 //============================================================================*/
 //	include
 //============================================================================*/
+#include <Game/Utility/Direction.h>
 
 // EngineView
 #include <Game/Utility/GameTimer.h>
@@ -123,15 +124,44 @@ void ImGuiRenderer::DisplayMatrix(const std::string& windowName, const Matrix4x4
 	displayFunction();
 }
 
+void ImGuiRenderer::DisplayQuaternion(const std::string& windowName, const Quaternion& quaternion) {
+
+	auto displayFunction = [windowName, &quaternion]() {
+
+		ImGui::Text("%.2f", quaternion.x);
+		ImGui::SameLine();
+		ImGui::Text("%.2f", quaternion.y);
+		ImGui::SameLine();
+		ImGui::Text("%.2f", quaternion.z);
+		ImGui::SameLine();
+		ImGui::Text("%.2f", quaternion.w);
+		ImGui::SameLine();
+		ImGui::Text(windowName.c_str());
+		};
+	displayFunction();
+}
+
 void ImGuiRenderer::RenderTask() {
 
-	Vector3 axis = Vector3(1.0f, 1.0f, 1.0f).Normalize();
-	float angle = 0.44f;
-	Quaternion quaternion = Quaternion::MakeRotateAxisAngleQuaternion(axis, angle);
-	Matrix4x4 rotateMatrix = Quaternion::MakeRotateMatrix(quaternion);
+	Quaternion q1 = Quaternion(2.0f, 3.0f, 4.0f, 1.0f);
+	Quaternion q2 = Quaternion(1.0f, 3.0f, 5.0f, 2.0f);
+
+	Quaternion identity = Quaternion::IdentityQuaternion();
+	Quaternion conj = Quaternion::Conjugate(q1);
+	Quaternion inv = Quaternion::Inverse(q1);
+	Quaternion normal = Quaternion::Normalize(q1);
+	Quaternion mul1 = Quaternion::Multiply(q1, q2);
+	Quaternion mul2 = Quaternion::Multiply(q2, q1);
+	float norm = Quaternion::Norm(q1);
 
 	// 値の表示
 	ImGui::Begin("MT4");
-	DisplayMatrix("rotateMatrix", rotateMatrix);
+	DisplayQuaternion(" : Identity", identity);
+	DisplayQuaternion(" : Conjugate", conj);
+	DisplayQuaternion(" : Inverse", inv);
+	DisplayQuaternion(" : Normalize", normal);
+	DisplayQuaternion(" : Multiply(q1, q2)", mul1);
+	DisplayQuaternion(" : Multiply(q2, q1)", mul2);
+	ImGui::Text("%.2f : Norm", norm);
 	ImGui::End();
 }

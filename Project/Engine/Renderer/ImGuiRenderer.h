@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Lib/MathUtils/Matrix4x4.h>
+#include <Lib/MathUtils/Quaternion.h>
 
 // imgui
 #include <imgui.h>
@@ -63,5 +64,7 @@ private:
 	//* task *//
 
 	void DisplayMatrix(const std::string& windowName, const Matrix4x4& matrix);
+
+	void DisplayQuaternion(const std::string& windowName, const Quaternion& quaternion);
 
 };
