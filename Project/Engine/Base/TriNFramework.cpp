@@ -6,6 +6,7 @@
 #include <Engine/Asset/Asset.h>
 #include <Engine/Renderer/ImGuiRenderer.h>
 #include <Engine/Process/Input.h>
+#include <Engine/Process/Audio.h>
 #include <Game/3D/PrimitiveDrawer.h>
 
 //============================================================================*/
@@ -38,23 +39,26 @@ void TriNFramework::Init() {
 	graphicsEngine_->Init();
 	// asset
 	Asset::Init();
+	// audio
+	Audio::GetInstance()->Init();
 	// lineDrawer
 	PrimitiveDrawer::GetInstance()->Init(graphicsEngine_->GetPipeline());
 	// gameSystem
 	gameSystem_ = std::make_unique<GameSystem>();
 	gameSystem_->Init();
 	// scene
-	sceneManager_ = std::make_unique<SceneManager>("Game");
+	sceneManager_ = std::make_unique<SceneManager>("Title");
 
 #ifdef _DEBUG
 	imGuiRenderer_ = std::make_unique<ImGuiRenderer>();
 	imGuiRenderer_->Init(graphicsEngine_->GetGuiTextureGPUHandle());
 #endif // _DEBUG
 
-
 }
 
 void TriNFramework::Update() {
+
+	sceneManager_->InitNextScene();
 
 	graphicsEngine_->BeginRenderFrame();
 
@@ -71,6 +75,8 @@ void TriNFramework::Draw() {
 
 	graphicsEngine_->EndRenderFrame();
 
+	gameSystem_->Reset();
+
 	sceneManager_->SwitchScene();
 
 }
@@ -81,10 +87,14 @@ void TriNFramework::Finalize() {
 	Asset::Finalize();
 	PrimitiveDrawer::Finalize();
 	Input::Finalize();
-	gameSystem_->Finalize();
+	Audio::GetInstance()->Finalize();
 
 	graphicsEngine_.reset();
-	gameSystem_.reset();
+
+	sceneManager_->Finalize();
 	sceneManager_.reset();
+
+	gameSystem_->Finalize();
+	gameSystem_.reset();
 
 }

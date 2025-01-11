@@ -114,7 +114,7 @@ void PrimitiveDrawer::DrawGrid() {
 void PrimitiveDrawer::DrawSphere(float radius, const Vector3& centerPos, const LineColor& color) {
 #ifdef _DEBUG
 
-	const uint32_t kSubdivision = 8;                                         //* 分割数
+	const uint32_t kSubdivision = 6;                                         //* 分割数
 	const float kLatEvery = std::numbers::pi_v<float> / kSubdivision;        //* 緯度
 	const float kLonEvery = 2.0f * std::numbers::pi_v<float> / kSubdivision; //* 経度
 

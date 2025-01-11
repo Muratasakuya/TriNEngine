@@ -8,6 +8,8 @@
 #include <Game/Utility/GameTimer.h>
 // GameView
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
+#include <Engine/Renderer/SpriteRenderer.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Editor/Manager/EditorManager.h>
 
@@ -52,6 +54,7 @@ void ImGuiRenderer::MainWindow() {
 	ImGui::Image(ImTextureID(renderTextureGPUHandle_.ptr), imageSize);
 
 	ImGui::End();
+	ImGui::ShowDemoWindow();
 
 }
 
@@ -76,11 +79,16 @@ void ImGuiRenderer::GameView() {
 	ImGui::Begin("GameObject");
 
 	GameSystem::GameCamera()->SelectGameCamera();
+	GameSystem::GameLight()->SelectGameLight();
 	MeshRenderer::SelectGameObject();
 
 	ImGui::End();
 
+	ParticleRenderer::SelectParticle();
+
 	EditorManager::SelectEditor();
+
+	SpriteRenderer::SelectSprite();
 
 }
 
@@ -89,7 +97,10 @@ void ImGuiRenderer::InspectorView() {
 	ImGui::Begin("Inspector");
 
 	MeshRenderer::SelectedImGui();
+	ParticleRenderer::SelectedImGui();
+	SpriteRenderer::SelectedImGui();
 	GameSystem::GameCamera()->ImGui();
+	GameSystem::GameLight()->ImGui();
 	EditorManager::SelectedImGui();
 
 	ImGui::End();

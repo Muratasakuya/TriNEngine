@@ -21,9 +21,15 @@ public:
 
 	void Update();
 
+	void SelectGameLight();
+
+	void ImGui();
+
 	//* getter *//
 
 	LightBuffer GetLightBuffer() const { return buffer_; }
+
+	bool SelectedGameLight() const { return selectGameLight_; }
 
 private:
 	//========================================================================*/
@@ -34,5 +40,7 @@ private:
 	//* variables
 
 	LightBuffer buffer_;
+
+	bool selectGameLight_;
 
 };

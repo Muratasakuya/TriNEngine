@@ -29,6 +29,8 @@ public:
 
 	void Finalize();
 
+	void Reset();
+
 	//* getter *//
 
 	static CollisionManager* GetCollision() { return collisionManager_.get(); }

@@ -20,8 +20,6 @@ public:
 
 	void Init();
 
-	void Update();
-
 	//* imgui *//
 
 	void DerivedImGui() override;

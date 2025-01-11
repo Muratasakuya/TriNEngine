@@ -10,7 +10,7 @@
 //	Sprite classMethods
 //============================================================================*/
 
-Sprite::Sprite(const std::string& textureName) {
+Sprite::Sprite(const std::string& textureName, Transform2D& transform) {
 
 	textureName_ = textureName;
 
@@ -30,22 +30,21 @@ Sprite::Sprite(const std::string& textureName) {
 	materialBuffer_.Init();
 	transformBuffer_.Init();
 
-	transform_.Init();
-
 	// 本来のテクスチャサイズに合わせる
-	SetMetaDataTextureSize();
+	SetMetaDataTextureSize(transform);
 
 }
 
-void Sprite::Update() {
+void Sprite::Update(const Transform2D& transform, const Color& color) {
 
-	VertexUpdate();
+	VertexUpdate(transform);
 
 	vertexBuffer_.Update();
 	indexBuffer_.Update();
 
+	materialBuffer_.properties.color = color;
 	materialBuffer_.Update();
-	transformBuffer_.Update(transform_);
+	transformBuffer_.Update(transform);
 
 }
 
@@ -65,24 +64,26 @@ void Sprite::Draw(BlendMode blendMode) {
 
 }
 
-void Sprite::SetMetaDataTextureSize() {
+void Sprite::SetMetaDataTextureSize(Transform2D& transform) {
 
-	float left = 0.0f - transform_.anchorPoint.x;
-	float right = 1.0f - transform_.anchorPoint.x;
-	float top = 0.0f - transform_.anchorPoint.y;
-	float bottom = 1.0f - transform_.anchorPoint.y;
+	transform.Init();
+
+	float left = 0.0f - transform.anchorPoint.x;
+	float right = 1.0f - transform.anchorPoint.x;
+	float top = 0.0f - transform.anchorPoint.y;
+	float bottom = 1.0f - transform.anchorPoint.y;
 
 	const DirectX::TexMetadata& metadata = Asset::GetTexture()->GetMetaData(textureName_);
 
-	transform_.textureSize = { static_cast<float>(metadata.width) ,static_cast<float>(metadata.height) };
-	transform_.size = transform_.textureSize;
+	transform.textureSize = { static_cast<float>(metadata.width) ,static_cast<float>(metadata.height) };
+	transform.size = transform.textureSize;
 
 	// 横
-	float texLeft = transform_.textureLeftTop.x / static_cast<float>(metadata.width);
-	float texRight = (transform_.textureLeftTop.x + transform_.textureSize.x) / static_cast<float>(metadata.width);
+	float texLeft = transform.textureLeftTop.x / static_cast<float>(metadata.width);
+	float texRight = (transform.textureLeftTop.x + transform.textureSize.x) / static_cast<float>(metadata.width);
 	// 縦
-	float texTop = transform_.textureLeftTop.y / static_cast<float>(metadata.height);
-	float texBottom = (transform_.textureLeftTop.y + transform_.textureSize.y) / static_cast<float>(metadata.height);
+	float texTop = transform.textureLeftTop.y / static_cast<float>(metadata.height);
+	float texBottom = (transform.textureLeftTop.y + transform.textureSize.y) / static_cast<float>(metadata.height);
 
 	// 左下
 	vertexBuffer_.data[0].pos = { left,bottom };
@@ -99,19 +100,21 @@ void Sprite::SetMetaDataTextureSize() {
 
 }
 
-void Sprite::VertexUpdate() {
+void Sprite::VertexUpdate(const Transform2D& transform) {
 
-	float left = 0.0f - transform_.anchorPoint.x;
-	float right = 1.0f - transform_.anchorPoint.x;
-	float top = 0.0f - transform_.anchorPoint.y;
-	float bottom = 1.0f - transform_.anchorPoint.y;
+	float left = 0.0f - transform.anchorPoint.x;
+	float right = 1.0f - transform.anchorPoint.x;
+	float top = 0.0f - transform.anchorPoint.y;
+	float bottom = 1.0f - transform.anchorPoint.y;
+
+	const DirectX::TexMetadata& metadata = Asset::GetTexture()->GetMetaData(textureName_);
 
 	// 横
-	float texLeft = transform_.textureLeftTop.x / transform_.textureSize.x;
-	float texRight = (transform_.textureLeftTop.x + transform_.textureSize.x) / transform_.textureSize.x;
+	float texLeft = transform.textureLeftTop.x / static_cast<float>(metadata.width);
+	float texRight = (transform.textureLeftTop.x + transform.textureSize.x) / static_cast<float>(metadata.width);
 	// 縦
-	float texTop = transform_.textureLeftTop.y / transform_.textureSize.y;
-	float texBottom = (transform_.textureLeftTop.y + transform_.textureSize.y) / transform_.textureSize.y;
+	float texTop = transform.textureLeftTop.y / static_cast<float>(metadata.height);
+	float texBottom = (transform.textureLeftTop.y + transform.textureSize.y) / static_cast<float>(metadata.height);
 
 	// 左下
 	vertexBuffer_.data[0].pos = { left,bottom };

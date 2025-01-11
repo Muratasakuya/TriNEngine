@@ -42,7 +42,7 @@ struct Transform2D {
 		pos = { 0.0f,0.0f };
 		rotate = 0.0f;
 		size = { 0.0f,0.0f };
-		anchorPoint = { 0.0f,0.0f };
+		anchorPoint = { 0.5f,0.5f };
 		textureLeftTop = { 0.0f,0.0f };
 		textureSize = { 0.0f,0.0f };
 		isFlipX = false;
@@ -70,6 +70,18 @@ public:
 	//* getter *//
 
 	virtual Vector3 GetWorldPos() const;
+
+	virtual Vector3 GetForward() const;
+
+	virtual Vector3 GetBack() const;
+
+	virtual Vector3 GetRight() const;
+
+	virtual Vector3 GetLeft() const;
+
+	virtual Vector3 GetUp() const;
+
+	virtual Vector3 GetDown() const;
 
 	//========================================================================*/
 	//* variables
@@ -131,6 +143,8 @@ public:
 	bool AnimationFinish() const { return animationFinish_; }
 	std::string GetCurrentAnimationName() const { return currentAnimationName_; }
 
+	float GetAnimationProgress() const { return animationProgress_; }
+
 	//* setter *//
 
 	// 最初のAnimation再生
@@ -174,6 +188,9 @@ private:
 	// 切り替え後のAnimation
 	std::string nextAnimationName_;
 	float nextAnimationTimer_;
+
+	// Animationの経過率
+	float animationProgress_;
 
 };
 

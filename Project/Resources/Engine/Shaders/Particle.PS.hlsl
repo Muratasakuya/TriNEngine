@@ -27,6 +27,5 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	output.color.rgb = textureColor.rgb * input.color.rgb;
 	output.color.a = textureColor.a * input.color.a;
 
-
 	return output;
 }

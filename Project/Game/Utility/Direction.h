@@ -9,6 +9,11 @@
 //	Direction
 //============================================================================*/
 
+enum class ObjectDirection {
+
+
+};
+
 namespace Direction {
 
 	// 右方向 (+X 軸)

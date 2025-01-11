@@ -82,6 +82,9 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	float4 transformUV = mul(float4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 	float4 textureColor = gTexture.Sample(gSampler, transformUV.xy);
 	
+	//========================================================================*/
+	//* shadow *//
+	
 	// wèúéZÇ≈ê≥ãKâªÉXÉNÉäÅ[Éìç¿ïWånÇ…ïœä∑Ç∑ÇÈ
 	float2 shadowMapUV = input.positionInLVP.xy / input.positionInLVP.w;
 	shadowMapUV *= float2(0.5f, -0.5f);
@@ -99,12 +102,101 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		if (zInLVp > zInShadowMap) {
 			
 			// âBï¡Ç≥ÇÍÇƒÇ¢ÇÈ
-			textureColor.xyz *= 0.25f;
+			textureColor.xyz *= 0.05f;
 		}
 	}
 	
-	output.color.rgb = gMaterial.color.rgb * textureColor.rgb;
+	//========================================================================*/
+	//* Lighting *//
+	
+	// ç°âÒÇÕBlinnPhongÇÃLightèàóùÇÃÇ›çsÇ§
+	if (gMaterial.enableBlinnPhongReflection == 1) {
+		
+		// PointLightÇÃì¸éÀåı
+		float3 pointLightDirection = normalize(input.worldPosition - gPunctual.pointLight.pos);
+		// PointLightÇ÷ÇÃãóó£
+		float distancePointLight = length(gPunctual.pointLight.pos - input.worldPosition);
+		// éwêîÇ…ÇÊÇÈÉRÉìÉgÉçÅ[Éã
+		float factorPointLight = pow(saturate(-distancePointLight / gPunctual.pointLight.radius + 1.0f), gPunctual.pointLight.decay);
+		// SpotLightÇÃì¸éÀåı
+		float3 spotLightDirectionOnSurface = normalize(input.worldPosition - gPunctual.spotLight.pos);
+		// SpotLightÇ÷ÇÃãóó£
+		float distanceSpotLight = length(gPunctual.spotLight.pos - input.worldPosition);
+		// éwêîÇ…ÇÊÇÈÉRÉìÉgÉçÅ[Éã
+		float factorSpotLight = pow(saturate(-distanceSpotLight / gPunctual.spotLight.distance + 1.0f), gPunctual.spotLight.decay);
+		// Cameraï˚å¸éZèo
+		float3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+		
+		/*-------------------------------------------------------------------------------------------------*/
+		/// DirectionalLight
+
+		float3 halfVectorDirectionalLight = normalize(normalize(-gPunctual.directionalLight.direction) + toEye);
+		float NDotHDirectionalLight = dot(normalize(input.normal), halfVectorDirectionalLight);
+		float specularPowDirectionalLight = pow(saturate(NDotHDirectionalLight), gMaterial.shininess);
+
+		float NdotLDirectionalLight = dot(normalize(input.normal), normalize(-gPunctual.directionalLight.direction));
+		float cosDirectionalLight = pow(NdotLDirectionalLight * 0.5f + 0.5f, 2.0f);
+
+		// ägéUîΩéÀ
+		float3 diffuseDirectionalLight =
+			gMaterial.color.rgb * textureColor.rgb * gPunctual.directionalLight.color.rgb * cosDirectionalLight * gPunctual.directionalLight.intensity;
+
+		// ãæñ îΩéÀ
+		float3 specularDirectionalLight =
+			gPunctual.directionalLight.color.rgb * gPunctual.directionalLight.intensity * specularPowDirectionalLight * gMaterial.specularColor;
+		
+		/*-------------------------------------------------------------------------------------------------*/
+		/// PointLight
+
+		float3 halfVectorPointLight = normalize(-pointLightDirection + toEye);
+		float NDotHPointLight = dot(normalize(input.normal), halfVectorPointLight);
+		float specularPowPointLight = pow(saturate(NDotHPointLight), gMaterial.shininess);
+
+		float NdotLPointLight = dot(normalize(input.normal), -pointLightDirection);
+		float cosPointLight = pow(NdotLPointLight * 0.5f + 0.5f, 2.0f);
+
+		// ägéUîΩéÀ
+		float3 diffusePointLight =
+			gMaterial.color.rgb * textureColor.rgb * gPunctual.pointLight.color.rgb * cosPointLight * gPunctual.pointLight.intensity * factorPointLight;
+
+		// ãæñ îΩéÀ
+		float3 specularPointLight =
+			gPunctual.pointLight.color.rgb * gPunctual.pointLight.intensity * factorPointLight * specularPowPointLight * gMaterial.specularColor;
+
+		/*-------------------------------------------------------------------------------------------------*/
+		/// SpotLight
+
+		float3 halfVectorSpotLight = normalize(-spotLightDirectionOnSurface + toEye);
+		float NDotHSpotLight = dot(normalize(input.normal), halfVectorSpotLight);
+		float specularPowSpotLight = pow(saturate(NDotHSpotLight), gMaterial.shininess);
+
+		float NdotLSpotLight = dot(normalize(input.normal), -spotLightDirectionOnSurface);
+		float cosSpotLight = pow(NdotLSpotLight * 0.5f + 0.5f, 2.0f);
+
+		float cosAngle = dot(spotLightDirectionOnSurface, gPunctual.spotLight.direction);
+		float falloffFactor = saturate((cosAngle - gPunctual.spotLight.cosAngle) / (gPunctual.spotLight.cosFalloffStart - gPunctual.spotLight.cosAngle));
+
+		// ägéUîΩéÀ
+		float3 diffuseSpotLight =
+			gMaterial.color.rgb * textureColor.rgb * gPunctual.spotLight.color.rgb * cosSpotLight * gPunctual.spotLight.intensity * falloffFactor * factorSpotLight;
+
+		// ãæñ îΩéÀ
+		float3 specularSpotLight =
+			gPunctual.spotLight.color.rgb * gPunctual.spotLight.intensity * falloffFactor * factorSpotLight * specularPowSpotLight * gMaterial.specularColor;
+		
+		output.color.rgb =
+			diffuseDirectionalLight + specularDirectionalLight + diffusePointLight + specularPointLight + diffuseSpotLight + specularSpotLight;
+		
+	} else {
+		
+		// âeÇóéÇ∆Ç∑ëOÇÃêF
+		output.color.rgb = gMaterial.color.rgb * textureColor.rgb;
+	}
+	
+	// âeÇçáê¨
 	output.color.rgb *= shadowMap;
+	
+	// Éøíl
 	output.color.a = gMaterial.color.a * textureColor.a;
 
 	return output;

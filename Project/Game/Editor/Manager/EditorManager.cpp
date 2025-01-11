@@ -4,6 +4,8 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
+#include <Engine/Renderer/SpriteRenderer.h>
 #include <Game/System/GameSystem.h>
 
 //============================================================================*/
@@ -25,6 +27,13 @@ void EditorManager::SetEditor(BaseEditor* editor) {
 
 void EditorManager::EraseEditor(BaseEditor* editor) {
 
+	if (selectedEditor_) {
+		if (selectedEditor_->GetName() == editor->GetName()) {
+
+			selectedEditor_ = nullptr;
+		}
+	}
+
 	editors_.erase(std::remove(editors_.begin(), editors_.end(), editor), editors_.end());
 }
 
@@ -39,7 +48,10 @@ void EditorManager::SelectEditor() {
 	ImGui::Begin("Editor");
 
 	// 他のオブジェクトが選択されていたら選択解除
-	if (MeshRenderer::GetSelectedObject() ||
+	if (SpriteRenderer::GetSelectedSprite() ||
+		MeshRenderer::GetSelectedObject() ||
+		ParticleRenderer::GetSelectedParticle() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 		selectedEditor_ = nullptr;
 		currentEditorIndex_ = -1;

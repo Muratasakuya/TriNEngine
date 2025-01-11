@@ -52,6 +52,8 @@ public:
 
 	static void SetShadowTextureCommand();
 
+	static void SetPostProcess(PostProcessPipelineType pipeline) { postProcessPipeline_ = pipeline; }
+
 	//* getter *//
 
 	static PipelineManager* GetPipeline() { return pipelineManager_.get(); }
@@ -78,6 +80,8 @@ private:
 	static std::unique_ptr<SrvManager> srvManager_;
 	static std::unique_ptr<PipelineManager> pipelineManager_;
 	static std::unique_ptr<ShadowMapRenderer> shadowMapRenderer_;
+
+	static PostProcessPipelineType postProcessPipeline_;
 
 	std::unique_ptr<WinApp> winApp_;
 

@@ -4,6 +4,7 @@
 //	include
 //============================================================================*/
 #include <Engine/Utility/Environment.h>
+#include <Game/Objects/Enemy/Manager/EnemyManager.h>
 #include <Game/System/GameSystem.h>
 #include <Game/Utility/GameTimer.h>
 #include <Lib/Adapter/JsonAdapter.h>
@@ -41,8 +42,13 @@ void Player::Init() {
 
 	BaseAnimationObject::Init(modelName, animationNames_[currentAnimationKey_]);
 	BaseAnimationObject::SetMeshRenderer("player");
-	parentFolderName_ = "Player/";
 
+	// Light
+	BaseAnimationObject::SetBlinnPhongLightingEnable(true);
+	// material
+	materials_.front().properties.phongRefShininess = 8.0f;
+
+	parentFolderName_ = "Player/";
 	model_->SetTexture("white");
 
 	// InitAnimation
@@ -53,7 +59,10 @@ void Player::Init() {
 	transform_.SetNewAnimationData(animationNames_["waitToAttack1"]);
 	transform_.SetNewAnimationData(animationNames_["waitToAttack2"]);
 
+	BaseAnimationObject::ApplyJsonForTransform(transform_);
 	ApplyJson();
+
+	posClamped_ = false;
 
 	isDashing_ = false;
 	isJump_ = false;
@@ -61,6 +70,18 @@ void Player::Init() {
 	isWaitToFirstAttack_ = false;
 	isWaitToSecondAttackEnable_ = false;
 	isWaitToThirdAttackEnable_ = false;
+
+	firstAttackCollisionEnable_ = false;
+	secondAttackCollisionEnable_ = false;
+	thirdAttackCollisionEnable_ = false;
+
+	//========================================================================*/
+	//* collision *//
+
+	isDrawDebugCollider_ = true;
+
+	attackCollider_ = std::make_unique<PlayerAttackCollider>();
+	attackCollider_->Init(this);
 
 }
 
@@ -70,7 +91,21 @@ void Player::Update() {
 
 	UpdateAnimation(); //* アニメーション設定処理
 
+	UpdateCollisionEnable(); //* 衝突フラグ更新
+
 	BaseAnimationObject::Update();
+
+	attackCollider_->Update();
+
+}
+
+void Player::Draw(RendererPipelineType pipeline) {
+
+	BaseAnimationObject::Draw(pipeline);
+
+	if (isDrawDebugCollider_) {
+		attackCollider_->DrawCollider();
+	}
 
 }
 
@@ -112,7 +147,27 @@ void Player::UpdateAnimation() {
 
 }
 
+void Player::MoveClamp() {
+
+	// 座標制限、Yはない
+	const Vector3 clampPos = Vector3(30.0f, 0.0f, 30.0f);
+
+	Vector3 originalPos = transform_.translation;
+
+	transform_.translation.x = std::clamp(transform_.translation.x, -clampPos.x, clampPos.x);
+	transform_.translation.z = std::clamp(transform_.translation.z, -clampPos.z, clampPos.z);
+
+	posClamped_ = transform_.translation != originalPos;
+
+}
+
 void Player::Move() {
+
+	if (!enemyManager_->IsStart()) {
+		return;
+	}
+
+	MoveClamp(); // 移動処理
 
 	MoveWalk();    // 通常歩き移動
 	MoveRequest(); // 移動依頼処理
@@ -257,6 +312,14 @@ void Player::MoveWalk() {
 	if (isDashing_) {
 		return;
 	}
+	// 攻撃中は移動不可
+	if (isWaitToFirstAttack_ || isWaitToSecondAttackEnable_ || isWaitToThirdAttackEnable_) {
+		return;
+	}
+	// ゲームが終了した後も動けない
+	if (enemyManager_->IsFinish()) {
+		return;
+	}
 
 	Vector2 leftStickVal = input_->GetLeftStickVal();
 
@@ -287,6 +350,11 @@ void Player::MoveWalk() {
 }
 
 void Player::MoveDash() {
+
+	// ゲームが終了した後も動けない
+	if (enemyManager_->IsFinish()) {
+		return;
+	}
 
 	// 補間処理をダッシュ中のみに限定
 	if (!isDashing_) {
@@ -365,6 +433,15 @@ void Player::DerivedImGui() {
 			case MoveBehaviour::Jump:
 				ImGui::BulletText("Jump");
 				break;
+			case MoveBehaviour::WaitToFirstAttack:
+				ImGui::BulletText("WaitToFirstAttack");
+				break;
+			case MoveBehaviour::WaitToSecondAttack:
+				ImGui::BulletText("WaitToSecondAttack");
+				break;
+			case MoveBehaviour::WaitToThirdAttack:
+				ImGui::BulletText("WaitToThirdAttack");
+				break;
 			default:
 				ImGui::BulletText("Unknown");
 				break;
@@ -401,6 +478,14 @@ void Player::DerivedImGui() {
 			ImGui::Separator();
 
 			transform_.AnimationInfo();
+
+			ImGui::EndTabItem();
+		}
+		// CollisionTab
+		if (ImGui::BeginTabItem("AttackCollider")) {
+
+			ImGui::Checkbox("isDrawDebugCollider", &isDrawDebugCollider_);
+			attackCollider_->ImGui();
 
 			ImGui::EndTabItem();
 		}
@@ -448,6 +533,36 @@ void Player::SaveJson() {
 
 	JsonAdapter::Save(parentFolderName_.value() + GetName() + "EditParameter.json", data);
 
+}
+
+void Player::UpdateCollisionEnable() {
+
+	if (isWaitToFirstAttack_) {
+		if (!transform_.IsTransition()) {
+
+			firstAttackCollisionEnable_ = true;
+		}
+	} else {
+		firstAttackCollisionEnable_ = false;
+	}
+
+	if (isWaitToSecondAttackEnable_) {
+		if (!transform_.IsTransition()) {
+
+			secondAttackCollisionEnable_ = true;
+		}
+	} else {
+		secondAttackCollisionEnable_ = false;
+	}
+
+	if (isWaitToThirdAttackEnable_) {
+		if (!transform_.IsTransition()) {
+
+			thirdAttackCollisionEnable_ = true;
+		}
+	} else {
+		thirdAttackCollisionEnable_ = false;
+	}
 }
 
 void Player::RotateToDirection() {

@@ -6,9 +6,17 @@
 #include <Game/Scenes/Methods/IScene.h>
 
 // object
-#include <Game/Objects/Test/Cube.h>
 #include <Game/Objects/Environment/Field.h>
+#include <Game/Objects/Environment/Wall.h>
 #include <Game/Objects/Player/Player.h>
+#include <Game/Objects/Enemy/Manager/EnemyManager.h>
+
+// particle
+#include <Game/Objects/Test/TestParticle.h>
+
+// HUD
+#include <Game/Objects/HUD/TimeLimit.h>
+#include <Game/Objects/HUD/PlayerOperatre.h>
 
 // c++
 #include <string>
@@ -29,7 +37,7 @@ public:
 
 	void Init() override;
 
-	void Update() override;
+	void Update([[maybe_unused]] SceneManager* sceneManager) override;
 
 private:
 	//========================================================================*/
@@ -39,11 +47,21 @@ private:
 	//========================================================================*/
 	//* variables
 
-	std::vector<std::unique_ptr<Cube>> cubes_;
-
 	std::unique_ptr<Field> field_;
+	std::vector<std::unique_ptr<Wall>> walls_;
 
 	std::unique_ptr<Player> player_;
+
+	std::unique_ptr<EnemyManager> enemyManager_;
+
+	std::unique_ptr<TimeLimit> timeLimit_;
+
+	std::unique_ptr<PlayerOperatre> playerOperate_;
+
+	//* timeScale *//
+
+	float finishScaleTimer_;
+	float finishScaleTime_;
 
 	//========================================================================*/
 	//* function

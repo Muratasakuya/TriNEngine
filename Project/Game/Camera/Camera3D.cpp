@@ -54,11 +54,13 @@ void Camera3D::ImGui() {
 
 }
 
-void Camera3D::SetCamera(const Matrix4x4& viewProMatrix, const Vector3& translate) {
+void Camera3D::SetCamera(const Matrix4x4& viewProMatrix, const Matrix4x4& cameraMatrix, const Vector3& translate) {
 
 	viewProjectionMatrix_ = viewProMatrix;
 
 	translation_ = translate;
+
+	matrix_ = cameraMatrix;
 
 	cameraBuffer_.Update(translate);
 	viewProBuffer_.Update(viewProjectionMatrix_);

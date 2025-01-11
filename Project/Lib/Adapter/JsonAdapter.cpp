@@ -72,6 +72,24 @@ Vector3 JsonAdapter::ToVector3(const Json& data) {
 	return v;
 }
 
+Json JsonAdapter::FromVector2(const Vector2& v) {
+
+	return Json{
+		{"x", v.x},
+		{"y", v.y},
+	};
+}
+
+Vector2 JsonAdapter::ToVector2(const Json& data) {
+
+	Vector2 v{};
+	if (data.contains("x") && data.contains("y")) {
+		v.x = data["x"].get<float>();
+		v.y = data["y"].get<float>();
+	}
+	return v;
+}
+
 Json JsonAdapter::FromColor(const Color& v) {
 
 	return Json{

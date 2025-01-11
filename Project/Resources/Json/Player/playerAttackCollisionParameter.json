@@ -1,0 +1,23 @@
+{
+    "firstParameter_offsetForward": 2.5,
+    "firstParameter_offsetY": 1.2000000476837158,
+    "firstParameter_size": {
+        "x": 2.0,
+        "y": 0.800000011920929,
+        "z": 1.0
+    },
+    "secondParameter_offsetForward": 2.5,
+    "secondParameter_offsetY": 2.0,
+    "secondParameter_size": {
+        "x": 2.0,
+        "y": 2.0,
+        "z": 1.0
+    },
+    "thirdParameter_offsetForward": 2.5,
+    "thirdParameter_offsetY": 2.0,
+    "thirdParameter_size": {
+        "x": 2.0,
+        "y": 2.0,
+        "z": 2.0
+    }
+}

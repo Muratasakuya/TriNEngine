@@ -5,6 +5,11 @@
 //============================================================================*/
 #include <Game/Scenes/Methods/IScene.h>
 
+#include <Game/Objects/Title/TitleSprite.h>
+
+// c++
+#include <memory>
+
 //============================================================================*/
 //	TitleScene class
 //============================================================================*/
@@ -20,7 +25,7 @@ public:
 
 	void Init() override;
 
-	void Update() override;
+	void Update([[maybe_unused]] SceneManager* sceneManager) override;
 
 private:
 	//========================================================================*/
@@ -29,5 +34,12 @@ private:
 
 	//========================================================================*/
 	//* variables
+
+	std::unique_ptr<TitleSprite> titleSprite_;
+
+	//========================================================================*/
+	//* function
+
+	void LoadAssets();
 
 };

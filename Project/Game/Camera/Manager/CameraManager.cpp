@@ -4,7 +4,10 @@
 //	include
 //============================================================================*/
 #include <Engine/Renderer/MeshRenderer.h>
+#include <Engine/Renderer/SpriteRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
+#include <Game/System/GameSystem.h>
 
 // imgui
 #include <imgui.h>
@@ -18,7 +21,6 @@ void CameraManager::Init() {
 	debugCameraEnable_ = false;
 
 	selectGameCamera_ = false;
-
 
 	// 2D
 	camera2D_ = std::make_unique<Camera2D>();
@@ -38,6 +40,7 @@ void CameraManager::Init() {
 	// Sun
 	sunLightCamera_ = std::make_unique<SunLightCamera>();
 	sunLightCamera_->Init();
+
 }
 
 void CameraManager::Update() {
@@ -45,12 +48,11 @@ void CameraManager::Update() {
 	debugCamera_->Update(camera3D_->GetTranslate(), camera3D_->GetRotate(), camera3D_->GetProjectionMatrix());
 	if (debugCamera_->Enable()) {
 
-		camera3D_->SetCamera(debugCamera_->GetViewProjectionMatrix(), debugCamera_->GetTranslate());
+		camera3D_->SetCamera(debugCamera_->GetViewProjectionMatrix(), debugCamera_->GetCameraMatrix(), debugCamera_->GetTranslate());
 	} else {
 
 		followCamera_->Update();
-		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetTranslate());
-
+		camera3D_->SetCamera(followCamera_->GetViewProjectionMatrix(), followCamera_->GetCameraMatrix(), followCamera_->GetTranslate());
 	}
 
 	sunLightCamera_->Update();
@@ -66,7 +68,10 @@ void CameraManager::DrawDebug() {
 void CameraManager::SelectGameCamera() {
 
 	// 他のObjectが選択された場合は選択解除する
-	if (MeshRenderer::GetSelectedObject() ||
+	if (GameSystem::GameLight()->SelectedGameLight() ||
+		ParticleRenderer::GetSelectedParticle() ||
+		SpriteRenderer::GetSelectedSprite() ||
+		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
 		selectGameCamera_ = false;
 	}
@@ -82,6 +87,9 @@ void CameraManager::SelectGameCamera() {
 void CameraManager::ImGui() {
 
 	if (!selectGameCamera_ ||
+		GameSystem::GameLight()->SelectedGameLight() ||
+		ParticleRenderer::GetSelectedParticle() ||
+		SpriteRenderer::GetSelectedSprite() ||
 		MeshRenderer::GetSelectedObject() ||
 		EditorManager::GetSelectedEditor()) {
 		return;

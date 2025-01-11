@@ -17,13 +17,19 @@ void Field::Init() {
 
 	CreateModel(16);
 
-	BaseGameObject::Init("field");
+	BaseGameObject::Init("field.obj");
 
 	BaseGameObject::SetMeshRenderer("field");
 
+	// Light
+	BaseGameObject::SetBlinnPhongLightingEnable(true);
+	// material
+	materials_.front().properties.specularColor = Vector3(0.869f, 0.479f, 0.447f);
+	materials_.front().properties.phongRefShininess = 2.8f;
+
 	drawDepthShadowEnable_ = false;
 
-	model_->SetTexture("field");
+	model_->SetTexture("fieldBaseTile");
 	parentFolderName_ = "Field/";
 
 	BaseGameObject::ApplyJsonForTransform(transform_);
@@ -31,13 +37,12 @@ void Field::Init() {
 
 }
 
-void Field::Update() {
-
-	BaseGameObject::Update();
-
-}
-
 void Field::DerivedImGui() {
+
+	if (ImGui::Button("Model Output")) {
+
+		Asset::GetModel()->ExportToOBJ("field.obj");
+	}
 
 	ImGui::Text("UVTransform");
 
@@ -48,6 +53,7 @@ void Field::DerivedImGui() {
 	ImGui::DragFloat3("uvScale", &uvTransform.scale.x, 0.01f);
 	ImGui::DragFloat3("uvRotate", &uvTransform.rotate.x, 0.01f);
 	ImGui::DragFloat3("uvTranslate", &uvTransform.translate.x, 0.01f);
+	BaseGameObject::SetUVTransform(uvTransform);
 
 }
 
@@ -125,6 +131,6 @@ void Field::CreateModel(int division) {
 	}
 
 	// モデル追加
-	Asset::GetModel()->MakeOriginalModel("field", vertices, indices);
+	Asset::GetModel()->MakeOriginalModel("field.obj", vertices, indices);
 
 }

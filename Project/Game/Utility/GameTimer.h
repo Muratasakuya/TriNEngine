@@ -33,7 +33,9 @@ public:
 
 	//* setter *//
 
-	static float SetTimeScale(float timeScale) { timeScale_ = timeScale; }
+	static void SetTimeScale(float timeScale) { timeScale_ = timeScale; }
+
+	static void SetReturnScaleEnable(bool enable) { returnScaleEnable_ = enable; }
 
 private:
 	//========================================================================*/
@@ -48,5 +50,12 @@ private:
 	static float deltaTime_;
 
 	static float timeScale_;
+
+	static float lerpSpeed_;
+
+	static float waitTimer_;
+	static float waitTime_;
+
+	static bool returnScaleEnable_;
 
 };

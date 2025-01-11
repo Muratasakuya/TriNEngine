@@ -11,6 +11,9 @@
 #include <Externals/assimp/include/assimp/postprocess.h>
 
 // c++
+#include <fstream>
+#include <sstream>
+#include <iostream> 
 #include <cstdint>
 #include <filesystem>
 #include <unordered_map>
@@ -35,10 +38,10 @@ public:
 	void MakeOriginalModel(const std::string& modelName,
 		const std::vector<ModelVertexData>& vertexData, const std::vector<uint32_t>& indexData);
 
+	void ExportToOBJ(const std::string& modelName);
+
 	void SkeletonUpdate(const std::string& animationName);
-
 	void ApplyAnimation(const std::string& animationName, float animationTime);
-
 	void SkinClusterUpdate(const std::string& animationName);
 
 	void BlendAnimation(

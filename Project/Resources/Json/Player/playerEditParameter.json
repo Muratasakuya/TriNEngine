@@ -4,15 +4,15 @@
     "dashSpeed_start": 3.4000000953674316,
     "moveDecay": 0.8999999761581421,
     "moveToJumpDuration": 0.10000000149011612,
-    "moveToWaitDuration": 0.800000011920929,
+    "moveToWaitDuration": 0.4000000059604645,
     "moveVelocity": {
         "x": 0.15000000596046448,
         "y": 0.0,
         "z": 0.15000000596046448
     },
     "rotationLerpRate": 0.30000001192092896,
-    "waitToAttackDuration": 0.4000000059604645,
+    "waitToAttackDuration": 0.25,
     "waitToDashDuration": 0.10000000149011612,
-    "waitToSecondAttackDuration": 0.10000000149011612,
-    "waitToThirdAttackDuration": 0.10000000149011612
+    "waitToSecondAttackDuration": 0.30000001192092896,
+    "waitToThirdAttackDuration": 0.30000001192092896
 }

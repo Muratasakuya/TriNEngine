@@ -3,7 +3,8 @@
 //============================================================================*/
 //	include
 //============================================================================*/
-#include <Engine/Renderer/ImGuiRenderer.h>
+#include <Engine/Renderer/SpriteRenderer.h>
+#include <Engine/Renderer/ParticleRenderer.h>
 #include <Game/Editor/Manager/EditorManager.h>
 #include <Game/System/GameSystem.h>
 
@@ -37,11 +38,9 @@ void MeshRenderer::Render() {
 
 		if (gameObject->GetDrawShadowEnable()) {
 
-			// このObjectには影を落とさない
 			pipeline = RendererPipelineType::NormalObject3D;
 		} else {
 
-			// このObjectに影を落とす
 			pipeline = RendererPipelineType::TargetShadowObject3D;
 		}
 
@@ -64,6 +63,13 @@ void MeshRenderer::SetGameObject(IBaseGameObject* gameObject) {
 
 void MeshRenderer::EraseGameObject(IBaseGameObject* gameObject) {
 
+	if (selectedGameObject_) {
+		if (selectedGameObject_->GetName() == gameObject->GetName()) {
+
+			selectedGameObject_ = nullptr;
+		}
+	}
+
 	gameObjects_.erase(std::remove(gameObjects_.begin(), gameObjects_.end(), gameObject), gameObjects_.end());
 }
 
@@ -76,7 +82,10 @@ void MeshRenderer::Clear() {
 void MeshRenderer::SelectGameObject() {
 
 	// 他のObjectが選択されていたら選択解除する
-	if (EditorManager::GetSelectedEditor()||
+	if (ParticleRenderer::GetSelectedParticle() ||
+		SpriteRenderer::GetSelectedSprite() ||
+		EditorManager::GetSelectedEditor() ||
+		GameSystem::GameLight()->SelectedGameLight() ||
 		GameSystem::GameCamera()->SelectedGameCamera()) {
 
 		currentObjectIndex_ = -1;

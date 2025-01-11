@@ -37,34 +37,43 @@ float EaseOutCirc(float t);
 float EaseInOutCirc(float t);
 float EaseOutBack(float t);
 float EaseInBack(float t);
+float EaseInBounce(float t);
+float EaseOutBounce(float t);
+float EaseInOutBounce(float t);
 
 enum class EasingType {
 
-	EaseInSine,
-	EaseInQuad,
-	EaseInCubic,
-	EaseInQuart,
-	EaseInQuint,
-	EaseInExpo,
-	EaseInCirc,
-	EaseInBack,
+    // EaseIn
+    EaseInSine,
+    EaseInQuad,
+    EaseInCubic,
+    EaseInQuart,
+    EaseInQuint,
+    EaseInExpo,
+    EaseInCirc,
+    EaseInBack,
+    EaseInBounce,
 
-	EaseOutSine,
-	EaseOutQuad,
-	EaseOutCubic,
-	EaseOutQuart,
-	EaseOutQuint,
-	EaseOutExpo,
-	EaseOutCirc,
-	EaseOutBack,
+    // EaseOut
+    EaseOutSine,
+    EaseOutQuad,
+    EaseOutCubic,
+    EaseOutQuart,
+    EaseOutQuint,
+    EaseOutExpo,
+    EaseOutCirc,
+    EaseOutBack,
+    EaseOutBounce,
 
-	EaseInOutSine,
-	EaseInOutQuad,
-	EaseInOutCubic,
-	EaseInOutQuart,
-	EaseInOutQuint,
-	EaseInOutExpo,
-	EaseInOutCirc
+    // EaseInOut
+    EaseInOutSine,
+    EaseInOutQuad,
+    EaseInOutCubic,
+    EaseInOutQuart,
+    EaseInOutQuint,
+    EaseInOutExpo,
+    EaseInOutCirc,
+    EaseInOutBounce,
 };
 
 float EasedValue(EasingType easingType, float t);

@@ -6,12 +6,17 @@
 #include <Engine/Process/Input.h>
 #include <Game/3D/Object/BaseAnimationObject.h>
 
+// collider
+#include <Game/Objects/Player/Collision/PlayerAttackCollider.h>
+
 // c++
 #include <memory>
 #include <optional>
 #include <initializer_list>
 #include <unordered_set>
 
+// front
+class EnemyManager;
 class FollowCamera;
 
 //============================================================================*/
@@ -31,11 +36,27 @@ public:
 
 	void Update();
 
+	void Draw(RendererPipelineType pipeline) override;
+
 	//* imgui *//
 
 	void DerivedImGui() override;
 
+	//* setter *//
+
+	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+
 	//* getter *//
+
+	bool IsPosClamped() const { return posClamped_; }
+
+	bool IsDash() const { return isDashing_; }
+
+	bool IsWaitToFirstAttack() const { return firstAttackCollisionEnable_; }
+
+	bool IsWaitToSecondAttack() const { return secondAttackCollisionEnable_; }
+
+	bool IsWaitToThirdAttack() const { return thirdAttackCollisionEnable_; }
 
 private:
 	//========================================================================*/
@@ -76,6 +97,9 @@ private:
 
 	Input* input_ = nullptr;
 	FollowCamera* followCamera_ = nullptr;
+	EnemyManager* enemyManager_ = nullptr;
+
+	std::unique_ptr<PlayerAttackCollider> attackCollider_;
 
 	std::optional<MoveBehaviour> moveBehaviour_;              //* 依頼移動ビヘイビア
 	std::unordered_set<MoveBehaviour> currentMoveBehaviours_; //* 現在の移動ビヘイビア
@@ -107,12 +131,22 @@ private:
 
 	//* bool *//
 
+	bool isDrawDebugCollider_; //* 攻撃用Colliderの描画有無
+
 	bool isDashing_;           //* ダッシュしたかどうか
 	bool isJump_;              //* ジャンプしたかどうか
 
 	bool isWaitToFirstAttack_;        //* 待機からの最初の攻撃をしたかどうか
 	bool isWaitToSecondAttackEnable_; //* 二回目の攻撃を行うかどうか
 	bool isWaitToThirdAttackEnable_;  //* 三回目の攻撃を行うかどうか
+
+	//* 衝突フラグ *//
+
+	bool posClamped_;
+
+	bool firstAttackCollisionEnable_;
+	bool secondAttackCollisionEnable_;
+	bool thirdAttackCollisionEnable_;
 
 	//========================================================================*/
 	//* functions
@@ -121,6 +155,8 @@ private:
 	//* move
 
 	void UpdateAnimation(); //* アニメーション更新
+
+	void MoveClamp(); //* 移動制限
 
 	void Move();        //* 全体の移動を管理
 	void MoveRequest(); //* 移動依頼
@@ -141,6 +177,8 @@ private:
 	// json
 	void ApplyJson();
 	void SaveJson();
+
+	void UpdateCollisionEnable();
 
 	// helper
 	void RotateToDirection();

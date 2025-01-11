@@ -5,6 +5,7 @@
 //============================================================================*/
 #include <Game/Scenes/Methods/IScene.h>
 #include <Game/Scenes/Methods/SceneFactory.h>
+#include <Game/Scenes/Methods/SceneTransition.h>
 
 // c++
 #include <string>
@@ -26,15 +27,16 @@ public:
 
 	void SwitchScene();
 
+	void InitNextScene();
+
 	void SetNextScene(const std::string& sceneName);
+
+
+	void Finalize();
 
 	//* imgui *//
 
 	void ImGui();
-
-	//* getter *//
-
-	bool IsSceneSwitching() const { return isSceneSwitching_; }
 
 private:
 	//========================================================================*/
@@ -45,6 +47,8 @@ private:
 	//* variables
 
 	std::unique_ptr<IScene> currentScene_;
+
+	std::unique_ptr<SceneTransition> sceneTransition_;
 
 	std::string nextSceneName_;
 	bool isSceneSwitching_;
